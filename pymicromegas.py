@@ -37,7 +37,7 @@ FLAGS = {
     "CLEAN"              : (1 << 17)
 }
 
-OMEGA_FLAG = ("OMEGA",)
+NATIVE_OMEGA_FLAGS = ("OMEGA",)
 
 
 #def flag_to_int(flag_name,bool_flag):
@@ -312,7 +312,9 @@ class Project:
     
     def __call__(self,dict_parameters,flags=None,dof_fname=None):
         flag_names = tuple(flags or ())
-        if flag_names == OMEGA_FLAG:
+        # Relic-density-only calls can use the ctypes bridge; other flag
+        # combinations still use the subprocess path to preserve stdout parsing.
+        if flag_names == NATIVE_OMEGA_FLAGS:
             try:
                 return_dict = self.native().dark_omega(dict_parameters,dof_fname=dof_fname)
                 return {"Xf":return_dict["Xf"],"Omega":return_dict["Omega"]}

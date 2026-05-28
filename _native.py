@@ -1,3 +1,4 @@
+from collections.abc import Mapping
 import ctypes
 import os
 from pathlib import Path
@@ -94,7 +95,7 @@ libs:
 	$(MAKE) -C ../sources
 
 work/bin:
-	ln -s `pwd`/../CalcHEP_src/bin `pwd`/work/bin
+	ln -s $(shell pwd)/../CalcHEP_src/bin $(shell pwd)/work/bin
 """
 
 
@@ -144,11 +145,12 @@ class NativeMicrOmegas:
         return func
 
     def assign_values(self, parameters):
+        """Assign values from a dict-like object or pandas.Series."""
         names = list(parameters.keys())
-        # dict.values is a method; pandas.Series.values is an array property.
-        raw_values = parameters.values
-        if callable(raw_values):
-            raw_values = raw_values()
+        if isinstance(parameters, Mapping):
+            raw_values = parameters.values()
+        else:
+            raw_values = parameters.values
         values = [float(value) for value in raw_values]
         name_array = (ctypes.c_char_p * len(names))(
             *[name.encode() for name in names]
