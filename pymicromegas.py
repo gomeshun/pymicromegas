@@ -1,4 +1,6 @@
 import os
+import ctypes
+import shutil
 import subprocess
 import sys
 from pathlib import Path 
@@ -288,3 +290,326 @@ class Project:
         flags = ["OMEGA"]
         output = self.run(dict_parameters,flags,dof_fname=dof_fname).stdout
         return self.parse_omega(output,flags,with_channels=True)    
+
+
+class MicrOmegas:
+    """ctypes based micrOMEGAs project wrapper.
+
+    The class creates or loads one micrOMEGAs project, builds a small generated
+    shared-library bridge in that project, and exposes both convenience methods
+    and the raw ``ctypes.CDLL`` object for direct calls to linked micrOMEGAs
+    symbols.
+    """
+
+    BRIDGE_SOURCE = r"""
+#include <string.h>
+
+#include "../include/micromegas.h"
+#include "../include/micromegas_aux.h"
+#include "lib/pmodel.h"
+
+int pymicromegas_assign_value(const char *name, double value)
+{
+    return assignVal((char *)name, value);
+}
+
+int pymicromegas_assign_values(int n_values, const char **names, const double *values)
+{
+    int err = 0;
+    for(int i = 0; i < n_values; ++i)
+    {
+        err = assignVal((char *)names[i], values[i]);
+        if(err) return i + 1;
+    }
+    return 0;
+}
+
+double pymicromegas_find_value(const char *name)
+{
+    return findValW((char *)name);
+}
+
+void pymicromegas_set_gauge(int force_ug, int vzdecay, int vwdecay)
+{
+    ForceUG = force_ug;
+    VZdecay = vzdecay;
+    VWdecay = vwdecay;
+}
+
+int pymicromegas_sort_odd_particles(char *cdm_name, int cdm_name_size)
+{
+    char local_name[64] = "";
+    int err = sortOddParticles(local_name);
+    if(!err && cdm_name && cdm_name_size > 0)
+    {
+        strncpy(cdm_name, local_name, (size_t)cdm_name_size - 1);
+        cdm_name[cdm_name_size - 1] = '\0';
+    }
+    return err;
+}
+
+int pymicromegas_load_heff_geff(const char *path)
+{
+    return loadHeffGeff((char *)path);
+}
+
+double pymicromegas_dark_omega(double *xf, int fast, double beps, int *err)
+{
+    return darkOmega(xf, fast, beps, err);
+}
+
+double pymicromegas_dark_omega2(int fast, double beps)
+{
+    return darkOmega2(fast, beps);
+}
+
+const char *pymicromegas_cdm1(void)
+{
+    return CDM1;
+}
+
+const char *pymicromegas_cdm2(void)
+{
+    return CDM2;
+}
+
+double pymicromegas_mcdm(void)
+{
+    return Mcdm;
+}
+
+double pymicromegas_mcdm1(void)
+{
+    return Mcdm1;
+}
+
+double pymicromegas_mcdm2(void)
+{
+    return Mcdm2;
+}
+"""
+
+    def __init__(self, project_name, mdl_paths=None, build=True, verbose=False):
+        if not is_valid_project_name(project_name):
+            raise RuntimeError(f"'{project_name}' is not valid project name.")
+
+        self.project_name = project_name
+        self.verbose = verbose
+        self.interface = PyMicrOmegas(verbose=verbose)
+        self.micromegas_path = Path(self.interface.path)
+        self.path = self.micromegas_path / project_name
+        self.models_path = self.path / "work" / "models"
+        self.bridge_source = self.path / "pymicromegas_bridge.c"
+        self.library_path = self.path / "libpymicromegas.so"
+        self._lib = None
+
+        self._ensure_project()
+        if mdl_paths is not None:
+            self.load_mdl_files(mdl_paths)
+        if build:
+            self.build_library()
+            self.load_library()
+
+    def _run(self, command, check=True, input=None):
+        if self.verbose:
+            print(command)
+        return subprocess.run(
+            command,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding="UTF-8",
+            check=check,
+            input=input,
+            cwd=self.path,
+        )
+
+    def _ensure_project(self):
+        if self.path.is_dir():
+            return
+        process = subprocess.run(
+            f"./newProject {self.project_name}",
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding="UTF-8",
+            check=True,
+            cwd=self.micromegas_path,
+        )
+        if self.verbose:
+            print(process.stdout)
+
+    def load_mdl_files(self, mdl_paths):
+        if type(mdl_paths) not in [list, tuple]:
+            raise RuntimeError("input arguments must be list or tuple.")
+        if len(mdl_paths) == 0:
+            raise RuntimeError("input argument is empty list or tuple.")
+        self.models_path.mkdir(parents=True, exist_ok=True)
+        for mdl_path in mdl_paths:
+            mdl_path = Path(mdl_path)
+            if not mdl_path.is_file():
+                raise RuntimeError(f"{mdl_path} does not existing file")
+            shutil.copy2(str(mdl_path.resolve()), str(self.models_path))
+
+    @property
+    def vars(self):
+        return np.loadtxt(
+            str(self.models_path / "vars1.mdl"),
+            skiprows=3,
+            delimiter="|",
+            dtype=str,
+            comments="=",
+        )
+
+    def write_bridge_source(self, force=False):
+        if force or not self.bridge_source.exists() or self.bridge_source.read_text() != self.BRIDGE_SOURCE:
+            self.bridge_source.write_text(self.BRIDGE_SOURCE)
+        return self.bridge_source
+
+    def _shared_link_command(self):
+        dry_run = self._run(f"make -n main={self.bridge_source.name}", check=True)
+        executable_name = self.bridge_source.with_suffix("").name
+        source_name = self.bridge_source.name
+        for line in dry_run.stdout.splitlines():
+            if source_name in line and f"-o {executable_name}" in line:
+                return line.replace(
+                    f"-o {executable_name}",
+                    f"-shared -fPIC -Wl,-export-dynamic -o {self.library_path.name}",
+                    1,
+                )
+        raise RuntimeError(
+            "Could not derive the micrOMEGAs link command. "
+            f"make output was:\n{dry_run.stdout}"
+        )
+
+    def build_library(self, force=False):
+        self.write_bridge_source(force=force)
+        if force or not self.library_path.exists():
+            self._run("make libs work/bin", check=True)
+            self._run(self._shared_link_command(), check=True)
+        return self.library_path
+
+    def load_library(self, force=False):
+        if force or self._lib is None:
+            if not self.library_path.exists():
+                self.build_library()
+            self._lib = ctypes.CDLL(str(self.library_path))
+            self._configure_bridge_functions()
+        return self._lib
+
+    @property
+    def lib(self):
+        return self.load_library()
+
+    def _configure_bridge_functions(self):
+        lib = self._lib
+        lib.pymicromegas_assign_value.argtypes = [ctypes.c_char_p, ctypes.c_double]
+        lib.pymicromegas_assign_value.restype = ctypes.c_int
+        lib.pymicromegas_assign_values.argtypes = [
+            ctypes.c_int,
+            ctypes.POINTER(ctypes.c_char_p),
+            ctypes.POINTER(ctypes.c_double),
+        ]
+        lib.pymicromegas_assign_values.restype = ctypes.c_int
+        lib.pymicromegas_find_value.argtypes = [ctypes.c_char_p]
+        lib.pymicromegas_find_value.restype = ctypes.c_double
+        lib.pymicromegas_set_gauge.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_int]
+        lib.pymicromegas_set_gauge.restype = None
+        lib.pymicromegas_sort_odd_particles.argtypes = [ctypes.c_char_p, ctypes.c_int]
+        lib.pymicromegas_sort_odd_particles.restype = ctypes.c_int
+        lib.pymicromegas_load_heff_geff.argtypes = [ctypes.c_char_p]
+        lib.pymicromegas_load_heff_geff.restype = ctypes.c_int
+        lib.pymicromegas_dark_omega.argtypes = [
+            ctypes.POINTER(ctypes.c_double),
+            ctypes.c_int,
+            ctypes.c_double,
+            ctypes.POINTER(ctypes.c_int),
+        ]
+        lib.pymicromegas_dark_omega.restype = ctypes.c_double
+        lib.pymicromegas_dark_omega2.argtypes = [ctypes.c_int, ctypes.c_double]
+        lib.pymicromegas_dark_omega2.restype = ctypes.c_double
+        lib.pymicromegas_cdm1.argtypes = []
+        lib.pymicromegas_cdm1.restype = ctypes.c_char_p
+        lib.pymicromegas_cdm2.argtypes = []
+        lib.pymicromegas_cdm2.restype = ctypes.c_char_p
+        lib.pymicromegas_mcdm.argtypes = []
+        lib.pymicromegas_mcdm.restype = ctypes.c_double
+        lib.pymicromegas_mcdm1.argtypes = []
+        lib.pymicromegas_mcdm1.restype = ctypes.c_double
+        lib.pymicromegas_mcdm2.argtypes = []
+        lib.pymicromegas_mcdm2.restype = ctypes.c_double
+
+    def assign(self, parameters):
+        names = list(map(str, get_keys(parameters)))
+        values = [float(value) for value in get_values(parameters)]
+        name_array = (ctypes.c_char_p * len(names))(
+            *[name.encode("UTF-8") for name in names]
+        )
+        value_array = (ctypes.c_double * len(values))(*values)
+        err = self.lib.pymicromegas_assign_values(len(names), name_array, value_array)
+        if err:
+            raise RuntimeError(f"Could not assign parameter '{names[err - 1]}'.")
+        return None
+
+    def find_value(self, name):
+        return self.lib.pymicromegas_find_value(str(name).encode("UTF-8"))
+
+    def set_gauge(self, force_ug=0, vzdecay=0, vwdecay=0):
+        self.lib.pymicromegas_set_gauge(int(force_ug), int(vzdecay), int(vwdecay))
+
+    def sort_odd_particles(self):
+        cdm_name = ctypes.create_string_buffer(64)
+        err = self.lib.pymicromegas_sort_odd_particles(cdm_name, len(cdm_name))
+        if err:
+            raise RuntimeError(f"Can't calculate {cdm_name.value.decode('UTF-8')}")
+        return cdm_name.value.decode("UTF-8")
+
+    def load_heff_geff(self, dof_fname):
+        dof_path = Path(dof_fname)
+        if not dof_path.is_file():
+            raise RuntimeError(f"{dof_fname} does not existing file")
+        err = self.lib.pymicromegas_load_heff_geff(str(dof_path.resolve()).encode("UTF-8"))
+        if err < 0:
+            raise RuntimeError("invalid input: wrong format")
+        if err == 0:
+            raise RuntimeError(f"invalid input: cannot open {dof_fname}")
+        return err
+
+    def dark_omega(self, parameters=None, dof_fname=None, fast=1, beps=1e-4):
+        if parameters is not None:
+            self.assign(parameters)
+        if dof_fname is not None:
+            self.load_heff_geff(dof_fname)
+        self.set_gauge()
+        self.sort_odd_particles()
+        xf = ctypes.c_double()
+        err = ctypes.c_int()
+        omega = self.lib.pymicromegas_dark_omega(
+            ctypes.byref(xf), int(fast), float(beps), ctypes.byref(err)
+        )
+        return {"Xf": xf.value, "Omega": omega, "err": err.value}
+
+    def dark_omega2(self, parameters=None, fast=1, beps=1e-4):
+        if parameters is not None:
+            self.assign(parameters)
+        self.set_gauge()
+        self.sort_odd_particles()
+        return self.lib.pymicromegas_dark_omega2(int(fast), float(beps))
+
+    def function(self, name, restype=ctypes.c_double, argtypes=None):
+        func = getattr(self.lib, name)
+        func.restype = restype
+        if argtypes is not None:
+            func.argtypes = argtypes
+        return func
+
+    def call(self, name, *args, restype=ctypes.c_double, argtypes=None):
+        return self.function(name, restype=restype, argtypes=argtypes)(*args)
+
+    def __getattr__(self, name):
+        if name.startswith("__"):
+            raise AttributeError(name)
+        try:
+            return getattr(self.lib, name)
+        except AttributeError as exc:
+            raise AttributeError(name) from exc
