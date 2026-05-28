@@ -439,6 +439,12 @@ class MicrOmegas:
         return self._require_project().calc_omega(dict_parameters,dof_fname=dof_fname)
 
     def function(self,name,restype=None,argtypes=None):
+        """
+        Return a raw ctypes function from the project library.
+
+        restype and argtypes are forwarded to ctypes for callers that need to
+        configure symbols not covered by the high-level wrapper methods.
+        """
         return self.library().function(name,restype=restype,argtypes=argtypes)
 
     def assign_values(self,parameters):
@@ -454,6 +460,13 @@ class MicrOmegas:
         return self.library().find_val(name)
 
     def dark_omega(self,parameters=None,dof_fname=None,fast=1,beps=1.0e-4):
+        """
+        Calculate relic density through the ctypes-backed darkOmega call.
+
+        parameters are assigned before the calculation when provided.  dof_fname
+        loads a custom degree-of-freedom table.  fast and beps are passed to
+        micrOMEGAs darkOmega.  Returns a dict with Xf, Omega, and err.
+        """
         return self.library().dark_omega(parameters=parameters,dof_fname=dof_fname,fast=fast,beps=beps)
 
     def dark_omega2(self,parameters=None,fast=1,beps=1.0e-4):

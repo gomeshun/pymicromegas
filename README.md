@@ -4,7 +4,7 @@ Python interface of micromegas.
 ## Features
 pymicromegas:
 
-- directly reseives your model parameters as Python `dict` (does not generate internal `.par` files)
+- directly receives your model parameters as Python `dict` (does not generate internal `.par` files)
 - can switch on/off by `flags` parameter
 
 If you don't like Python, instead, you can use `main.c/cpp` in `/pymicromegas/` just as normal `main.c/cpp` of micromegas.
@@ -23,7 +23,7 @@ from pymicromegas import MicrOmegas
 
 micromegas = MicrOmegas("test", create=True)
 micromegas.load_mdl_files(["the", "list of", "your", ".mdl file", "paths"])
-micromegas.compile()  # once a project is compiled, you can load it again with MicrOmegas(project_name).
+micromegas.compile()  # once compiled, load it again with MicrOmegas(project_name) using the default create=False.
 
 
 args = {

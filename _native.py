@@ -103,7 +103,12 @@ work/bin:
 
 
 class NativeMicrOmegas:
-    """ctypes bridge for a compiled micrOMEGAs project."""
+    """
+    ctypes bridge for a compiled micrOMEGAs project.
+
+    The bridge generates a small C wrapper in the project directory, compiles it
+    as a shared library, and exposes selected micrOMEGAs functions to Python.
+    """
 
     source_name = "pymicromegas_native.c"
     makefile_name = "pymicromegas_native.mk"
@@ -176,8 +181,10 @@ class NativeMicrOmegas:
         err = self.cdll.pymicromegas_load_heff_geff(os.fsencode(path))
         # micrOMEGAs loadHeffGeff returns a positive line count on success;
         # 0 means the file could not be opened, and negative values are errors.
-        if err <= 0:
+        if err == 0:
             raise RuntimeError(f"micrOMEGAs could not load DOF file: {path}")
+        if err < 0:
+            raise RuntimeError(f"micrOMEGAs rejected DOF file '{path}' with error {err}.")
         return err
 
     def find_val(self, name):
@@ -188,6 +195,13 @@ class NativeMicrOmegas:
         return value
 
     def dark_omega(self, parameters=None, dof_fname=None, fast=1, beps=1.0e-4):
+        """
+        Calculate relic density with darkOmega.
+
+        parameters are assigned before the calculation when provided.  dof_fname
+        loads a custom degree-of-freedom table.  fast and beps are passed to
+        micrOMEGAs darkOmega.  Returns a dict with Xf, Omega, and err.
+        """
         if parameters is not None:
             self.assign_values(parameters)
         if dof_fname is not None:
