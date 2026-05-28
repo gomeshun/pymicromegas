@@ -327,3 +327,113 @@ class Project:
         flags = ["OMEGA"]
         output = self.run(dict_parameters,flags,dof_fname=dof_fname).stdout
         return self.parse_omega(output,flags,with_channels=True)    
+
+
+class MicrOmegas:
+    """
+    Standalone wrapper for micrOMEGAs.
+
+    This class combines the package-level micrOMEGAs management provided by
+    PyMicrOmegas and the project-level operations provided by Project.  The
+    existing PyMicrOmegas and Project classes are kept for backwards
+    compatibility.
+    """
+
+    def __init__(self,project_name=None,verbose=False,create=False):
+        self._interface = PyMicrOmegas(verbose=verbose)
+        self._project = None
+        if project_name is not None:
+            if create:
+                self.create_project(project_name)
+            else:
+                self.load_project(project_name)
+
+    @property
+    def project(self):
+        return self._project
+
+    @property
+    def project_name(self):
+        return self._require_project().project_name
+
+    @property
+    def path(self):
+        if self._project is not None:
+            return self._project.path
+        return self._interface.path
+
+    @property
+    def models_path(self):
+        return self._require_project().models_path
+
+    @property
+    def vars(self):
+        return self._require_project().vars
+
+    @property
+    def is_user_defined_project(self):
+        return self._require_project().is_user_defined_project
+
+    def _require_project(self):
+        if self._project is None:
+            raise RuntimeError("No project is loaded. Call load_project() or create_project() first.")
+        return self._project
+
+    def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):
+        if self._project is not None:
+            return self._project.run_bash(command,shell=shell,stdout=stdout,encoding=encoding,check=check,input=input,verbose=verbose)
+        return self._interface.run_bash(command,shell=shell,stdout=stdout,encoding=encoding,check=check,input=input,verbose=verbose)
+
+    def compile_micromegas(self):
+        return self._interface.compile_micromegas()
+
+    def clean_micromegas(self):
+        return self._interface.clean_micromegas()
+
+    def project_exists(self,project_name):
+        return self._interface.project_exists(project_name)
+
+    def create_project(self,project_name):
+        self._project = self._interface.create_newproject(project_name,return_project=True)
+        return self
+
+    def create_newproject(self,project_name):
+        return self.create_project(project_name)
+
+    def load_project(self,project_name):
+        self._project = self._interface.load_project(project_name)
+        return self
+
+    def remove_project(self,project_name=None):
+        project_name = project_name or self.project_name
+        process = self._interface.remove_project(project_name)
+        if self._project is not None and self._project.project_name == project_name:
+            self._project = None
+        return process
+
+    def load_mdl_files(self,mdl_paths):
+        return self._require_project().load_mdl_files(mdl_paths)
+
+    def compile(self,main="main.c"):
+        return self._require_project().compile(main=main)
+
+    def native(self,build=True,force=False):
+        return self._require_project().native(build=build,force=force)
+
+    def compile_native(self,force=False):
+        return self._require_project().compile_native(force=force)
+
+    def clean(self):
+        return self._require_project().clean()
+
+    def run(self,dict_parameters,flags=None,dof_fname=None):
+        return self._require_project().run(dict_parameters,flags=flags,dof_fname=dof_fname)
+
+    def parse_omega(self,micromegas_output,flags=None,with_channels=False):
+        return self._require_project().parse_omega(micromegas_output,flags=flags,with_channels=with_channels)
+
+    def calc_omega(self,dict_parameters,dof_fname=None):
+        return self._require_project().calc_omega(dict_parameters,dof_fname=dof_fname)
+
+    def __call__(self,dict_parameters,flags=None,dof_fname=None):
+        return self._require_project()(dict_parameters,flags=flags,dof_fname=dof_fname)
