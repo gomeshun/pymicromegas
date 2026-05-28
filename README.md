@@ -16,7 +16,8 @@ These modified `main` files receive arguments like:
 
 # How to use it
 
-`git clone` to download pymicromegas. Then 
+`git clone` to download pymicromegas. The micrOMEGAs source tree is included
+as `micromegas_5.0.8/`, so it can be inspected and built directly. Then
 
 ```python
 from pymicromegas import PyMicrOmegas
@@ -83,7 +84,8 @@ raw_lib = mo.lib
 
 ## `PyMicrOmegas`
 - wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.
-- When pymicromegas imported for the first time, it unzip `micromegas_5.0.8.tgz` and install (make) it
+- When pymicromegas is imported for the first time, it installs (make) the
+  checked-in `micromegas_5.0.8/` source tree if it has not been built yet.
 
 If you want to modify micromegas, 
 1. clean

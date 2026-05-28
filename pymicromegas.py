@@ -81,8 +81,7 @@ class PyMicrOmegas:
         self.path = dir_micromegas
         
         if not os.path.isdir(self.path):
-            print("PyMicrOmegas: unzip micromegas...")
-            run_bash("tar -xzf micromegas_5.0.8.tgz",cwd=os.path.dirname(__file__))
+            raise RuntimeError(f"micromegas directory is missing: {self.path}")
 
         if os.path.isfile(self.path + "include/microPath.h"): 
             pass
