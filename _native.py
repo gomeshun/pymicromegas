@@ -145,6 +145,7 @@ class NativeMicrOmegas:
 
     def assign_values(self, parameters):
         names = list(parameters.keys())
+        # dict.values is a method; pandas.Series.values is an array property.
         raw_values = parameters.values
         if callable(raw_values):
             raw_values = raw_values()
@@ -168,6 +169,7 @@ class NativeMicrOmegas:
 
     def load_heff_geff(self, path):
         err = self.cdll.pymicromegas_load_heff_geff(os.fsencode(path))
+        # micrOMEGAs loadHeffGeff returns a positive line count on success.
         if err <= 0:
             raise RuntimeError(f"micrOMEGAs could not load DOF file: {path}")
         return err

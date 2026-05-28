@@ -37,6 +37,8 @@ FLAGS = {
     "CLEAN"              : (1 << 17)
 }
 
+OMEGA_FLAG = ("OMEGA",)
+
 
 #def flag_to_int(flag_name,bool_flag):
 #    if type(bool_flag) is not bool: raise TypeError("invalid input for {}".format(key))
@@ -310,7 +312,7 @@ class Project:
     
     def __call__(self,dict_parameters,flags=None,dof_fname=None):
         flag_names = tuple(flags or ())
-        if flag_names == ("OMEGA",):
+        if flag_names == OMEGA_FLAG:
             try:
                 return_dict = self.native().dark_omega(dict_parameters,dof_fname=dof_fname)
                 return {"Xf":return_dict["Xf"],"Omega":return_dict["Omega"]}
