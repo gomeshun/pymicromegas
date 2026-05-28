@@ -149,11 +149,10 @@ class NativeMicrOmegas:
 
     def assign_values(self, parameters):
         """Assign values from a dict-like object or pandas.Series."""
+        names = list(parameters.keys())
         if isinstance(parameters, Mapping):
-            names = list(parameters.keys())
             raw_values = parameters.values()
         else:
-            names = list(parameters.keys())
             raw_values = parameters.values
         values = [float(value) for value in raw_values]
         name_array = (ctypes.c_char_p * len(names))(
@@ -250,6 +249,7 @@ class NativeMicrOmegas:
 
     @staticmethod
     def _write_if_changed(path, content):
+        """Write content only when it differs to avoid needless rebuilds."""
         if path.exists() and path.read_text() == content:
             return
         path.write_text(content)
