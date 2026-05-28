@@ -319,7 +319,7 @@ class Project:
                 return_dict = self.native().dark_omega(dict_parameters,dof_fname=dof_fname)
                 return {"Xf":return_dict["Xf"],"Omega":return_dict["Omega"]}
             except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
-                warnings.warn(f"Native micrOMEGAs call failed; falling back to subprocess: {exc}",RuntimeWarning)
+                warnings.warn(f"ctypes micrOMEGAs call failed; falling back to subprocess: {exc}", RuntimeWarning)
         output = self.run(dict_parameters,flags,dof_fname).stdout
         return self.parse_omega(output,flags)
     

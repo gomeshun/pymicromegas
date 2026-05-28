@@ -153,8 +153,10 @@ class NativeMicrOmegas:
         return func
 
     def assign_values(self, parameters):
-        """Assign values from a dict-like object or pandas.Series."""
+        """Assign values from a Mapping or pandas.Series."""
         names = list(parameters.keys())
+        # Mappings expose values() as a method; pandas.Series exposes values as
+        # an array-like attribute.
         if isinstance(parameters, Mapping):
             raw_values = parameters.values()
         else:
