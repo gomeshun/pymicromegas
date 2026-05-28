@@ -43,10 +43,10 @@ flags = ["MASSES_INFO","OMEGA"]
 #process = micromegas.run(args,flags)  # return subprocess.CompletedProcess
 #print(process.stdout)  # print the output text of micromegas
 
-outout_dict = micromegas(args,flags)  # directly return parsed output (at present, relic density only)
-output_dict = micromegas.calc_omega(args)  # directly return parsed output about relic density with channels
+output_dict = micromegas(args,flags)  # directly return parsed output (at present, relic density only)
+omega_dict = micromegas.calc_omega(args)  # directly return parsed output about relic density with channels
 
-print(output_dict)  
+print(omega_dict)  
 ```
 
 The older `PyMicrOmegas` and `Project` classes are still available for
