@@ -261,7 +261,7 @@ class Project:
             dof_fname = to_abspath(dof_fname)
         
         args = (
-            ["./main", str(int_flags), str(n_inputvals), dof_fname]
+            ["./main", str(int_flags), str(n_inputvals), str(dof_fname)]
             + list(map(str,get_keys(dict_parameters)))
             + list(map(str,get_values(dict_parameters)))
         )
