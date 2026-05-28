@@ -33,7 +33,7 @@ Linux) if(test "$CC" = "icc") then
           CFLAGS="-g -fsigned-char -Qoption,cpp,--extended_float_type -std=gnu99 -fPIC" 
        else
           CC=gcc
-          CFLAGS="-g -fsigned-char -Wstrict-prototypes -Wimplicit -Wmissing-prototypes -std=gnu99"
+          CFLAGS="-g -fsigned-char -Wstrict-prototypes -Wimplicit -Wmissing-prototypes -std=gnu99 -fcommon"
        fi
        lDL="-rdynamic -ldl"       
        SHARED=-shared
