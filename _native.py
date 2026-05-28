@@ -98,7 +98,7 @@ libs:
 	$(MAKE) -C ../sources
 
 work/bin:
-	ln -s $(shell pwd)/../CalcHEP_src/bin $(shell pwd)/work/bin
+	ln -s ../../CalcHEP_src/bin work/bin
 """
 
 
