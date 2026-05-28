@@ -182,9 +182,9 @@ class NativeMicrOmegas:
         # micrOMEGAs loadHeffGeff returns a positive line count on success;
         # 0 means the file could not be opened, and negative values are errors.
         if err == 0:
-            raise RuntimeError(f"micrOMEGAs could not load DOF file: {path}")
+            raise RuntimeError(f"micrOMEGAs could not load DOF file '{path}' (file not found)")
         if err < 0:
-            raise RuntimeError(f"micrOMEGAs rejected DOF file '{path}' with error {err}.")
+            raise RuntimeError(f"micrOMEGAs rejected DOF file '{path}' with error {err}")
         return err
 
     def find_val(self, name):
