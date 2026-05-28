@@ -391,7 +391,7 @@ double pymicromegas_mcdm2(void)
 
     def __init__(self, project_name, mdl_paths=None, build=True, verbose=False):
         if not is_valid_project_name(project_name):
-            raise RuntimeError(f"'{project_name}' is not valid project name.")
+            raise RuntimeError(f"'{project_name}' is not a valid project name.")
 
         self.project_name = project_name
         self.verbose = verbose
@@ -448,7 +448,7 @@ double pymicromegas_mcdm2(void)
         for mdl_path in mdl_paths:
             mdl_path = Path(mdl_path)
             if not mdl_path.is_file():
-                raise RuntimeError(f"{mdl_path} does not existing file")
+                raise RuntimeError(f"{mdl_path} is not an existing file")
             shutil.copy2(str(mdl_path.resolve()), str(self.models_path))
 
     @property
@@ -561,13 +561,15 @@ double pymicromegas_mcdm2(void)
         cdm_name = ctypes.create_string_buffer(64)
         err = self.lib.pymicromegas_sort_odd_particles(cdm_name, len(cdm_name))
         if err:
-            raise RuntimeError(f"Can't calculate {cdm_name.value.decode('UTF-8')}")
+            raise RuntimeError(
+                f"Failed to sort odd particles for CDM candidate {cdm_name.value.decode('UTF-8')}"
+            )
         return cdm_name.value.decode("UTF-8")
 
     def load_heff_geff(self, dof_fname):
         dof_path = Path(dof_fname)
         if not dof_path.is_file():
-            raise RuntimeError(f"{dof_fname} does not existing file")
+            raise RuntimeError(f"{dof_fname} is not an existing file")
         err = self.lib.pymicromegas_load_heff_geff(str(dof_path.resolve()).encode("UTF-8"))
         if err < 0:
             raise RuntimeError("invalid input: wrong format")
