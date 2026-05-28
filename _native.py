@@ -124,11 +124,13 @@ class NativeMicrOmegas:
         if force or not self.library_path.exists():
             if self.runner is None:
                 raise RuntimeError("No project runner is available to compile native bridge.")
-            self.runner(
+            process = self.runner(
                 ["make", "-f", self.makefile_name, self.library_name],
                 shell=False,
                 verbose=True,
             )
+            if process.returncode:
+                raise RuntimeError(process.stdout)
         self._cdll = None
         return self
 

@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import warnings
 from pathlib import Path 
 import numpy as np
 from pandas import Series
@@ -308,12 +309,13 @@ class Project:
         
     
     def __call__(self,dict_parameters,flags=None,dof_fname=None):
-        if flags == ["OMEGA"] or flags == ("OMEGA",):
+        flag_names = tuple(flags or ())
+        if flag_names == ("OMEGA",):
             try:
                 return_dict = self.native().dark_omega(dict_parameters,dof_fname=dof_fname)
                 return {"Xf":return_dict["Xf"],"Omega":return_dict["Omega"]}
-            except Exception:
-                pass
+            except (OSError, RuntimeError, subprocess.SubprocessError) as exc:
+                warnings.warn(f"Native micrOMEGAs call failed; falling back to subprocess: {exc}",RuntimeWarning)
         output = self.run(dict_parameters,flags,dof_fname).stdout
         return self.parse_omega(output,flags)
     
