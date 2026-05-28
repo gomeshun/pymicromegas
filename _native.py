@@ -67,6 +67,9 @@ double pymicromegas_find_val(const char *name, int *err)
 BRIDGE_MAKEFILE = r"""
 .PHONY: libs
 
+# This makefile is generated inside a normal micrOMEGAs project directory,
+# where ../CalcHEP_src, ../include, work, and lib are part of the standard
+# project layout created by newProject.
 AllFlags = ../CalcHEP_src/FlagsForMake
 ifeq (,$(wildcard $(AllFlags) ))
 $(error File $(AllFlags) is absent. Compile micrOMEGAs first)
@@ -146,10 +149,11 @@ class NativeMicrOmegas:
 
     def assign_values(self, parameters):
         """Assign values from a dict-like object or pandas.Series."""
-        names = list(parameters.keys())
         if isinstance(parameters, Mapping):
+            names = list(parameters.keys())
             raw_values = parameters.values()
         else:
+            names = list(parameters.keys())
             raw_values = parameters.values
         values = [float(value) for value in raw_values]
         name_array = (ctypes.c_char_p * len(names))(
@@ -171,7 +175,8 @@ class NativeMicrOmegas:
 
     def load_heff_geff(self, path):
         err = self.cdll.pymicromegas_load_heff_geff(os.fsencode(path))
-        # micrOMEGAs loadHeffGeff returns a positive line count on success.
+        # micrOMEGAs loadHeffGeff returns a positive line count on success;
+        # 0 means the file could not be opened, and negative values are errors.
         if err <= 0:
             raise RuntimeError(f"micrOMEGAs could not load DOF file: {path}")
         return err
