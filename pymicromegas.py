@@ -467,10 +467,10 @@ double pymicromegas_mcdm2(void)
         return self.bridge_source
 
     def _shared_link_command(self):
-        dry_run = self._run(f"make -n main={self.bridge_source.name}", check=True)
+        make_result = self._run(f"make -n main={self.bridge_source.name}", check=True)
         executable_name = self.bridge_source.with_suffix("").name
         source_name = self.bridge_source.name
-        for line in dry_run.stdout.splitlines():
+        for line in make_result.stdout.splitlines():
             if source_name in line and f"-o {executable_name}" in line:
                 return line.replace(
                     f"-o {executable_name}",
@@ -479,7 +479,7 @@ double pymicromegas_mcdm2(void)
                 )
         raise RuntimeError(
             "Could not derive the micrOMEGAs link command. "
-            f"make output was:\n{dry_run.stdout}"
+            f"make output was:\n{make_result.stdout}"
         )
 
     def build_library(self, force=False):
@@ -548,7 +548,7 @@ double pymicromegas_mcdm2(void)
         value_array = (ctypes.c_double * len(values))(*values)
         err = self.lib.pymicromegas_assign_values(len(names), name_array, value_array)
         if err:
-            raise RuntimeError(f"Could not assign parameter '{names[err - 1]}'.")
+            raise RuntimeError(f"Could not assign parameter '{names[err - 1]}' (error code: {err}).")
         return None
 
     def find_value(self, name):
@@ -561,9 +561,7 @@ double pymicromegas_mcdm2(void)
         cdm_name = ctypes.create_string_buffer(64)
         err = self.lib.pymicromegas_sort_odd_particles(cdm_name, len(cdm_name))
         if err:
-            raise RuntimeError(
-                f"Failed to sort odd particles for CDM candidate {cdm_name.value.decode('UTF-8')}"
-            )
+            raise RuntimeError(f"Failed to sort odd particles (error code: {err}).")
         return cdm_name.value.decode("UTF-8")
 
     def load_heff_geff(self, dof_fname):
