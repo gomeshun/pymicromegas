@@ -50,6 +50,24 @@ output_dict = project.calc_omega(args)  # directly return parsed output about re
 print(output_dict)  
 ```
 
+## Native ctypes interface
+
+`Project.native()` builds a small project-local shared library and loads it with
+`ctypes`.  The generated C file lives inside the micrOMEGAs project directory
+and links against the normal micrOMEGAs libraries, so the bundled upstream C
+sources do not need to be patched.
+
+```python
+native = project.native()
+native.assign_values(args)
+print(native.sort_odd_particles())
+print(native.dark_omega(args))
+print(native.find_val("parname1"))
+
+# Advanced users can call exported micrOMEGAs symbols directly.
+assign_val = native.function("assignVal")
+```
+
 # Class
 
 ## `PyMicrOmegas`

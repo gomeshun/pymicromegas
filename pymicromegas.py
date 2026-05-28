@@ -5,6 +5,11 @@ from pathlib import Path
 import numpy as np
 from pandas import Series
 
+try:
+    from ._native import NativeMicrOmegas
+except ImportError:
+    from _native import NativeMicrOmegas
+
 
 dir_micromegas = os.path.dirname(__file__) + "/micromegas_5.0.8/"
 
@@ -174,6 +179,7 @@ class Project:
         self.project_name = project_name
         self.path = dir_micromegas + project_name + "/"
         self.models_path = self.path + "work/models/"
+        self._native = None
     
     
     def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):
@@ -200,6 +206,25 @@ class Project:
     def compile(self,main="main.c"):
         #process = subprocess.run("bash install_project.sh " + project_name,shell=True,stdout=subprocess.PIPE)
         return self.run_bash("make main={}".format(main))
+
+
+    def native(self,build=True,force=False):
+        """
+        Return the ctypes bridge for this project.
+
+        The bridge is generated inside the project directory and links against
+        the already-installed micrOMEGAs libraries, so upstream C sources are
+        not patched.
+        """
+        if self._native is None:
+            self._native = NativeMicrOmegas(self.path,runner=self.run_bash)
+        if build:
+            self._native.build(force=force)
+        return self._native
+
+
+    def compile_native(self,force=False):
+        return self.native(build=True,force=force)
            
       
     def clean(self):
@@ -232,11 +257,13 @@ class Project:
             if not os.path.isfile(dof_fname): raise RuntimeError("{} does not existing file".format(dof_fname))
             dof_fname = to_abspath(dof_fname)
         
-        par_names = " ".join(map(str,get_keys(dict_parameters)))
-        par_vals  = " ".join(map(str,get_values(dict_parameters)))
-        args = f"{int_flags} {n_inputvals} {dof_fname} {par_names} {par_vals}"
-        
-        return self.run_bash("./main {}".format(args),verbose=False)
+        args = (
+            ["./main", str(int_flags), str(n_inputvals), dof_fname]
+            + list(map(str,get_keys(dict_parameters)))
+            + list(map(str,get_values(dict_parameters)))
+        )
+
+        return self.run_bash(args,shell=False,verbose=False)
     
     
     def parse_omega(self,micromegas_output,flags=None,with_channels=False):
@@ -281,6 +308,12 @@ class Project:
         
     
     def __call__(self,dict_parameters,flags=None,dof_fname=None):
+        if flags == ["OMEGA"] or flags == ("OMEGA",):
+            try:
+                return_dict = self.native().dark_omega(dict_parameters,dof_fname=dof_fname)
+                return {"Xf":return_dict["Xf"],"Omega":return_dict["Omega"]}
+            except Exception:
+                pass
         output = self.run(dict_parameters,flags,dof_fname).stdout
         return self.parse_omega(output,flags)
     
