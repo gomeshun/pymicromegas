@@ -19,12 +19,11 @@ These modified `main` files receive arguments like:
 `git clone` to download pymicromegas. Then 
 
 ```python
-from pymicromegas import PyMicrOmegas
+from pymicromegas import MicrOmegas
 
-interf = PyMicrOmegas()
-project = interf.create_newproject("test")
-project.load_mdl_files(["the", "list of", "your", ".mdl file", "paths"])
-project.compile()  # once a project is compiled, you can directly call the compiled project as Project(project_name).
+micromegas = MicrOmegas("test", create=True)
+micromegas.load_mdl_files(["the", "list of", "your", ".mdl file", "paths"])
+micromegas.compile()  # once a project is compiled, you can load it again with MicrOmegas(project_name).
 
 
 args = {
@@ -41,34 +40,41 @@ args = {
 ##########
 flags = ["MASSES_INFO","OMEGA"]
 
-#process = project.run(args,flags)  # return subprocess.CompletedProcess
+#process = micromegas.run(args,flags)  # return subprocess.CompletedProcess
 #print(process.stdout)  # print the output text of micromegas
 
-outout_dict = project(args,flags)  # directly return parsed output (at present, relic density only)
-output_dict = project.calc_omega(args)  # directly return parsed output about relic density with channels
+outout_dict = micromegas(args,flags)  # directly return parsed output (at present, relic density only)
+output_dict = micromegas.calc_omega(args)  # directly return parsed output about relic density with channels
 
 print(output_dict)  
 ```
 
-## Native ctypes interface
+The older `PyMicrOmegas` and `Project` classes are still available for
+backwards compatibility.
 
-`Project.native()` builds a small project-local shared library and loads it with
-`ctypes`.  The generated C file lives inside the micrOMEGAs project directory
-and links against the normal micrOMEGAs libraries, so the bundled upstream C
-sources do not need to be patched.
+## ctypes interface
+
+`MicrOmegas` can also call selected micrOMEGAs functions through a small
+project-local shared library loaded with `ctypes`.  The generated C file lives
+inside the micrOMEGAs project directory and links against the normal micrOMEGAs
+libraries, so the bundled upstream C sources do not need to be patched.
 
 ```python
-native = project.native()
-native.assign_values(args)
-print(native.sort_odd_particles())
-print(native.dark_omega(args))
-print(native.find_val("parname1"))
+micromegas.assign_values(args)
+print(micromegas.sort_odd_particles())
+print(micromegas.dark_omega(args))
+print(micromegas.find_val("parname1"))
 
 # Advanced users can call exported micrOMEGAs symbols directly.
-assign_val = native.function("assignVal")
+assign_val = micromegas.function("assignVal")
 ```
 
 # Class
+
+## `MicrOmegas`
+- standalone wrapper class for micrOMEGAs management and project operations.
+- use `MicrOmegas(project_name)` to load an existing project, or
+  `MicrOmegas(project_name, create=True)` to create and load a new project.
 
 ## `PyMicrOmegas`
 - wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.

@@ -420,6 +420,9 @@ class MicrOmegas:
     def native(self,build=True,force=False):
         return self._require_project().native(build=build,force=force)
 
+    def library(self,build=True,force=False):
+        return self.native(build=build,force=force)
+
     def compile_native(self,force=False):
         return self._require_project().compile_native(force=force)
 
@@ -434,6 +437,30 @@ class MicrOmegas:
 
     def calc_omega(self,dict_parameters,dof_fname=None):
         return self._require_project().calc_omega(dict_parameters,dof_fname=dof_fname)
+
+    def function(self,name,restype=None,argtypes=None):
+        return self.library().function(name,restype=restype,argtypes=argtypes)
+
+    def assign_values(self,parameters):
+        return self.library().assign_values(parameters)
+
+    def sort_odd_particles(self):
+        return self.library().sort_odd_particles()
+
+    def load_heff_geff(self,path):
+        return self.library().load_heff_geff(path)
+
+    def find_val(self,name):
+        return self.library().find_val(name)
+
+    def dark_omega(self,parameters=None,dof_fname=None,fast=1,beps=1.0e-4):
+        return self.library().dark_omega(parameters=parameters,dof_fname=dof_fname,fast=fast,beps=beps)
+
+    def dark_omega2(self,parameters=None,fast=1,beps=1.0e-4):
+        return self.library().dark_omega2(parameters=parameters,fast=fast,beps=beps)
+
+    def v_sigma(self,temperature,beps=1.0e-5,fast=1):
+        return self.library().v_sigma(temperature,beps=beps,fast=fast)
 
     def __call__(self,dict_parameters,flags=None,dof_fname=None):
         return self._require_project()(dict_parameters,flags=flags,dof_fname=dof_fname)
