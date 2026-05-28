@@ -376,7 +376,7 @@ class MicrOmegas:
 
     def _require_project(self):
         if self._project is None:
-            raise RuntimeError("No project is loaded. Call load_project() or create_project() first.")
+            raise RuntimeError("No project is loaded. Call load_project(), create_project(), or initialize with create=True.")
         return self._project
 
     def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):

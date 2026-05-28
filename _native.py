@@ -139,7 +139,7 @@ class NativeMicrOmegas:
                 verbose=True,
             )
             if process.returncode:
-                raise RuntimeError(process.stdout)
+                raise RuntimeError(f"Failed to compile native bridge: {process.stdout}")
         self._cdll = None
         return self
 
