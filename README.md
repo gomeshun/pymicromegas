@@ -83,7 +83,7 @@ raw_lib = mo.lib
 
 ## `PyMicrOmegas`
 - wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.
-- When pymicromegas imported for the first time, it unzip `miccromegas_5.0.8.tgz` and install (make) it
+- When pymicromegas imported for the first time, it unzip `micromegas_5.0.8.tgz` and install (make) it
 
 If you want to modify micromegas, 
 1. clean

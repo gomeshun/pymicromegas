@@ -440,10 +440,10 @@ double pymicromegas_mcdm2(void)
             print(process.stdout)
 
     def load_mdl_files(self, mdl_paths):
-        if type(mdl_paths) not in [list, tuple]:
-            raise RuntimeError("input arguments must be list or tuple.")
+        if not isinstance(mdl_paths, (list, tuple)):
+            raise RuntimeError("mdl_paths must be a list or tuple.")
         if len(mdl_paths) == 0:
-            raise RuntimeError("input argument is empty list or tuple.")
+            raise RuntimeError("mdl_paths cannot be empty.")
         self.models_path.mkdir(parents=True, exist_ok=True)
         for mdl_path in mdl_paths:
             mdl_path = Path(mdl_path)
@@ -572,9 +572,9 @@ double pymicromegas_mcdm2(void)
             raise RuntimeError(f"{dof_fname} is not an existing file")
         err = self.lib.pymicromegas_load_heff_geff(str(dof_path.resolve()).encode("UTF-8"))
         if err < 0:
-            raise RuntimeError("invalid input: wrong format")
+            raise RuntimeError("Failed to load Heff/Geff data: invalid file format")
         if err == 0:
-            raise RuntimeError(f"invalid input: cannot open {dof_fname}")
+            raise RuntimeError(f"Failed to load Heff/Geff data: cannot open file {dof_fname}")
         return err
 
     def dark_omega(self, parameters=None, dof_fname=None, fast=1, beps=1e-4):
