@@ -1,0 +1,5 @@
+qed
+ Particles 
+Full   Name     | P | aP|  number  |spin2|mass|width|color|aux| LaTeX(A)       |  LateX(A+)         |
+photon          |A  |A  |22        |2    |0   |0    |1    |   |A               |A                   |
+electron        |e1 |E1 |11        |1    |me  |0    |1    |   |e1              |E1                  |

@@ -1,0 +1,619 @@
+MSSM, Feynman gauge
+ Constraints 
+ Name  |> Expression                                                                                                                                                                                                                                   <|
+rd     |slhaRead("slha-mssm", 0)
+pi     |4*atan(1)
+CW     |sqrt(1-SW^2) % cos of the Weinberg angle
+S2W    |2*SW*CW
+C2W    |CW^2-SW^2
+MW     |MZ*CW % W mass
+Q      |MZ % scale parameter for reading slha file
+c12    |sqrt(1-s12^2) % parameter  of C-K-M matrix
+c23    |sqrt(1-s23^2) % parameter  of C-K-M matrix
+c13    |sqrt(1-s13^2) % parameter  of C-K-M matrix
+tb     |slhaVal1("hmix", MZ, 2)
+Mb     |slhaVal1("SMINPUTS", MZ, 5)
+Mt     |slhaVal1("SMINPUTS", MZ, 6)
+Ml     |slhaVal1("SMINPUTS", MZ, 7)
+mu     |slhaVal1("hmix", MZ, 1)
+MG1    |slhaVal1("MSOFT", Q, 1)
+MG2    |slhaVal1("MSOFT", Q, 2)
+MG3    |slhaVal1("MSOFT", Q, 3)
+Mq2    |slhaVal1("MSOFT", Q, 42)
+Mq3    |slhaVal1("MSOFT", Q, 43)
+Mu2    |slhaVal1("MSOFT", Q, 45)
+Mu3    |slhaVal1("MSOFT", Q, 46)
+Md2    |slhaVal1("MSOFT", Q, 48)
+Md3    |slhaVal1("MSOFT", Q, 49)
+Ml2    |slhaVal1("MSOFT", Q, 32)
+Ml3    |slhaVal1("MSOFT", Q, 33)
+Mr2    |slhaVal1("MSOFT", Q, 35)
+Mr3    |slhaVal1("MSOFT", Q, 36)
+At     |slhaVal2("Au", Q, 3, 3)
+Ab     |slhaVal2("Ad", Q, 3, 3)
+Al     |slhaVal2("Ae", Q, 3, 3)
+sb     |tb/sqrt(1+tb^2) % Sinus beta
+cb     |sqrt(1-sb^2) % Cosine beta
+t2b    |2*tb/(1-tb^2)
+c2b    |cb^2-sb^2 % cos(2b)
+s2b    |4*sb*cb/2 % sin(2b)
+ls3    |Ml*Al/Sqrt2*EE/SW/MW/cb % Tau soft coupling (Rosiek notation)
+MSne   |slhaVal1("MASS", Q, 1000012)
+MSnm   |slhaVal1("MASS", Q, 1000014)
+MSnl   |slhaVal1("MASS", Q, 1000016)
+MSeL   |slhaVal1("MASS", Q, 1000011)
+MSeR   |slhaVal1("MASS", Q, 2000011)
+MSmL   |slhaVal1("MASS", Q, 1000013)
+MSmR   |slhaVal1("MASS", Q, 2000013)
+MSl1   |slhaVal1("MASS", Q, 1000015)
+MSl2   |slhaVal1("MASS", Q, 2000015)
+Zl33   |slhaVal2("staumix", Q, 1, 1)
+Zl36   |slhaVal2("staumix", Q, 2, 1)
+Zl63   |slhaVal2("staumix", Q, 1, 2)
+Zl66   |slhaVal2("staumix", Q, 2, 2)
+ds3    |Mb*Ab*EE/SW/MW/Sqrt2/cb % d3 soft breaking parameter (RN)
+us3    |-At*Mt*EE/SW/MW/Sqrt2/sb % u3 soft breaking parameter (RN)
+MSuL   |slhaVal1("MASS", Q, 1000002)
+MSuR   |slhaVal1("MASS", Q, 2000002)
+MSdL   |slhaVal1("MASS", Q, 1000001)
+MSdR   |slhaVal1("MASS", Q, 2000001)
+MScL   |slhaVal1("MASS", Q, 1000004)
+MScR   |slhaVal1("MASS", Q, 2000004)
+MSsL   |slhaVal1("MASS", Q, 1000003)
+MSsR   |slhaVal1("MASS", Q, 2000003)
+MSt1   |slhaVal1("MASS", Q, 1000006)
+MSt2   |slhaVal1("MASS", Q, 2000006)
+MSb1   |slhaVal1("MASS", Q, 1000005)
+MSb2   |slhaVal1("MASS", Q, 2000005)
+Zu33   |slhaVal2("stopmix", Q, 1, 1)
+Zu36   |slhaVal2("stopmix", Q, 2, 1)
+Zu63   |slhaVal2("stopmix", Q, 1, 2)
+Zu66   |slhaVal2("stopmix", Q, 2, 2)
+Zd33   |slhaVal2("sbotmix", Q, 1, 1)
+Zd36   |slhaVal2("sbotmix", Q, 2, 1)
+Zd63   |slhaVal2("sbotmix", Q, 1, 2)
+Zd66   |slhaVal2("sbotmix", Q, 2, 2)
+MH3    |slhaVal1("MASS", Q, 36) % Mass of CP-odd Higgs
+Mh     |slhaVal1("MASS", Q, 25)
+MHH    |slhaVal1("MASS", Q, 35)
+MHc    |slhaVal1("MASS", Q, 37)
+alpha  |slhaVal0("ALPHA", Q)
+sa     |sin(alpha)
+ca     |cos(alpha)
+vevv   |2*MW^2*SW^2/EE^2
+s2a    |2*sa*ca % sin(2a)
+c2a    |ca^2-sa^2
+sapb   |sa*cb+ca*sb % sin(a+b)
+samb   |sa*cb-ca*sb % sin(a-b)
+capb   |ca*cb-sa*sb % cos(a+b)
+camb   |ca*cb+sa*sb % cos(a-b)
+MC1    |slhaVal1("MASS", Q, 1000024)
+MC2    |slhaVal1("MASS", Q, 1000037)
+Zp11   |slhaVal2("vmix", Q, 1, 1)
+Zp12   |slhaVal2("vmix", Q, 2, 1)
+Zp21   |slhaVal2("vmix", Q, 1, 2)
+Zp22   |slhaVal2("vmix", Q, 2, 2)
+Zm11   |slhaVal2("umix", Q, 1, 1)
+Zm12   |slhaVal2("umix", Q, 2, 1)
+Zm21   |slhaVal2("umix", Q, 1, 2)
+Zm22   |slhaVal2("umix", Q, 2, 2)
+MNE1   |slhaVal1("MASS", Q, 1000022)
+MNE2   |slhaVal1("MASS", Q, 1000023)
+MNE3   |slhaVal1("MASS", Q, 1000025)
+MNE4   |slhaVal1("MASS", Q, 1000035)
+Zn11   |slhaVal2("Nmix", Q, 1, 1)
+Zn12   |slhaVal2("Nmix", Q, 2, 1)
+Zn13   |slhaVal2("Nmix", Q, 3, 1)
+Zn14   |slhaVal2("Nmix", Q, 4, 1)
+Zn21   |slhaVal2("Nmix", Q, 1, 2)
+Zn22   |slhaVal2("Nmix", Q, 2, 2)
+Zn23   |slhaVal2("Nmix", Q, 3, 2)
+Zn24   |slhaVal2("Nmix", Q, 4, 2)
+Zn31   |slhaVal2("Nmix", Q, 1, 3)
+Zn32   |slhaVal2("Nmix", Q, 2, 3)
+Zn33   |slhaVal2("Nmix", Q, 3, 3)
+Zn34   |slhaVal2("Nmix", Q, 4, 3)
+Zn41   |slhaVal2("Nmix", Q, 1, 4)
+Zn42   |slhaVal2("Nmix", Q, 2, 4)
+Zn43   |slhaVal2("Nmix", Q, 3, 4)
+Zn44   |slhaVal2("Nmix", Q, 4, 4)
+MSG    |MG3 % mass of gluino
+B00000 |2*MW*Zp11*Zu33*cb*sb-Mt*Sqrt2*Zp21*Zu63*cb
+B00001 |2*MW*Zp11*Zu36*cb*sb-Mt*Sqrt2*Zp21*Zu66*cb
+B00002 |2*MW*Zp12*Zu33*cb*sb-Mt*Sqrt2*Zp22*Zu63*cb
+B00003 |2*MW*Zp12*Zu36*cb*sb-Mt*Sqrt2*Zp22*Zu66*cb
+B00004 |3*CW*Mb*Zd63*Zn31-3*CW*MW*Zd33*Zn21*cb+MW*SW*Zd33*Zn11*cb
+B00005 |3*CW*Mb*Zd33*Zn31+2*MW*SW*Zd63*Zn11*cb
+B00006 |3*CW*Mb*Zd66*Zn31-3*CW*MW*Zd36*Zn21*cb+MW*SW*Zd36*Zn11*cb
+B00007 |3*CW*Mb*Zd36*Zn31+2*MW*SW*Zd66*Zn11*cb
+B00008 |3*CW*Mb*Zd63*Zn32-3*CW*MW*Zd33*Zn22*cb+MW*SW*Zd33*Zn12*cb
+B00009 |3*CW*Mb*Zd33*Zn32+2*MW*SW*Zd63*Zn12*cb
+B00010 |3*CW*Mb*Zd66*Zn32-3*CW*MW*Zd36*Zn22*cb+MW*SW*Zd36*Zn12*cb
+B00011 |3*CW*Mb*Zd36*Zn32+2*MW*SW*Zd66*Zn12*cb
+B00012 |3*CW*Mb*Zd63*Zn33-3*CW*MW*Zd33*Zn23*cb+MW*SW*Zd33*Zn13*cb
+B00013 |3*CW*Mb*Zd33*Zn33+2*MW*SW*Zd63*Zn13*cb
+B00014 |3*CW*Mb*Zd66*Zn33-3*CW*MW*Zd36*Zn23*cb+MW*SW*Zd36*Zn13*cb
+B00015 |3*CW*Mb*Zd36*Zn33+2*MW*SW*Zd66*Zn13*cb
+B00016 |3*CW*Mb*Zd63*Zn34-3*CW*MW*Zd33*Zn24*cb+MW*SW*Zd33*Zn14*cb
+B00017 |3*CW*Mb*Zd33*Zn34+2*MW*SW*Zd63*Zn14*cb
+B00018 |3*CW*Mb*Zd66*Zn34-3*CW*MW*Zd36*Zn24*cb+MW*SW*Zd36*Zn14*cb
+B00019 |3*CW*Mb*Zd36*Zn34+2*MW*SW*Zd66*Zn14*cb
+B00020 |3*CW*Zn21+SW*Zn11
+B00021 |3*CW*Zn22+SW*Zn12
+B00022 |3*CW*Zn23+SW*Zn13
+B00023 |3*CW*Zn24+SW*Zn14
+B00024 |3*CW*Zn21-SW*Zn11
+B00025 |3*CW*Zn22-SW*Zn12
+B00026 |3*CW*Zn23-SW*Zn13
+B00027 |3*CW*Zn24-SW*Zn14
+B00028 |CW*Zn21+SW*Zn11
+B00029 |CW*Zn22+SW*Zn12
+B00030 |CW*Zn23+SW*Zn13
+B00031 |CW*Zn24+SW*Zn14
+B00032 |(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2-CW^2*EE^2*MH3^2*samb^2*sapb-MW^2*S2W^2*dlh5*samb^2*sapb+MW^2*S2W^2*ca*cb*dlh6*samb^2+MW^2*S2W^2*dlh7*sa*samb^2*sb
+B00033 |2*CW^2*EE^2*MHH^2*s2a+CW^2*EE^2*Mh^2*s2a-2*MW^2*S2W^2*cb^2*dlh6-2*MW^2*S2W^2*dlh7*sb^2-6*CW^2*EE^2*MH3^2*ca*sa
+B00034 |B00033-2*CW^2*EE^2*MH3^2*cb*sb-6*MW^2*S2W^2*ca*dlh5*sa-2*MW^2*S2W^2*cb*dlh5*sb+6*MW^2*S2W^2*ca*camb*cb*dlh6+6*MW^2*S2W^2*camb*dlh7*sa*sb
+B00035 |(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*vevv-MW^2*S2W^2*dlh5*sapb*vevv-MW^4*S2W^2*camb*cb*sb-CW^2*EE^2*MH3^2*c2b*samb*vevv-MH3^2*MW^2*S2W^2*camb*cb*sb
+B00036 |B00035+MHc^2*MW^2*S2W^2*camb*cb*sb+2*CW^2*EE^2*MW^2*camb*cb*sb*vevv+4*CW^2*MW^2*SW^2*ca*cb*dlh6*vevv+4*CW^2*MW^2*SW^2*dlh7*sa*sb*vevv
+B00037 |MW^4*S2W^2+MH3^2*MW^2*S2W^2-MHc^2*MW^2*S2W^2-2*CW^2*EE^2*MH3^2*vevv+2*CW^2*EE^2*MHH^2*vevv
+B00038 |B00037-2*CW^2*EE^2*MW^2*vevv
+B00039 |(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2-MW^2*S2W^2*dlh5*sapb-CW^2*EE^2*MH3^2*c2b*samb+4*CW^2*MW^2*SW^2*ca*cb*dlh6+4*CW^2*MW^2*SW^2*dlh7*sa*sb
+B00040 |MH3^2-MHH^2
+B00041 |CW^2*EE^2*MHH^2*s2a+2*CW^2*EE^2*Mh^2*s2a-4*MW^2*S2W^2*cb^2*dlh6-4*MW^2*S2W^2*dlh7*sb^2-6*CW^2*EE^2*MH3^2*ca*sa
+B00042 |B00041+2*CW^2*EE^2*MH3^2*cb*sb-6*MW^2*S2W^2*ca*dlh5*sa+2*MW^2*S2W^2*cb*dlh5*sb+6*MW^2*S2W^2*ca*camb*cb*dlh6+6*MW^2*S2W^2*camb*dlh7*sa*sb
+B00043 |6*CW^2*EE*Mb^2*ca-3*EE*MW^2*Zd33^2*capb*cb+2*EE*MW^2*SW^2*Zd33^2*capb*cb-2*EE*MW^2*SW^2*Zd63^2*capb*cb-6*CW^2*EE*Mb*Zd33*Zd63*mu*sa
+B00044 |B00043+6*CW^2*MW*SW*Sqrt2*Zd33*Zd63*ca*cb*ds3
+B00045 |3*EE*MW^2*Zd33*Zd36*capb*cb+3*CW^2*EE*Mb*Zd33*Zd66*mu*sa+3*CW^2*EE*Mb*Zd36*Zd63*mu*sa-2*EE*MW^2*SW^2*Zd33*Zd36*capb*cb+2*EE*MW^2*SW^2*Zd63*Zd66*capb*cb
+B00046 |B00045-3*CW^2*MW*SW*Sqrt2*Zd33*Zd66*ca*cb*ds3-3*CW^2*MW*SW*Sqrt2*Zd36*Zd63*ca*cb*ds3
+B00047 |6*CW^2*EE*Mb^2*ca-3*EE*MW^2*Zd36^2*capb*cb+2*EE*MW^2*SW^2*Zd36^2*capb*cb-2*EE*MW^2*SW^2*Zd66^2*capb*cb-6*CW^2*EE*Mb*Zd36*Zd66*mu*sa
+B00048 |B00047+6*CW^2*MW*SW*Sqrt2*Zd36*Zd66*ca*cb*ds3
+B00049 |3-4*SW^2
+B00050 |3-2*SW^2
+B00051 |2*CW^2*EE*Ml^2*ca-C2W*EE*MW^2*Zl33^2*capb*cb-2*EE*MW^2*SW^2*Zl63^2*capb*cb-2*CW^2*EE*Ml*Zl33*Zl63*mu*sa+2*CW^2*MW*SW*Sqrt2*Zl33*Zl63*ca*cb*ls3
+B00052 |C2W*EE*MW^2*Zl33*Zl36*capb*cb+CW^2*EE*Ml*Zl33*Zl66*mu*sa+CW^2*EE*Ml*Zl36*Zl63*mu*sa+2*EE*MW^2*SW^2*Zl63*Zl66*capb*cb-CW^2*MW*SW*Sqrt2*Zl33*Zl66*ca*cb*ls3
+B00053 |B00052-CW^2*MW*SW*Sqrt2*Zl36*Zl63*ca*cb*ls3
+B00054 |2*CW^2*EE*Ml^2*ca-C2W*EE*MW^2*Zl36^2*capb*cb-2*EE*MW^2*SW^2*Zl66^2*capb*cb-2*CW^2*EE*Ml*Zl36*Zl66*mu*sa+2*CW^2*MW*SW*Sqrt2*Zl36*Zl66*ca*cb*ls3
+B00055 |6*CW^2*EE*Mt^2*sa+3*EE*MW^2*Zu33^2*capb*sb-4*EE*MW^2*SW^2*Zu33^2*capb*sb+4*EE*MW^2*SW^2*Zu63^2*capb*sb-6*CW^2*EE*Mt*Zu33*Zu63*ca*mu
+B00056 |B00055-6*CW^2*MW*SW*Sqrt2*Zu33*Zu63*sa*sb*us3
+B00057 |3*EE*MW^2*Zu33*Zu36*capb*sb-3*CW^2*EE*Mt*Zu33*Zu66*ca*mu-3*CW^2*EE*Mt*Zu36*Zu63*ca*mu-4*EE*MW^2*SW^2*Zu33*Zu36*capb*sb+4*EE*MW^2*SW^2*Zu63*Zu66*capb*sb
+B00058 |B00057-3*CW^2*MW*SW*Sqrt2*Zu33*Zu66*sa*sb*us3-3*CW^2*MW*SW*Sqrt2*Zu36*Zu63*sa*sb*us3
+B00059 |6*CW^2*EE*Mt^2*sa+3*EE*MW^2*Zu36^2*capb*sb-4*EE*MW^2*SW^2*Zu36^2*capb*sb+4*EE*MW^2*SW^2*Zu66^2*capb*sb-6*CW^2*EE*Mt*Zu36*Zu66*ca*mu
+B00060 |B00059-6*CW^2*MW*SW*Sqrt2*Zu36*Zu66*sa*sb*us3
+B00061 |(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*vevv-MW^2*S2W^2*capb*dlh5*vevv+MW^4*S2W^2*cb*samb*sb-CW^2*EE^2*MH3^2*c2b*camb*vevv+MH3^2*MW^2*S2W^2*cb*samb*sb
+B00062 |B00061-MHc^2*MW^2*S2W^2*cb*samb*sb-2*CW^2*EE^2*MW^2*cb*samb*sb*vevv+4*CW^2*MW^2*SW^2*ca*dlh7*sb*vevv-4*CW^2*MW^2*SW^2*cb*dlh6*sa*vevv
+B00063 |EE^2*vevv-2*MH3^2*SW^2+2*MHc^2*SW^2-2*MW^2*SW^2
+B00064 |MW^4*S2W^2+MH3^2*MW^2*S2W^2-MHc^2*MW^2*S2W^2-2*CW^2*EE^2*MH3^2*vevv-2*CW^2*EE^2*MW^2*vevv
+B00065 |B00064+2*CW^2*EE^2*Mh^2*vevv
+B00066 |EE*Ml^2*Sqrt2*Zl33*sb-2*EE*MW^2*Sqrt2*Zl33*cb^2*sb+EE*Ml*Sqrt2*Zl63*cb*mu+2*MW*SW*Zl63*cb*ls3*sb
+B00067 |EE*Ml^2*Sqrt2*Zl36*sb-2*EE*MW^2*Sqrt2*Zl36*cb^2*sb+EE*Ml*Sqrt2*Zl66*cb*mu+2*MW*SW*Zl66*cb*ls3*sb
+B00068 |EE*Mb*Mt*Sqrt2*Zd63*Zu63+EE*Mb^2*Sqrt2*Zd33*Zu33*sb^2+EE*Mt^2*Sqrt2*Zd33*Zu33*cb^2-2*EE*MW^2*Sqrt2*Zd33*Zu33*cb^2*sb^2-2*MW*SW*Zd33*Zu63*cb^2*sb*us3
+B00069 |B00068+2*MW*SW*Zd63*Zu33*cb*ds3*sb^2+EE*Mb*Sqrt2*Zd63*Zu33*cb*mu*sb+EE*Mt*Sqrt2*Zd33*Zu63*cb*mu*sb
+B00070 |EE*Mb*Mt*Sqrt2*Zd66*Zu63+EE*Mb^2*Sqrt2*Zd36*Zu33*sb^2+EE*Mt^2*Sqrt2*Zd36*Zu33*cb^2-2*EE*MW^2*Sqrt2*Zd36*Zu33*cb^2*sb^2-2*MW*SW*Zd36*Zu63*cb^2*sb*us3
+B00071 |B00070+2*MW*SW*Zd66*Zu33*cb*ds3*sb^2+EE*Mb*Sqrt2*Zd66*Zu33*cb*mu*sb+EE*Mt*Sqrt2*Zd36*Zu63*cb*mu*sb
+B00072 |EE*Mb*Mt*Sqrt2*Zd63*Zu66+EE*Mb^2*Sqrt2*Zd33*Zu36*sb^2+EE*Mt^2*Sqrt2*Zd33*Zu36*cb^2-2*EE*MW^2*Sqrt2*Zd33*Zu36*cb^2*sb^2-2*MW*SW*Zd33*Zu66*cb^2*sb*us3
+B00073 |B00072+2*MW*SW*Zd63*Zu36*cb*ds3*sb^2+EE*Mb*Sqrt2*Zd63*Zu36*cb*mu*sb+EE*Mt*Sqrt2*Zd33*Zu66*cb*mu*sb
+B00074 |EE*Mb*Mt*Sqrt2*Zd66*Zu66+EE*Mb^2*Sqrt2*Zd36*Zu36*sb^2+EE*Mt^2*Sqrt2*Zd36*Zu36*cb^2-2*EE*MW^2*Sqrt2*Zd36*Zu36*cb^2*sb^2-2*MW*SW*Zd36*Zu66*cb^2*sb*us3
+B00075 |B00074+2*MW*SW*Zd66*Zu36*cb*ds3*sb^2+EE*Mb*Sqrt2*Zd66*Zu36*cb*mu*sb+EE*Mt*Sqrt2*Zd36*Zu66*cb*mu*sb
+B00076 |(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2-MW^2*S2W^2*capb*dlh5-CW^2*EE^2*MH3^2*c2b*camb+4*CW^2*MW^2*SW^2*ca*dlh7*sb-4*CW^2*MW^2*SW^2*cb*dlh6*sa
+B00077 |MH3^2-Mh^2
+B00078 |EE*Mb*Zd33*Zd66*mu-EE*Mb*Zd36*Zd63*mu+MW*SW*Sqrt2*Zd33*Zd66*ds3*sb-MW*SW*Sqrt2*Zd36*Zd63*ds3*sb
+B00079 |EE*Ml*Zl33*Zl66*mu-EE*Ml*Zl36*Zl63*mu+MW*SW*Sqrt2*Zl33*Zl66*ls3*sb-MW*SW*Sqrt2*Zl36*Zl63*ls3*sb
+B00080 |EE*Mt*Zu33*Zu66*mu-EE*Mt*Zu36*Zu63*mu-MW*SW*Sqrt2*Zu33*Zu66*cb*us3+MW*SW*Sqrt2*Zu36*Zu63*cb*us3
+B00081 |CW*Ml*Zl63*Zn31-CW*MW*Zl33*Zn21*cb-MW*SW*Zl33*Zn11*cb
+B00082 |CW*Ml*Zl33*Zn31+2*MW*SW*Zl63*Zn11*cb
+B00083 |CW*Ml*Zl66*Zn31-CW*MW*Zl36*Zn21*cb-MW*SW*Zl36*Zn11*cb
+B00084 |CW*Ml*Zl36*Zn31+2*MW*SW*Zl66*Zn11*cb
+B00085 |CW*Ml*Zl63*Zn32-CW*MW*Zl33*Zn22*cb-MW*SW*Zl33*Zn12*cb
+B00086 |CW*Ml*Zl33*Zn32+2*MW*SW*Zl63*Zn12*cb
+B00087 |CW*Ml*Zl66*Zn32-CW*MW*Zl36*Zn22*cb-MW*SW*Zl36*Zn12*cb
+B00088 |CW*Ml*Zl36*Zn32+2*MW*SW*Zl66*Zn12*cb
+B00089 |CW*Ml*Zl63*Zn33-CW*MW*Zl33*Zn23*cb-MW*SW*Zl33*Zn13*cb
+B00090 |CW*Ml*Zl33*Zn33+2*MW*SW*Zl63*Zn13*cb
+B00091 |CW*Ml*Zl66*Zn33-CW*MW*Zl36*Zn23*cb-MW*SW*Zl36*Zn13*cb
+B00092 |CW*Ml*Zl36*Zn33+2*MW*SW*Zl66*Zn13*cb
+B00093 |CW*Ml*Zl63*Zn34-CW*MW*Zl33*Zn24*cb-MW*SW*Zl33*Zn14*cb
+B00094 |CW*Ml*Zl33*Zn34+2*MW*SW*Zl63*Zn14*cb
+B00095 |CW*Ml*Zl66*Zn34-CW*MW*Zl36*Zn24*cb-MW*SW*Zl36*Zn14*cb
+B00096 |CW*Ml*Zl36*Zn34+2*MW*SW*Zl66*Zn14*cb
+B00097 |CW*Zn21-SW*Zn11
+B00098 |CW*Zn22-SW*Zn12
+B00099 |CW*Zn23-SW*Zn13
+B00100 |CW*Zn24-SW*Zn14
+B00101 |2*MW*Zl33*Zm11*cb-Ml*Sqrt2*Zl63*Zm21
+B00102 |2*MW*Zl36*Zm11*cb-Ml*Sqrt2*Zl66*Zm21
+B00103 |2*MW*Zl33*Zm12*cb-Ml*Sqrt2*Zl63*Zm22
+B00104 |2*MW*Zl36*Zm12*cb-Ml*Sqrt2*Zl66*Zm22
+B00105 |2*MW*Zd33*Zm11*cb*sb-Mb*Sqrt2*Zd63*Zm21*sb
+B00106 |2*MW*Zd36*Zm11*cb*sb-Mb*Sqrt2*Zd66*Zm21*sb
+B00107 |2*MW*Zd33*Zm12*cb*sb-Mb*Sqrt2*Zd63*Zm22*sb
+B00108 |2*MW*Zd36*Zm12*cb*sb-Mb*Sqrt2*Zd66*Zm22*sb
+B00109 |3*CW*Mt*Zn41*Zu63+3*CW*MW*Zn21*Zu33*sb+MW*SW*Zn11*Zu33*sb
+B00110 |3*CW*Mt*Zn41*Zu33-4*MW*SW*Zn11*Zu63*sb
+B00111 |3*CW*Mt*Zn41*Zu66+3*CW*MW*Zn21*Zu36*sb+MW*SW*Zn11*Zu36*sb
+B00112 |3*CW*Mt*Zn41*Zu36-4*MW*SW*Zn11*Zu66*sb
+B00113 |3*CW*Mt*Zn42*Zu63+3*CW*MW*Zn22*Zu33*sb+MW*SW*Zn12*Zu33*sb
+B00114 |3*CW*Mt*Zn42*Zu33-4*MW*SW*Zn12*Zu63*sb
+B00115 |3*CW*Mt*Zn42*Zu66+3*CW*MW*Zn22*Zu36*sb+MW*SW*Zn12*Zu36*sb
+B00116 |3*CW*Mt*Zn42*Zu36-4*MW*SW*Zn12*Zu66*sb
+B00117 |3*CW*Mt*Zn43*Zu63+3*CW*MW*Zn23*Zu33*sb+MW*SW*Zn13*Zu33*sb
+B00118 |3*CW*Mt*Zn43*Zu33-4*MW*SW*Zn13*Zu63*sb
+B00119 |3*CW*Mt*Zn43*Zu66+3*CW*MW*Zn23*Zu36*sb+MW*SW*Zn13*Zu36*sb
+B00120 |3*CW*Mt*Zn43*Zu36-4*MW*SW*Zn13*Zu66*sb
+B00121 |3*CW*Mt*Zn44*Zu63+3*CW*MW*Zn24*Zu33*sb+MW*SW*Zn14*Zu33*sb
+B00122 |3*CW*Mt*Zn44*Zu33-4*MW*SW*Zn14*Zu63*sb
+B00123 |3*CW*Mt*Zn44*Zu66+3*CW*MW*Zn24*Zu36*sb+MW*SW*Zn14*Zu36*sb
+B00124 |3*CW*Mt*Zn44*Zu36-4*MW*SW*Zn14*Zu66*sb
+B00125 |EE*Ml^2*Sqrt2*Zl33*cb+2*MW*SW*Zl63*cb^2*ls3-EE*MW^2*Sqrt2*Zl33*c2b*cb-EE*Ml*Sqrt2*Zl63*mu*sb
+B00126 |EE*Ml^2*Sqrt2*Zl36*cb+2*MW*SW*Zl66*cb^2*ls3-EE*MW^2*Sqrt2*Zl36*c2b*cb-EE*Ml*Sqrt2*Zl66*mu*sb
+B00127 |EE*Mb*Sqrt2*Zd63*Zu33*mu*sb^2-EE*Mb^2*Sqrt2*Zd33*Zu33*cb*sb-EE*Mt*Sqrt2*Zd33*Zu63*cb^2*mu+EE*Mt^2*Sqrt2*Zd33*Zu33*cb*sb-2*MW*SW*Zd33*Zu63*cb*sb^2*us3
+B00128 |B00127-2*MW*SW*Zd63*Zu33*cb^2*ds3*sb+EE*MW^2*Sqrt2*Zd33*Zu33*c2b*cb*sb
+B00129 |EE*Mb*Sqrt2*Zd66*Zu33*mu*sb^2-EE*Mb^2*Sqrt2*Zd36*Zu33*cb*sb-EE*Mt*Sqrt2*Zd36*Zu63*cb^2*mu+EE*Mt^2*Sqrt2*Zd36*Zu33*cb*sb-2*MW*SW*Zd36*Zu63*cb*sb^2*us3
+B00130 |B00129-2*MW*SW*Zd66*Zu33*cb^2*ds3*sb+EE*MW^2*Sqrt2*Zd36*Zu33*c2b*cb*sb
+B00131 |EE*Mb*Sqrt2*Zd63*Zu36*mu*sb^2-EE*Mb^2*Sqrt2*Zd33*Zu36*cb*sb-EE*Mt*Sqrt2*Zd33*Zu66*cb^2*mu+EE*Mt^2*Sqrt2*Zd33*Zu36*cb*sb-2*MW*SW*Zd33*Zu66*cb*sb^2*us3
+B00132 |B00131-2*MW*SW*Zd63*Zu36*cb^2*ds3*sb+EE*MW^2*Sqrt2*Zd33*Zu36*c2b*cb*sb
+B00133 |EE*Mb*Sqrt2*Zd66*Zu36*mu*sb^2-EE*Mb^2*Sqrt2*Zd36*Zu36*cb*sb-EE*Mt*Sqrt2*Zd36*Zu66*cb^2*mu+EE*Mt^2*Sqrt2*Zd36*Zu36*cb*sb-2*MW*SW*Zd36*Zu66*cb*sb^2*us3
+B00134 |B00133-2*MW*SW*Zd66*Zu36*cb^2*ds3*sb+EE*MW^2*Sqrt2*Zd36*Zu36*c2b*cb*sb
+B00135 |2*SW^2-3*Zd33^2
+B00136 |2*SW^2-3*Zd36^2
+B00137 |2*SW^2-Zl33^2
+B00138 |2*SW^2-Zl36^2
+B00139 |4*SW^2-3*Zu33^2
+B00140 |4*SW^2-3*Zu36^2
+B00141 |EE*Mb*Zd33*Zd66*mu*sb-EE*Mb*Zd36*Zd63*mu*sb-MW*SW*Sqrt2*Zd33*Zd66*cb^2*ds3+MW*SW*Sqrt2*Zd36*Zd63*cb^2*ds3
+B00142 |EE*Ml*Zl33*Zl66*mu*sb-EE*Ml*Zl36*Zl63*mu*sb-MW*SW*Sqrt2*Zl33*Zl66*cb^2*ls3+MW*SW*Sqrt2*Zl36*Zl63*cb^2*ls3
+B00143 |EE*Mt*Zu33*Zu66*cb*mu-EE*Mt*Zu36*Zu63*cb*mu+MW*SW*Sqrt2*Zu33*Zu66*sb^2*us3-MW*SW*Sqrt2*Zu36*Zu63*sb^2*us3
+B00144 |(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2-CW^2*EE^2*MH3^2*camb^2*capb-MW^2*S2W^2*camb^2*capb*dlh5+MW^2*S2W^2*ca*camb^2*dlh7*sb-MW^2*S2W^2*camb^2*cb*dlh6*sa
+B00145 |6*CW^2*EE*Mb^2*sa-3*EE*MW^2*Zd33^2*cb*sapb+2*EE*MW^2*SW^2*Zd33^2*cb*sapb-2*EE*MW^2*SW^2*Zd63^2*cb*sapb+6*CW^2*EE*Mb*Zd33*Zd63*ca*mu
+B00146 |B00145+6*CW^2*MW*SW*Sqrt2*Zd33*Zd63*cb*ds3*sa
+B00147 |3*EE*MW^2*Zd33*Zd36*cb*sapb-3*CW^2*EE*Mb*Zd33*Zd66*ca*mu-3*CW^2*EE*Mb*Zd36*Zd63*ca*mu-2*EE*MW^2*SW^2*Zd33*Zd36*cb*sapb+2*EE*MW^2*SW^2*Zd63*Zd66*cb*sapb
+B00148 |B00147-3*CW^2*MW*SW*Sqrt2*Zd33*Zd66*cb*ds3*sa-3*CW^2*MW*SW*Sqrt2*Zd36*Zd63*cb*ds3*sa
+B00149 |6*CW^2*EE*Mb^2*sa-3*EE*MW^2*Zd36^2*cb*sapb+2*EE*MW^2*SW^2*Zd36^2*cb*sapb-2*EE*MW^2*SW^2*Zd66^2*cb*sapb+6*CW^2*EE*Mb*Zd36*Zd66*ca*mu
+B00150 |B00149+6*CW^2*MW*SW*Sqrt2*Zd36*Zd66*cb*ds3*sa
+B00151 |2*CW^2*EE*Ml^2*sa-C2W*EE*MW^2*Zl33^2*cb*sapb-2*EE*MW^2*SW^2*Zl63^2*cb*sapb+2*CW^2*EE*Ml*Zl33*Zl63*ca*mu+2*CW^2*MW*SW*Sqrt2*Zl33*Zl63*cb*ls3*sa
+B00152 |C2W*EE*MW^2*Zl33*Zl36*cb*sapb-CW^2*EE*Ml*Zl33*Zl66*ca*mu-CW^2*EE*Ml*Zl36*Zl63*ca*mu+2*EE*MW^2*SW^2*Zl63*Zl66*cb*sapb-CW^2*MW*SW*Sqrt2*Zl33*Zl66*cb*ls3*sa
+B00153 |B00152-CW^2*MW*SW*Sqrt2*Zl36*Zl63*cb*ls3*sa
+B00154 |2*CW^2*EE*Ml^2*sa-C2W*EE*MW^2*Zl36^2*cb*sapb-2*EE*MW^2*SW^2*Zl66^2*cb*sapb+2*CW^2*EE*Ml*Zl36*Zl66*ca*mu+2*CW^2*MW*SW*Sqrt2*Zl36*Zl66*cb*ls3*sa
+B00155 |6*CW^2*EE*Mt^2*ca-3*EE*MW^2*Zu33^2*sapb*sb+4*EE*MW^2*SW^2*Zu33^2*sapb*sb-4*EE*MW^2*SW^2*Zu63^2*sapb*sb+6*CW^2*EE*Mt*Zu33*Zu63*mu*sa
+B00156 |B00155-6*CW^2*MW*SW*Sqrt2*Zu33*Zu63*ca*sb*us3
+B00157 |3*EE*MW^2*Zu33*Zu36*sapb*sb-3*CW^2*EE*Mt*Zu33*Zu66*mu*sa-3*CW^2*EE*Mt*Zu36*Zu63*mu*sa-4*EE*MW^2*SW^2*Zu33*Zu36*sapb*sb+4*EE*MW^2*SW^2*Zu63*Zu66*sapb*sb
+B00158 |B00157+3*CW^2*MW*SW*Sqrt2*Zu33*Zu66*ca*sb*us3+3*CW^2*MW*SW*Sqrt2*Zu36*Zu63*ca*sb*us3
+B00159 |6*CW^2*EE*Mt^2*ca-3*EE*MW^2*Zu36^2*sapb*sb+4*EE*MW^2*SW^2*Zu36^2*sapb*sb-4*EE*MW^2*SW^2*Zu66^2*sapb*sb+6*CW^2*EE*Mt*Zu36*Zu66*mu*sa
+B00160 |B00159-6*CW^2*MW*SW*Sqrt2*Zu36*Zu66*ca*sb*us3
+B00161 |Zd33^2-Zd63^2
+B00162 |Zd33*Zd36-Zd63*Zd66
+B00163 |Zd36^2-Zd66^2
+B00164 |Zu33^2-Zu63^2
+B00165 |Zu33*Zu36-Zu63*Zu66
+B00166 |Zu36^2-Zu66^2
+B00167 |Zd33^2+2*Zd63^2
+B00168 |Zd33*Zd36+2*Zd63*Zd66
+B00169 |Zd36^2+2*Zd66^2
+B00170 |Zl33^2-2*Zl63^2
+B00171 |Zl33*Zl36-2*Zl63*Zl66
+B00172 |Zl36^2-2*Zl66^2
+B00173 |Zu33^2-4*Zu63^2
+B00174 |Zu33*Zu36-4*Zu63*Zu66
+B00175 |Zu36^2-4*Zu66^2
+B00176 |2*CW*Zm11*Zn31*sb-CW*Sqrt2*Zm21*Zn21*sb-SW*Sqrt2*Zm21*Zn11*sb
+B00177 |2*CW*Zn41*Zp11*cb+CW*Sqrt2*Zn21*Zp21*cb+SW*Sqrt2*Zn11*Zp21*cb
+B00178 |2*Zm11*Zn21+Sqrt2*Zm21*Zn31
+B00179 |2*Zn21*Zp11-Sqrt2*Zn41*Zp21
+B00180 |2*CW*Zm11*Zn31*cb-CW*Sqrt2*Zm21*Zn21*cb-SW*Sqrt2*Zm21*Zn11*cb
+B00181 |2*CW*Zn41*Zp11*sb+CW*Sqrt2*Zn21*Zp21*sb+SW*Sqrt2*Zn11*Zp21*sb
+B00182 |2*CW*Zm11*Zn32*sb-CW*Sqrt2*Zm21*Zn22*sb-SW*Sqrt2*Zm21*Zn12*sb
+B00183 |2*CW*Zn42*Zp11*cb+CW*Sqrt2*Zn22*Zp21*cb+SW*Sqrt2*Zn12*Zp21*cb
+B00184 |2*Zm11*Zn22+Sqrt2*Zm21*Zn32
+B00185 |2*Zn22*Zp11-Sqrt2*Zn42*Zp21
+B00186 |2*CW*Zm11*Zn32*cb-CW*Sqrt2*Zm21*Zn22*cb-SW*Sqrt2*Zm21*Zn12*cb
+B00187 |2*CW*Zn42*Zp11*sb+CW*Sqrt2*Zn22*Zp21*sb+SW*Sqrt2*Zn12*Zp21*sb
+B00188 |2*CW*Zm11*Zn33*sb-CW*Sqrt2*Zm21*Zn23*sb-SW*Sqrt2*Zm21*Zn13*sb
+B00189 |2*CW*Zn43*Zp11*cb+CW*Sqrt2*Zn23*Zp21*cb+SW*Sqrt2*Zn13*Zp21*cb
+B00190 |2*Zm11*Zn23+Sqrt2*Zm21*Zn33
+B00191 |2*Zn23*Zp11-Sqrt2*Zn43*Zp21
+B00192 |2*CW*Zm11*Zn33*cb-CW*Sqrt2*Zm21*Zn23*cb-SW*Sqrt2*Zm21*Zn13*cb
+B00193 |2*CW*Zn43*Zp11*sb+CW*Sqrt2*Zn23*Zp21*sb+SW*Sqrt2*Zn13*Zp21*sb
+B00194 |2*CW*Zm11*Zn34*sb-CW*Sqrt2*Zm21*Zn24*sb-SW*Sqrt2*Zm21*Zn14*sb
+B00195 |2*CW*Zn44*Zp11*cb+CW*Sqrt2*Zn24*Zp21*cb+SW*Sqrt2*Zn14*Zp21*cb
+B00196 |2*Zm11*Zn24+Sqrt2*Zm21*Zn34
+B00197 |2*Zn24*Zp11-Sqrt2*Zn44*Zp21
+B00198 |2*CW*Zm11*Zn34*cb-CW*Sqrt2*Zm21*Zn24*cb-SW*Sqrt2*Zm21*Zn14*cb
+B00199 |2*CW*Zn44*Zp11*sb+CW*Sqrt2*Zn24*Zp21*sb+SW*Sqrt2*Zn14*Zp21*sb
+B00200 |Zm11*Zp21*sa+Zm21*Zp11*ca
+B00201 |Zm11*Zp21*cb+Zm21*Zp11*sb
+B00202 |2*Zm11^2+Zm21^2
+B00203 |2*Zp11^2+Zp21^2
+B00204 |Zm11*Zp21*sb-Zm21*Zp11*cb
+B00205 |Zm11*Zp21*ca-Zm21*Zp11*sa
+B00206 |Zm11*Zp22*sa+Zm21*Zp12*ca
+B00207 |Zm12*Zp21*sa+Zm22*Zp11*ca
+B00208 |Zm11*Zp22*cb+Zm21*Zp12*sb
+B00209 |Zm12*Zp21*cb+Zm22*Zp11*sb
+B00210 |2*Zm11*Zm12+Zm21*Zm22
+B00211 |2*Zp11*Zp12+Zp21*Zp22
+B00212 |Zm11*Zp22*sb-Zm21*Zp12*cb
+B00213 |Zm12*Zp21*sb-Zm22*Zp11*cb
+B00214 |Zm11*Zp22*ca-Zm21*Zp12*sa
+B00215 |Zm12*Zp21*ca-Zm22*Zp11*sa
+B00216 |2*CW*Zm12*Zn31*sb-CW*Sqrt2*Zm22*Zn21*sb-SW*Sqrt2*Zm22*Zn11*sb
+B00217 |2*CW*Zn41*Zp12*cb+CW*Sqrt2*Zn21*Zp22*cb+SW*Sqrt2*Zn11*Zp22*cb
+B00218 |2*Zm12*Zn21+Sqrt2*Zm22*Zn31
+B00219 |2*Zn21*Zp12-Sqrt2*Zn41*Zp22
+B00220 |2*CW*Zm12*Zn31*cb-CW*Sqrt2*Zm22*Zn21*cb-SW*Sqrt2*Zm22*Zn11*cb
+B00221 |2*CW*Zn41*Zp12*sb+CW*Sqrt2*Zn21*Zp22*sb+SW*Sqrt2*Zn11*Zp22*sb
+B00222 |2*CW*Zm12*Zn32*sb-CW*Sqrt2*Zm22*Zn22*sb-SW*Sqrt2*Zm22*Zn12*sb
+B00223 |2*CW*Zn42*Zp12*cb+CW*Sqrt2*Zn22*Zp22*cb+SW*Sqrt2*Zn12*Zp22*cb
+B00224 |2*Zm12*Zn22+Sqrt2*Zm22*Zn32
+B00225 |2*Zn22*Zp12-Sqrt2*Zn42*Zp22
+B00226 |2*CW*Zm12*Zn32*cb-CW*Sqrt2*Zm22*Zn22*cb-SW*Sqrt2*Zm22*Zn12*cb
+B00227 |2*CW*Zn42*Zp12*sb+CW*Sqrt2*Zn22*Zp22*sb+SW*Sqrt2*Zn12*Zp22*sb
+B00228 |2*CW*Zm12*Zn33*sb-CW*Sqrt2*Zm22*Zn23*sb-SW*Sqrt2*Zm22*Zn13*sb
+B00229 |2*CW*Zn43*Zp12*cb+CW*Sqrt2*Zn23*Zp22*cb+SW*Sqrt2*Zn13*Zp22*cb
+B00230 |2*Zm12*Zn23+Sqrt2*Zm22*Zn33
+B00231 |2*Zn23*Zp12-Sqrt2*Zn43*Zp22
+B00232 |2*CW*Zm12*Zn33*cb-CW*Sqrt2*Zm22*Zn23*cb-SW*Sqrt2*Zm22*Zn13*cb
+B00233 |2*CW*Zn43*Zp12*sb+CW*Sqrt2*Zn23*Zp22*sb+SW*Sqrt2*Zn13*Zp22*sb
+B00234 |2*CW*Zm12*Zn34*sb-CW*Sqrt2*Zm22*Zn24*sb-SW*Sqrt2*Zm22*Zn14*sb
+B00235 |2*CW*Zn44*Zp12*cb+CW*Sqrt2*Zn24*Zp22*cb+SW*Sqrt2*Zn14*Zp22*cb
+B00236 |2*Zm12*Zn24+Sqrt2*Zm22*Zn34
+B00237 |2*Zn24*Zp12-Sqrt2*Zn44*Zp22
+B00238 |2*CW*Zm12*Zn34*cb-CW*Sqrt2*Zm22*Zn24*cb-SW*Sqrt2*Zm22*Zn14*cb
+B00239 |2*CW*Zn44*Zp12*sb+CW*Sqrt2*Zn24*Zp22*sb+SW*Sqrt2*Zn14*Zp22*sb
+B00240 |Zm12*Zp22*sa+Zm22*Zp12*ca
+B00241 |Zm12*Zp22*cb+Zm22*Zp12*sb
+B00242 |2*Zm12^2+Zm22^2
+B00243 |2*Zp12^2+Zp22^2
+B00244 |Zm12*Zp22*sb-Zm22*Zp12*cb
+B00245 |Zm12*Zp22*ca-Zm22*Zp12*sa
+B00246 |CW*Zn21*Zn31*ca-CW*Zn21*Zn41*sa-SW*Zn11*Zn31*ca+SW*Zn11*Zn41*sa
+B00247 |CW*Zn21*Zn31*sb-CW*Zn21*Zn41*cb-SW*Zn11*Zn31*sb+SW*Zn11*Zn41*cb
+B00248 |Zn31^2-Zn41^2
+B00249 |CW*Zn21*Zn31*cb+CW*Zn21*Zn41*sb-SW*Zn11*Zn31*cb-SW*Zn11*Zn41*sb
+B00250 |CW*Zn21*Zn31*sa+CW*Zn21*Zn41*ca-SW*Zn11*Zn31*sa-SW*Zn11*Zn41*ca
+B00251 |CW*Zn21*Zn32*ca-CW*Zn21*Zn42*sa+CW*Zn22*Zn31*ca-CW*Zn22*Zn41*sa-SW*Zn11*Zn32*ca
+B00252 |B00251+SW*Zn11*Zn42*sa-SW*Zn12*Zn31*ca+SW*Zn12*Zn41*sa
+B00253 |CW*Zn21*Zn32*sb-CW*Zn21*Zn42*cb+CW*Zn22*Zn31*sb-CW*Zn22*Zn41*cb-SW*Zn11*Zn32*sb
+B00254 |B00253+SW*Zn11*Zn42*cb-SW*Zn12*Zn31*sb+SW*Zn12*Zn41*cb
+B00255 |Zn31*Zn32-Zn41*Zn42
+B00256 |CW*Zn21*Zn32*cb+CW*Zn21*Zn42*sb+CW*Zn22*Zn31*cb+CW*Zn22*Zn41*sb-SW*Zn11*Zn32*cb
+B00257 |B00256-SW*Zn11*Zn42*sb-SW*Zn12*Zn31*cb-SW*Zn12*Zn41*sb
+B00258 |CW*Zn21*Zn32*sa+CW*Zn21*Zn42*ca+CW*Zn22*Zn31*sa+CW*Zn22*Zn41*ca-SW*Zn11*Zn32*sa
+B00259 |B00258-SW*Zn11*Zn42*ca-SW*Zn12*Zn31*sa-SW*Zn12*Zn41*ca
+B00260 |CW*Zn21*Zn33*ca-CW*Zn21*Zn43*sa+CW*Zn23*Zn31*ca-CW*Zn23*Zn41*sa-SW*Zn11*Zn33*ca
+B00261 |B00260+SW*Zn11*Zn43*sa-SW*Zn13*Zn31*ca+SW*Zn13*Zn41*sa
+B00262 |CW*Zn21*Zn33*sb-CW*Zn21*Zn43*cb+CW*Zn23*Zn31*sb-CW*Zn23*Zn41*cb-SW*Zn11*Zn33*sb
+B00263 |B00262+SW*Zn11*Zn43*cb-SW*Zn13*Zn31*sb+SW*Zn13*Zn41*cb
+B00264 |Zn31*Zn33-Zn41*Zn43
+B00265 |CW*Zn21*Zn33*cb+CW*Zn21*Zn43*sb+CW*Zn23*Zn31*cb+CW*Zn23*Zn41*sb-SW*Zn11*Zn33*cb
+B00266 |B00265-SW*Zn11*Zn43*sb-SW*Zn13*Zn31*cb-SW*Zn13*Zn41*sb
+B00267 |CW*Zn21*Zn33*sa+CW*Zn21*Zn43*ca+CW*Zn23*Zn31*sa+CW*Zn23*Zn41*ca-SW*Zn11*Zn33*sa
+B00268 |B00267-SW*Zn11*Zn43*ca-SW*Zn13*Zn31*sa-SW*Zn13*Zn41*ca
+B00269 |CW*Zn21*Zn34*ca-CW*Zn21*Zn44*sa+CW*Zn24*Zn31*ca-CW*Zn24*Zn41*sa-SW*Zn11*Zn34*ca
+B00270 |B00269+SW*Zn11*Zn44*sa-SW*Zn14*Zn31*ca+SW*Zn14*Zn41*sa
+B00271 |CW*Zn21*Zn34*sb-CW*Zn21*Zn44*cb+CW*Zn24*Zn31*sb-CW*Zn24*Zn41*cb-SW*Zn11*Zn34*sb
+B00272 |B00271+SW*Zn11*Zn44*cb-SW*Zn14*Zn31*sb+SW*Zn14*Zn41*cb
+B00273 |Zn31*Zn34-Zn41*Zn44
+B00274 |CW*Zn21*Zn34*cb+CW*Zn21*Zn44*sb+CW*Zn24*Zn31*cb+CW*Zn24*Zn41*sb-SW*Zn11*Zn34*cb
+B00275 |B00274-SW*Zn11*Zn44*sb-SW*Zn14*Zn31*cb-SW*Zn14*Zn41*sb
+B00276 |CW*Zn21*Zn34*sa+CW*Zn21*Zn44*ca+CW*Zn24*Zn31*sa+CW*Zn24*Zn41*ca-SW*Zn11*Zn34*sa
+B00277 |B00276-SW*Zn11*Zn44*ca-SW*Zn14*Zn31*sa-SW*Zn14*Zn41*ca
+B00278 |CW*Zn22*Zn32*ca-CW*Zn22*Zn42*sa-SW*Zn12*Zn32*ca+SW*Zn12*Zn42*sa
+B00279 |CW*Zn22*Zn32*sb-CW*Zn22*Zn42*cb-SW*Zn12*Zn32*sb+SW*Zn12*Zn42*cb
+B00280 |Zn32^2-Zn42^2
+B00281 |CW*Zn22*Zn32*cb+CW*Zn22*Zn42*sb-SW*Zn12*Zn32*cb-SW*Zn12*Zn42*sb
+B00282 |CW*Zn22*Zn32*sa+CW*Zn22*Zn42*ca-SW*Zn12*Zn32*sa-SW*Zn12*Zn42*ca
+B00283 |CW*Zn22*Zn33*ca-CW*Zn22*Zn43*sa+CW*Zn23*Zn32*ca-CW*Zn23*Zn42*sa-SW*Zn12*Zn33*ca
+B00284 |B00283+SW*Zn12*Zn43*sa-SW*Zn13*Zn32*ca+SW*Zn13*Zn42*sa
+B00285 |CW*Zn22*Zn33*sb-CW*Zn22*Zn43*cb+CW*Zn23*Zn32*sb-CW*Zn23*Zn42*cb-SW*Zn12*Zn33*sb
+B00286 |B00285+SW*Zn12*Zn43*cb-SW*Zn13*Zn32*sb+SW*Zn13*Zn42*cb
+B00287 |Zn32*Zn33-Zn42*Zn43
+B00288 |CW*Zn22*Zn33*cb+CW*Zn22*Zn43*sb+CW*Zn23*Zn32*cb+CW*Zn23*Zn42*sb-SW*Zn12*Zn33*cb
+B00289 |B00288-SW*Zn12*Zn43*sb-SW*Zn13*Zn32*cb-SW*Zn13*Zn42*sb
+B00290 |CW*Zn22*Zn33*sa+CW*Zn22*Zn43*ca+CW*Zn23*Zn32*sa+CW*Zn23*Zn42*ca-SW*Zn12*Zn33*sa
+B00291 |B00290-SW*Zn12*Zn43*ca-SW*Zn13*Zn32*sa-SW*Zn13*Zn42*ca
+B00292 |CW*Zn22*Zn34*ca-CW*Zn22*Zn44*sa+CW*Zn24*Zn32*ca-CW*Zn24*Zn42*sa-SW*Zn12*Zn34*ca
+B00293 |B00292+SW*Zn12*Zn44*sa-SW*Zn14*Zn32*ca+SW*Zn14*Zn42*sa
+B00294 |CW*Zn22*Zn34*sb-CW*Zn22*Zn44*cb+CW*Zn24*Zn32*sb-CW*Zn24*Zn42*cb-SW*Zn12*Zn34*sb
+B00295 |B00294+SW*Zn12*Zn44*cb-SW*Zn14*Zn32*sb+SW*Zn14*Zn42*cb
+B00296 |Zn32*Zn34-Zn42*Zn44
+B00297 |CW*Zn22*Zn34*cb+CW*Zn22*Zn44*sb+CW*Zn24*Zn32*cb+CW*Zn24*Zn42*sb-SW*Zn12*Zn34*cb
+B00298 |B00297-SW*Zn12*Zn44*sb-SW*Zn14*Zn32*cb-SW*Zn14*Zn42*sb
+B00299 |CW*Zn22*Zn34*sa+CW*Zn22*Zn44*ca+CW*Zn24*Zn32*sa+CW*Zn24*Zn42*ca-SW*Zn12*Zn34*sa
+B00300 |B00299-SW*Zn12*Zn44*ca-SW*Zn14*Zn32*sa-SW*Zn14*Zn42*ca
+B00301 |CW*Zn23*Zn33*ca-CW*Zn23*Zn43*sa-SW*Zn13*Zn33*ca+SW*Zn13*Zn43*sa
+B00302 |CW*Zn23*Zn33*sb-CW*Zn23*Zn43*cb-SW*Zn13*Zn33*sb+SW*Zn13*Zn43*cb
+B00303 |Zn33^2-Zn43^2
+B00304 |CW*Zn23*Zn33*cb+CW*Zn23*Zn43*sb-SW*Zn13*Zn33*cb-SW*Zn13*Zn43*sb
+B00305 |CW*Zn23*Zn33*sa+CW*Zn23*Zn43*ca-SW*Zn13*Zn33*sa-SW*Zn13*Zn43*ca
+B00306 |CW*Zn23*Zn34*ca-CW*Zn23*Zn44*sa+CW*Zn24*Zn33*ca-CW*Zn24*Zn43*sa-SW*Zn13*Zn34*ca
+B00307 |B00306+SW*Zn13*Zn44*sa-SW*Zn14*Zn33*ca+SW*Zn14*Zn43*sa
+B00308 |CW*Zn23*Zn34*sb-CW*Zn23*Zn44*cb+CW*Zn24*Zn33*sb-CW*Zn24*Zn43*cb-SW*Zn13*Zn34*sb
+B00309 |B00308+SW*Zn13*Zn44*cb-SW*Zn14*Zn33*sb+SW*Zn14*Zn43*cb
+B00310 |Zn33*Zn34-Zn43*Zn44
+B00311 |CW*Zn23*Zn34*cb+CW*Zn23*Zn44*sb+CW*Zn24*Zn33*cb+CW*Zn24*Zn43*sb-SW*Zn13*Zn34*cb
+B00312 |B00311-SW*Zn13*Zn44*sb-SW*Zn14*Zn33*cb-SW*Zn14*Zn43*sb
+B00313 |CW*Zn23*Zn34*sa+CW*Zn23*Zn44*ca+CW*Zn24*Zn33*sa+CW*Zn24*Zn43*ca-SW*Zn13*Zn34*sa
+B00314 |B00313-SW*Zn13*Zn44*ca-SW*Zn14*Zn33*sa-SW*Zn14*Zn43*ca
+B00315 |CW*Zn24*Zn34*ca-CW*Zn24*Zn44*sa-SW*Zn14*Zn34*ca+SW*Zn14*Zn44*sa
+B00316 |CW*Zn24*Zn34*sb-CW*Zn24*Zn44*cb-SW*Zn14*Zn34*sb+SW*Zn14*Zn44*cb
+B00317 |Zn34^2-Zn44^2
+B00318 |CW*Zn24*Zn34*cb+CW*Zn24*Zn44*sb-SW*Zn14*Zn34*cb-SW*Zn14*Zn44*sb
+B00319 |CW*Zn24*Zn34*sa+CW*Zn24*Zn44*ca-SW*Zn14*Zn34*sa-SW*Zn14*Zn44*ca
+B00320 |4*(sb*ca^3+cb*sa^3)^2*CW^2*EE^2*MHH^2-4*CW^2*EE^2*MH3^2*samb^2*sapb^2+CW^2*EE^2*Mh^2*s2a^2*samb^2-4*MW^2*S2W^2*dlh5*samb^2*sapb^2+8*MW^2*S2W^2*ca^2*cb*dlh6*samb^2*sb
+B00321 |B00320+8*MW^2*S2W^2*cb*dlh7*sa^2*samb^2*sb
+B00322 |2*(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2*s2a-2*CW^2*EE^2*MH3^2*s2a*sapb+CW^2*EE^2*Mh^2*camb*s2a^2-2*MW^2*S2W^2*dlh5*s2a*sapb+4*MW^2*S2W^2*c2a*ca*cb^2*dlh6*sb
+B00323 |B00322-4*MW^2*S2W^2*c2a*cb*dlh7*sa*sb^2+8*MW^2*S2W^2*ca*cb^2*dlh7*sa^2*sb+8*MW^2*S2W^2*ca^2*cb*dlh6*sa*sb^2
+B00324 |CW^2*EE^2*MHH^2*sapb^2*vevv-2*MW^2*S2W^2*dlh5*sapb^2*vevv-4*MW^4*S2W^2*camb^2*cb^2*sb^2-CW^2*EE^2*MHH^2*camb^2*samb^2*vevv+3*CW^2*EE^2*MHH^2*samb^2*sapb^2*vevv
+B00325 |B00324-4*MH3^2*MW^2*S2W^2*camb^2*cb^2*sb^2+4*MHc^2*MW^2*S2W^2*camb^2*cb^2*sb^2-2*MW^2*S2W^2*c2b^2*dlh5*samb^2*vevv+4*MW^2*S2W^2*cb*dlh6*sb*vevv+2*MW^2*S2W^2*cb*dlh7*sb*vevv
+B00326 |B00325+2*(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*s2a*samb*vevv-4*CW^2*EE^2*MH3^2*c2b*samb*sapb*vevv+8*CW^2*EE^2*MW^2*camb^2*cb^2*sb^2*vevv+4*MW^2*S2W^2*c2a*cb*dlh6*sb^5*vevv-2*MW^2*S2W^2*c2a*cb*dlh7*sb*vevv
+B00327 |B00326+2*MW^2*S2W^2*cb*dlh7*samb^2*sb*vevv-4*MW^2*S2W^2*cb^3*dlh6*sa^2*sb*vevv+2*MW^2*S2W^2*c2b*cb*dlh7*samb^2*sb*vevv-8*MW^2*S2W^2*ca*cb^2*dlh6*sa*sb^4*vevv
+B00328 |2*(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2*vevv-2*CW^2*EE^2*MH3^2*sapb*vevv+2*MW^4*S2W^2*camb*cb*sb+CW^2*EE^2*Mh^2*camb*s2a*vevv+2*MH3^2*MW^2*S2W^2*camb*cb*sb
+B00329 |B00328-2*MHc^2*MW^2*S2W^2*camb*cb*sb-2*MW^2*S2W^2*c2b*dlh5*samb*vevv-4*CW^2*EE^2*MW^2*camb*cb*sb*vevv-2*MW^2*S2W^2*cb*dlh6*samb*sb*vevv+2*MW^2*S2W^2*cb*dlh7*samb*sb*vevv
+B00330 |CW^2*EE^2*MHH^2*sapb^2-2*MW^2*S2W^2*dlh5*sapb^2-CW^2*EE^2*MHH^2*camb^2*samb^2+3*CW^2*EE^2*MHH^2*samb^2*sapb^2-2*MW^2*S2W^2*c2b^2*dlh5*samb^2
+B00331 |B00330+4*MW^2*S2W^2*cb*dlh6*sb+2*MW^2*S2W^2*cb*dlh7*sb+2*(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*s2a*samb-4*CW^2*EE^2*MH3^2*c2b*samb*sapb+4*MW^2*S2W^2*c2a*cb*dlh6*sb^5
+B00332 |B00331-2*MW^2*S2W^2*c2a*cb*dlh7*sb+2*MW^2*S2W^2*cb*dlh7*samb^2*sb-4*MW^2*S2W^2*cb^3*dlh6*sa^2*sb+2*MW^2*S2W^2*c2b*cb*dlh7*samb^2*sb-8*MW^2*S2W^2*ca*cb^2*dlh6*sa*sb^4
+B00333 |2*(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2-2*CW^2*EE^2*MH3^2*sapb+CW^2*EE^2*Mh^2*camb*s2a-2*MW^2*S2W^2*c2b*dlh5*samb-2*MW^2*S2W^2*cb*dlh6*samb*sb
+B00334 |B00333+2*MW^2*S2W^2*cb*dlh7*samb*sb
+B00335 |2*MW^4*S2W^2*cb*samb^2*sb-2*(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2*camb*vevv+CW^2*EE^2*Mh^2*s2a*samb^2*vevv+2*MH3^2*MW^2*S2W^2*cb*samb^2*sb-2*MHc^2*MW^2*S2W^2*cb*samb^2*sb
+B00336 |B00335-2*MW^2*S2W^2*cb^2*dlh6*samb^2*vevv-2*MW^2*S2W^2*dlh7*samb^2*sb^2*vevv-4*CW^2*EE^2*MW^2*cb*samb^2*sb*vevv+4*MW^2*S2W^2*cb*dlh5*samb^2*sb*vevv
+B00337 |2*(sb*ca^3+cb*sa^3)*CW^2*EE^2*MHH^2*camb-CW^2*EE^2*Mh^2*s2a*samb^2+2*MW^2*S2W^2*cb^2*dlh6*samb^2+2*MW^2*S2W^2*dlh7*samb^2*sb^2-4*MW^2*S2W^2*cb*dlh5*samb^2*sb
+B00338 |12*CW^2*EE^2*MH3^2*ca^2*sa^2-4*CW^2*EE^2*MH3^2*cb^2*sb^2-3*CW^2*EE^2*MHH^2*s2a^2*samb^2+3*CW^2*EE^2*Mh^2*s2a^2*samb^2+12*MW^2*S2W^2*ca^2*dlh5*sa^2
+B00339 |B00338-4*MW^2*S2W^2*cb*dlh7*sb^3-4*MW^2*S2W^2*cb^2*dlh5*sb^2-4*MW^2*S2W^2*cb^3*dlh6*sb-CW^2*EE^2*MHH^2*camb*s2a*sapb+CW^2*EE^2*MHH^2*capb*s2a*samb
+B00340 |B00339-2*CW^2*EE^2*Mh^2*camb*s2a*sapb-4*CW^2*EE^2*Mh^2*capb*s2a*samb-24*MW^2*S2W^2*c2a*ca*cb^2*dlh6*sa*sb^2+24*MW^2*S2W^2*c2a*ca*cb^2*dlh7*sa*sb^2+24*MW^2*S2W^2*c2b*ca^2*cb*dlh6*sa^2*sb
+B00341 |B00340-24*MW^2*S2W^2*c2b*ca^2*cb*dlh7*sa^2*sb
+B00342 |6*CW^2*Mb^2*ca^2-3*MW^2*Zd33^2*c2a*cb^2+2*MW^2*SW^2*Zd33^2*c2a*cb^2-2*MW^2*SW^2*Zd63^2*c2a*cb^2
+B00343 |3*Zd33*Zd36-2*SW^2*Zd33*Zd36+2*SW^2*Zd63*Zd66
+B00344 |6*CW^2*Mb^2*ca^2-3*MW^2*Zd36^2*c2a*cb^2+2*MW^2*SW^2*Zd36^2*c2a*cb^2-2*MW^2*SW^2*Zd66^2*c2a*cb^2
+B00345 |2*CW^2*Ml^2*ca^2-C2W*MW^2*Zl33^2*c2a*cb^2-2*MW^2*SW^2*Zl63^2*c2a*cb^2
+B00346 |C2W*Zl33*Zl36+2*SW^2*Zl63*Zl66
+B00347 |2*CW^2*Ml^2*ca^2-C2W*MW^2*Zl36^2*c2a*cb^2-2*MW^2*SW^2*Zl66^2*c2a*cb^2
+B00348 |6*CW^2*Mt^2*sa^2+3*MW^2*Zu33^2*c2a*sb^2-4*MW^2*SW^2*Zu33^2*c2a*sb^2+4*MW^2*SW^2*Zu63^2*c2a*sb^2
+B00349 |3*Zu33*Zu36-4*SW^2*Zu33*Zu36+4*SW^2*Zu63*Zu66
+B00350 |6*CW^2*Mt^2*sa^2+3*MW^2*Zu36^2*c2a*sb^2-4*MW^2*SW^2*Zu36^2*c2a*sb^2+4*MW^2*SW^2*Zu66^2*c2a*sb^2
+B00351 |CW^2*EE^2*MH3^2*c2b*s2a*vevv+MW^2*S2W^2*capb*dlh5*sapb*vevv-2*MW^4*S2W^2*camb*cb^2*samb*sb^2-(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*camb*s2a*vevv-(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*s2a*samb*vevv
+B00352 |B00351-2*MH3^2*MW^2*S2W^2*camb*cb^2*samb*sb^2+2*MHc^2*MW^2*S2W^2*camb*cb^2*samb*sb^2+2*MW^2*S2W^2*c2a*cb^2*dlh6*sb^4*vevv+2*MW^2*S2W^2*c2a*cb^4*dlh7*sb^2*vevv+4*CW^2*EE^2*MW^2*camb*cb^2*samb*sb^2*vevv
+B00353 |B00352+MW^2*S2W^2*c2a*c2b*camb*dlh5*samb*vevv+2*MW^2*S2W^2*c2b*camb*dlh5*samb^2*sapb*vevv+4*MW^2*S2W^2*ca*cb*dlh6*sa*sb^5*vevv-4*MW^2*S2W^2*ca*cb*dlh7*sa*sb*vevv+6*MW^2*S2W^2*ca*cb*dlh7*sa*sb^3*vevv
+B00354 |B00353-4*MW^2*S2W^2*ca*cb*dlh7*sa*sb^5*vevv+2*MW^2*S2W^2*ca*cb^3*dlh6*sa*sb*vevv
+B00355 |2*CW^2*EE^2*MH3^2*ca*sa*vevv-CW^2*EE^2*MHH^2*s2a*samb^2*vevv-CW^2*EE^2*Mh^2*camb^2*s2a*vevv-MW^4*S2W^2*c2a*c2b*cb*sb-4*MW^4*S2W^2*ca*cb^2*sa*sb^2
+B00356 |B00355-MH3^2*MW^2*S2W^2*c2a*c2b*cb*sb-4*MH3^2*MW^2*S2W^2*ca*cb^2*sa*sb^2+MHc^2*MW^2*S2W^2*c2a*c2b*cb*sb+4*MHc^2*MW^2*S2W^2*ca*cb^2*sa*sb^2+2*MW^2*S2W^2*c2b*camb*dlh5*samb*vevv
+B00357 |B00356+2*CW^2*EE^2*MW^2*c2a*c2b*cb*sb*vevv+8*CW^2*EE^2*MW^2*ca*cb^2*sa*sb^2*vevv+2*MW^2*S2W^2*camb*cb*dlh6*samb*sb*vevv-2*MW^2*S2W^2*camb*cb*dlh7*samb*sb*vevv
+B00358 |MW^2*cb^2*sapb-Ml^2*ca*sb
+B00359 |Mb^2*Zd33*Zu33*ca*sb^3+Mt^2*Zd33*Zu33*cb^3*sa-MW^2*Zd33*Zu33*cb^2*sapb*sb^2+Mb*Mt*Zd63*Zu63*camb*cb*sb
+B00360 |Mb^2*Zd36*Zu33*ca*sb^3+Mt^2*Zd36*Zu33*cb^3*sa-MW^2*Zd36*Zu33*cb^2*sapb*sb^2+Mb*Mt*Zd66*Zu63*camb*cb*sb
+B00361 |Mb^2*Zd33*Zu36*ca*sb^3+Mt^2*Zd33*Zu36*cb^3*sa-MW^2*Zd33*Zu36*cb^2*sapb*sb^2+Mb*Mt*Zd63*Zu66*camb*cb*sb
+B00362 |Mb^2*Zd36*Zu36*ca*sb^3+Mt^2*Zd36*Zu36*cb^3*sa-MW^2*Zd36*Zu36*cb^2*sapb*sb^2+Mb*Mt*Zd66*Zu66*camb*cb*sb
+B00363 |CW^2*EE^2*MH3^2*c2b*s2a+MW^2*S2W^2*capb*dlh5*sapb-(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*camb*s2a-(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*s2a*samb+2*MW^2*S2W^2*c2a*cb^2*dlh6*sb^4
+B00364 |B00363+2*MW^2*S2W^2*c2a*cb^4*dlh7*sb^2+MW^2*S2W^2*c2a*c2b*camb*dlh5*samb+2*MW^2*S2W^2*c2b*camb*dlh5*samb^2*sapb+4*MW^2*S2W^2*ca*cb*dlh6*sa*sb^5-4*MW^2*S2W^2*ca*cb*dlh7*sa*sb
+B00365 |B00364+6*MW^2*S2W^2*ca*cb*dlh7*sa*sb^3-4*MW^2*S2W^2*ca*cb*dlh7*sa*sb^5+2*MW^2*S2W^2*ca*cb^3*dlh6*sa*sb
+B00366 |2*CW^2*EE^2*MH3^2*ca*sa-CW^2*EE^2*MHH^2*s2a*samb^2-CW^2*EE^2*Mh^2*camb^2*s2a+2*MW^2*S2W^2*c2b*camb*dlh5*samb+2*MW^2*S2W^2*camb*cb*dlh6*samb*sb
+B00367 |B00366-2*MW^2*S2W^2*camb*cb*dlh7*samb*sb
+B00368 |2*MW^4*S2W^2*cb*sb-CW^2*EE^2*MHH^2*s2a*vevv+CW^2*EE^2*Mh^2*s2a*vevv+2*MH3^2*MW^2*S2W^2*cb*sb-2*MHc^2*MW^2*S2W^2*cb*sb
+B00369 |B00368-2*MW^2*S2W^2*cb^2*dlh6*vevv-2*MW^2*S2W^2*dlh7*sb^2*vevv-4*CW^2*EE^2*MW^2*cb*sb*vevv+4*MW^2*S2W^2*cb*dlh5*sb*vevv
+B00370 |Ml^2*ca-MW^2*capb*cb
+B00371 |Mb*Mt*Zd63*Zu63*samb+Mb^2*Zd33*Zu33*ca*sb-Mt^2*Zd33*Zu33*cb*sa-MW^2*Zd33*Zu33*capb*cb*sb
+B00372 |Mb*Mt*Zd66*Zu63*samb+Mb^2*Zd36*Zu33*ca*sb-Mt^2*Zd36*Zu33*cb*sa-MW^2*Zd36*Zu33*capb*cb*sb
+B00373 |Mb*Mt*Zd63*Zu66*samb+Mb^2*Zd33*Zu36*ca*sb-Mt^2*Zd33*Zu36*cb*sa-MW^2*Zd33*Zu36*capb*cb*sb
+B00374 |Mb*Mt*Zd66*Zu66*samb+Mb^2*Zd36*Zu36*ca*sb-Mt^2*Zd36*Zu36*cb*sa-MW^2*Zd36*Zu36*capb*cb*sb
+B00375 |CW^2*EE^2*MHH^2*s2a-CW^2*EE^2*Mh^2*s2a+2*MW^2*S2W^2*cb^2*dlh6+2*MW^2*S2W^2*dlh7*sb^2-4*MW^2*S2W^2*cb*dlh5*sb
+B00376 |2*(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2*s2a-2*CW^2*EE^2*MH3^2*capb*s2a+CW^2*EE^2*MHH^2*s2a^2*samb-2*MW^2*S2W^2*capb*dlh5*s2a-4*MW^2*S2W^2*c2a*ca*cb*dlh7*sb^2
+B00377 |B00376-4*MW^2*S2W^2*c2a*cb^2*dlh6*sa*sb-8*MW^2*S2W^2*ca*cb*dlh6*sa^2*sb^2+8*MW^2*S2W^2*ca^2*cb^2*dlh7*sa*sb
+B00378 |3*CW^2*Mb^2-3*MW^2*Zd33^2*cb^2+2*MW^2*SW^2*Zd33^2*cb^2-2*MW^2*SW^2*Zd63^2*cb^2
+B00379 |3*CW^2*Mb^2-3*MW^2*Zd36^2*cb^2+2*MW^2*SW^2*Zd36^2*cb^2-2*MW^2*SW^2*Zd66^2*cb^2
+B00380 |CW^2*Ml^2-C2W*MW^2*Zl33^2*cb^2-2*MW^2*SW^2*Zl63^2*cb^2
+B00381 |CW^2*Ml^2-C2W*MW^2*Zl36^2*cb^2-2*MW^2*SW^2*Zl66^2*cb^2
+B00382 |3*CW^2*Mt^2-3*MW^2*Zu33^2*sb^2+4*MW^2*SW^2*Zu33^2*sb^2-4*MW^2*SW^2*Zu63^2*sb^2
+B00383 |3*CW^2*Mt^2-3*MW^2*Zu36^2*sb^2+4*MW^2*SW^2*Zu36^2*sb^2-4*MW^2*SW^2*Zu66^2*sb^2
+B00384 |(ca*cb^3-sa*sb^3)^2*CW^2*EE^2*Mh^2+(sa*cb^3+ca*sb^3)^2*CW^2*EE^2*MHH^2-CW^2*EE^2*MH3^2*c2b^2-MW^2*S2W^2*c2b^2*dlh5+8*CW^2*MW^2*SW^2*cb*dlh6*sb^3
+B00385 |B00384+8*CW^2*MW^2*SW^2*cb^3*dlh7*sb
+B00386 |CW^2*EE^2*MH3^2*c2b+MW^2*S2W^2*c2b*dlh5-(ca*cb^3-sa*sb^3)*CW^2*EE^2*Mh^2*camb-(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*samb+4*CW^2*MW^2*SW^2*cb*dlh6*sb
+B00387 |B00386-4*CW^2*MW^2*SW^2*cb*dlh7*sb
+B00388 |MH3^2-MHH^2*samb^2-Mh^2*camb^2
+B00389 |EE^2*MH3^2*cb*sb-2*EE^2*MHH^2*cb*sb^3-2*EE^2*Mh^2*cb^3*sb-4*MW^2*SW^2*cb^2*dlh6-4*MW^2*SW^2*dlh7*sb^2
+B00390 |B00389-EE^2*MHH^2*c2b^2*ca*sa+EE^2*Mh^2*c2b^2*ca*sa+8*MW^2*SW^2*cb*dlh5*sb-2*EE^2*MHH^2*c2b*cb*sa^2*sb+2*EE^2*Mh^2*c2b*cb*sa^2*sb
+B00391 |4*MW^4*SW^2*cb*sb+(ca*cb^3-sa*sb^3)*EE^2*Mh^2*samb*vevv-(sa*cb^3+ca*sb^3)*EE^2*MHH^2*camb*vevv-2*EE^2*MW^2*cb*sb*vevv+4*MH3^2*MW^2*SW^2*cb*sb
+B00392 |B00391-4*MHc^2*MW^2*SW^2*cb*sb-4*MW^2*SW^2*cb^2*dlh6*vevv-4*MW^2*SW^2*dlh7*sb^2*vevv+8*MW^2*SW^2*cb*dlh5*sb*vevv
+B00393 |4*(ca*cb^3-sa*sb^3)^2*MW^2*S2W^2*dlh5*vevv-CW^2*EE^2*Mh^2*samb^4*vevv+MW^2*S2W^2*dlh5*samb^4*vevv+4*MW^4*S2W^2*cb^2*samb^2*sb^2-4*CW^2*EE^2*Mh^2*c2a*c2b*vevv
+B00394 |B00393-3*CW^2*EE^2*Mh^2*samb^2*sapb^2*vevv+4*MH3^2*MW^2*S2W^2*cb^2*samb^2*sb^2-4*MHc^2*MW^2*S2W^2*cb^2*samb^2*sb^2-4*MW^2*S2W^2*cb*dlh7*sb*vevv-4*MW^2*S2W^2*cb^3*dlh6*sb^3*vevv
+B00395 |B00394+MW^2*S2W^2*dlh5*samb^2*sapb^2*vevv-2*(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*camb*s2a*vevv+4*CW^2*EE^2*MH3^2*c2b*camb*capb*vevv-8*CW^2*EE^2*MW^2*cb^2*samb^2*sb^2*vevv-2*MW^2*S2W^2*c2b*dlh5*samb^3*sapb*vevv
+B00396 |B00395-8*MW^2*S2W^2*cb*dlh6*sa^2*sb^5*vevv+2*MW^2*S2W^2*cb*dlh7*samb^2*sb*vevv-4*MW^2*S2W^2*cb^3*dlh6*sa^2*sb*vevv+2*MW^2*S2W^2*c2b*cb*dlh7*samb^2*sb*vevv-8*MW^2*S2W^2*ca*cb^2*dlh6*sa*sb^4*vevv
+B00397 |B00396-4*MW^2*S2W^2*camb*capb*cb*dlh7*sb*vevv
+B00398 |6*CW^2*Mb^2*Zd63^2*sb^4+6*CW^2*Mt^2*Zd33^2*cb^4-3*MW^2*Zd33^2*c2b*cb^2*sb^2+4*MW^2*SW^2*Zd33^2*c2b*cb^2*sb^2+2*MW^2*SW^2*Zd63^2*c2b*cb^2*sb^2
+B00399 |6*CW^2*Mb^2*Zd63*Zd66*sb^4+6*CW^2*Mt^2*Zd33*Zd36*cb^4-3*MW^2*Zd33*Zd36*c2b*cb^2*sb^2+4*MW^2*SW^2*Zd33*Zd36*c2b*cb^2*sb^2+2*MW^2*SW^2*Zd63*Zd66*c2b*cb^2*sb^2
+B00400 |6*CW^2*Mb^2*Zd66^2*sb^4+6*CW^2*Mt^2*Zd36^2*cb^4-3*MW^2*Zd36^2*c2b*cb^2*sb^2+4*MW^2*SW^2*Zd36^2*c2b*cb^2*sb^2+2*MW^2*SW^2*Zd66^2*c2b*cb^2*sb^2
+B00401 |2*CW^2*Ml^2*Zl63^2*sb^2-MW^2*Zl33^2*c2b*cb^2+2*MW^2*SW^2*Zl63^2*c2b*cb^2
+B00402 |2*CW^2*Ml^2*Zl63*Zl66*sb^2-MW^2*Zl33*Zl36*c2b*cb^2+2*MW^2*SW^2*Zl63*Zl66*c2b*cb^2
+B00403 |2*CW^2*Ml^2*Zl66^2*sb^2-MW^2*Zl36^2*c2b*cb^2+2*MW^2*SW^2*Zl66^2*c2b*cb^2
+B00404 |2*CW^2*Ml^2*sb^2+C2W*MW^2*c2b*cb^2
+B00405 |6*CW^2*Mb^2*Zu33^2*sb^4+6*CW^2*Mt^2*Zu63^2*cb^4+3*MW^2*Zu33^2*c2b*cb^2*sb^2-2*MW^2*SW^2*Zu33^2*c2b*cb^2*sb^2-4*MW^2*SW^2*Zu63^2*c2b*cb^2*sb^2
+B00406 |6*CW^2*Mb^2*Zu33*Zu36*sb^4+6*CW^2*Mt^2*Zu63*Zu66*cb^4+3*MW^2*Zu33*Zu36*c2b*cb^2*sb^2-2*MW^2*SW^2*Zu33*Zu36*c2b*cb^2*sb^2-4*MW^2*SW^2*Zu63*Zu66*c2b*cb^2*sb^2
+B00407 |6*CW^2*Mb^2*Zu36^2*sb^4+6*CW^2*Mt^2*Zu66^2*cb^4+3*MW^2*Zu36^2*c2b*cb^2*sb^2-2*MW^2*SW^2*Zu36^2*c2b*cb^2*sb^2-4*MW^2*SW^2*Zu66^2*c2b*cb^2*sb^2
+B00408 |2*MW^4*SW^2-EE^2*MH3^2*vevv-EE^2*MW^2*vevv+2*MH3^2*MW^2*SW^2-2*MHc^2*MW^2*SW^2
+B00409 |B00408+EE^2*MHH^2*samb^2*vevv+EE^2*Mh^2*camb^2*vevv
+B00410 |Ml^2*sb^2+MW^2*c2b*cb^2
+B00411 |Mb^2*sb^4-Mt^2*cb^4+MW^2*c2b*cb^2*sb^2
+B00412 |MHH^2-Mh^2
+B00413 |2*(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2*vevv-2*CW^2*EE^2*MH3^2*capb*vevv-2*MW^4*S2W^2*cb*samb*sb+CW^2*EE^2*MHH^2*s2a*samb*vevv-2*MH3^2*MW^2*S2W^2*cb*samb*sb
+B00414 |B00413+2*MHc^2*MW^2*S2W^2*cb*samb*sb-2*MW^2*S2W^2*c2b*camb*dlh5*vevv+4*CW^2*EE^2*MW^2*cb*samb*sb*vevv-2*MW^2*S2W^2*camb*cb*dlh6*sb*vevv+2*MW^2*S2W^2*camb*cb*dlh7*sb*vevv
+B00415 |3*CW^2*Mb^2*Zd63^2*sb^2-3*CW^2*Mt^2*Zd33^2*cb^2+3*MW^2*Zd33^2*cb^2*sb^2-4*MW^2*SW^2*Zd33^2*cb^2*sb^2-2*MW^2*SW^2*Zd63^2*cb^2*sb^2
+B00416 |3*CW^2*Mb^2*Zd63*Zd66*sb^2-3*CW^2*Mt^2*Zd33*Zd36*cb^2+3*MW^2*Zd33*Zd36*cb^2*sb^2-4*MW^2*SW^2*Zd33*Zd36*cb^2*sb^2-2*MW^2*SW^2*Zd63*Zd66*cb^2*sb^2
+B00417 |3*CW^2*Mb^2*Zd66^2*sb^2-3*CW^2*Mt^2*Zd36^2*cb^2+3*MW^2*Zd36^2*cb^2*sb^2-4*MW^2*SW^2*Zd36^2*cb^2*sb^2-2*MW^2*SW^2*Zd66^2*cb^2*sb^2
+B00418 |CW^2*Ml^2*Zl63^2+MW^2*Zl33^2*cb^2-2*MW^2*SW^2*Zl63^2*cb^2
+B00419 |CW^2*Ml^2*Zl63*Zl66+MW^2*Zl33*Zl36*cb^2-2*MW^2*SW^2*Zl63*Zl66*cb^2
+B00420 |CW^2*Ml^2*Zl66^2+MW^2*Zl36^2*cb^2-2*MW^2*SW^2*Zl66^2*cb^2
+B00421 |CW^2*Ml^2-C2W*MW^2*cb^2
+B00422 |3*CW^2*Mb^2*Zu33^2*sb^2-3*CW^2*Mt^2*Zu63^2*cb^2-3*MW^2*Zu33^2*cb^2*sb^2+2*MW^2*SW^2*Zu33^2*cb^2*sb^2+4*MW^2*SW^2*Zu63^2*cb^2*sb^2
+B00423 |3*CW^2*Mb^2*Zu33*Zu36*sb^2-3*CW^2*Mt^2*Zu63*Zu66*cb^2-3*MW^2*Zu33*Zu36*cb^2*sb^2+2*MW^2*SW^2*Zu33*Zu36*cb^2*sb^2+4*MW^2*SW^2*Zu63*Zu66*cb^2*sb^2
+B00424 |3*CW^2*Mb^2*Zu36^2*sb^2-3*CW^2*Mt^2*Zu66^2*cb^2-3*MW^2*Zu36^2*cb^2*sb^2+2*MW^2*SW^2*Zu36^2*cb^2*sb^2+4*MW^2*SW^2*Zu66^2*cb^2*sb^2
+B00425 |Ml^2-2*MW^2*cb^2
+B00426 |Mb*Mt*Zd63*Zu63-Mb^2*Zd33*Zu33*sb^2-Mt^2*Zd33*Zu33*cb^2+2*MW^2*Zd33*Zu33*cb^2*sb^2
+B00427 |Mb*Mt*Zd66*Zu63-Mb^2*Zd36*Zu33*sb^2-Mt^2*Zd36*Zu33*cb^2+2*MW^2*Zd36*Zu33*cb^2*sb^2
+B00428 |Mb*Mt*Zd63*Zu66-Mb^2*Zd33*Zu36*sb^2-Mt^2*Zd33*Zu36*cb^2+2*MW^2*Zd33*Zu36*cb^2*sb^2
+B00429 |Mb*Mt*Zd66*Zu66-Mb^2*Zd36*Zu36*sb^2-Mt^2*Zd36*Zu36*cb^2+2*MW^2*Zd36*Zu36*cb^2*sb^2
+B00430 |MW^2*capb*cb^2+Ml^2*sa*sb
+B00431 |Mb^2*Zd33*Zu33*sa*sb^3-Mt^2*Zd33*Zu33*ca*cb^3+MW^2*Zd33*Zu33*capb*cb^2*sb^2+Mb*Mt*Zd63*Zu63*cb*samb*sb
+B00432 |Mb^2*Zd36*Zu33*sa*sb^3-Mt^2*Zd36*Zu33*ca*cb^3+MW^2*Zd36*Zu33*capb*cb^2*sb^2+Mb*Mt*Zd66*Zu63*cb*samb*sb
+B00433 |Mb^2*Zd33*Zu36*sa*sb^3-Mt^2*Zd33*Zu36*ca*cb^3+MW^2*Zd33*Zu36*capb*cb^2*sb^2+Mb*Mt*Zd63*Zu66*cb*samb*sb
+B00434 |Mb^2*Zd36*Zu36*sa*sb^3-Mt^2*Zd36*Zu36*ca*cb^3+MW^2*Zd36*Zu36*capb*cb^2*sb^2+Mb*Mt*Zd66*Zu66*cb*samb*sb
+B00435 |EE^2*MHH^2*s2a-4*EE^2*MH3^2*cb*sb-3*EE^2*MHH^2*capb*samb^3-2*EE^2*Mh^2*ca*sa+6*EE^2*Mh^2*cb^3*sb
+B00436 |B00435+8*MW^2*SW^2*cb^2*dlh6+8*MW^2*SW^2*dlh7*sb^2+3*EE^2*MHH^2*camb*samb^2*sapb-16*MW^2*SW^2*cb*dlh5*sb-6*EE^2*Mh^2*c2b*cb*sa^2*sb
+B00437 |B00436+12*EE^2*Mh^2*ca*cb^2*sa*sb^2
+B00438 |4*(ca*cb^3-sa*sb^3)^2*MW^2*S2W^2*dlh5-CW^2*EE^2*Mh^2*samb^4+MW^2*S2W^2*dlh5*samb^4-4*CW^2*EE^2*Mh^2*c2a*c2b-3*CW^2*EE^2*Mh^2*samb^2*sapb^2
+B00439 |B00438-4*MW^2*S2W^2*cb*dlh7*sb-4*MW^2*S2W^2*cb^3*dlh6*sb^3+MW^2*S2W^2*dlh5*samb^2*sapb^2-2*(sa*cb^3+ca*sb^3)*CW^2*EE^2*MHH^2*camb*s2a+4*CW^2*EE^2*MH3^2*c2b*camb*capb
+B00440 |B00439-2*MW^2*S2W^2*c2b*dlh5*samb^3*sapb-8*MW^2*S2W^2*cb*dlh6*sa^2*sb^5+2*MW^2*S2W^2*cb*dlh7*samb^2*sb-4*MW^2*S2W^2*cb^3*dlh6*sa^2*sb+2*MW^2*S2W^2*c2b*cb*dlh7*samb^2*sb
+B00441 |B00440-8*MW^2*S2W^2*ca*cb^2*dlh6*sa*sb^4-4*MW^2*S2W^2*camb*capb*cb*dlh7*sb
+B00442 |6*CW^2*Mb^2*sb^2+3*MW^2*Zd33^2*c2b*cb^2-2*MW^2*SW^2*Zd33^2*c2b*cb^2+2*MW^2*SW^2*Zd63^2*c2b*cb^2
+B00443 |6*CW^2*Mb^2*sb^2+3*MW^2*Zd36^2*c2b*cb^2-2*MW^2*SW^2*Zd36^2*c2b*cb^2+2*MW^2*SW^2*Zd66^2*c2b*cb^2
+B00444 |2*CW^2*Ml^2*sb^2+C2W*MW^2*Zl33^2*c2b*cb^2+2*MW^2*SW^2*Zl63^2*c2b*cb^2
+B00445 |2*CW^2*Ml^2*sb^2+C2W*MW^2*Zl36^2*c2b*cb^2+2*MW^2*SW^2*Zl66^2*c2b*cb^2
+B00446 |6*CW^2*Mt^2*cb^2-3*MW^2*Zu33^2*c2b*sb^2+4*MW^2*SW^2*Zu33^2*c2b*sb^2-4*MW^2*SW^2*Zu63^2*c2b*sb^2
+B00447 |6*CW^2*Mt^2*cb^2-3*MW^2*Zu36^2*c2b*sb^2+4*MW^2*SW^2*Zu36^2*c2b*sb^2-4*MW^2*SW^2*Zu66^2*c2b*sb^2
+B00448 |Mb*Mt*Zd63*Zu63+Mb^2*Zd33*Zu33*sb^2+Mt^2*Zd33*Zu33*cb^2-2*MW^2*Zd33*Zu33*cb^2*sb^2
+B00449 |Mb*Mt*Zd66*Zu63+Mb^2*Zd36*Zu33*sb^2+Mt^2*Zd36*Zu33*cb^2-2*MW^2*Zd36*Zu33*cb^2*sb^2
+B00450 |Mb*Mt*Zd63*Zu66+Mb^2*Zd33*Zu36*sb^2+Mt^2*Zd33*Zu36*cb^2-2*MW^2*Zd33*Zu36*cb^2*sb^2
+B00451 |Mb*Mt*Zd66*Zu66+Mb^2*Zd36*Zu36*sb^2+Mt^2*Zd36*Zu36*cb^2-2*MW^2*Zd36*Zu36*cb^2*sb^2
+B00452 |2*(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2-2*CW^2*EE^2*MH3^2*capb+CW^2*EE^2*MHH^2*s2a*samb-2*MW^2*S2W^2*c2b*camb*dlh5-2*MW^2*S2W^2*camb*cb*dlh6*sb
+B00453 |B00452+2*MW^2*S2W^2*camb*cb*dlh7*sb
+B00454 |MHH^2*camb^2+Mh^2*samb^2
+B00455 |2*MW^4*S2W^2*camb^2*cb*sb+2*(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2*samb*vevv-CW^2*EE^2*MHH^2*camb^2*s2a*vevv+2*MH3^2*MW^2*S2W^2*camb^2*cb*sb-2*MHc^2*MW^2*S2W^2*camb^2*cb*sb
+B00456 |B00455-2*MW^2*S2W^2*camb^2*cb^2*dlh6*vevv-2*MW^2*S2W^2*camb^2*dlh7*sb^2*vevv-4*CW^2*EE^2*MW^2*camb^2*cb*sb*vevv+4*MW^2*S2W^2*camb^2*cb*dlh5*sb*vevv
+B00457 |6*CW^2*Mb^2*Zd63^2+6*CW^2*Mt^2*Zd33^2+3*MW^2*Zd33^2*c2b-4*MW^2*SW^2*Zd33^2*c2b-2*MW^2*SW^2*Zd63^2*c2b
+B00458 |6*CW^2*Mb^2*Zd63*Zd66+6*CW^2*Mt^2*Zd33*Zd36+3*MW^2*Zd33*Zd36*c2b-4*MW^2*SW^2*Zd33*Zd36*c2b-2*MW^2*SW^2*Zd63*Zd66*c2b
+B00459 |6*CW^2*Mb^2*Zd66^2+6*CW^2*Mt^2*Zd36^2+3*MW^2*Zd36^2*c2b-4*MW^2*SW^2*Zd36^2*c2b-2*MW^2*SW^2*Zd66^2*c2b
+B00460 |2*CW^2*Ml^2*Zl63^2+MW^2*Zl33^2*c2b-2*MW^2*SW^2*Zl63^2*c2b
+B00461 |2*CW^2*Ml^2*Zl63*Zl66+MW^2*Zl33*Zl36*c2b-2*MW^2*SW^2*Zl63*Zl66*c2b
+B00462 |2*CW^2*Ml^2*Zl66^2+MW^2*Zl36^2*c2b-2*MW^2*SW^2*Zl66^2*c2b
+B00463 |2*CW^2*Ml^2-C2W*MW^2*c2b
+B00464 |6*CW^2*Mb^2*Zu33^2+6*CW^2*Mt^2*Zu63^2-3*MW^2*Zu33^2*c2b+2*MW^2*SW^2*Zu33^2*c2b+4*MW^2*SW^2*Zu63^2*c2b
+B00465 |6*CW^2*Mb^2*Zu33*Zu36+6*CW^2*Mt^2*Zu63*Zu66-3*MW^2*Zu33*Zu36*c2b+2*MW^2*SW^2*Zu33*Zu36*c2b+4*MW^2*SW^2*Zu63*Zu66*c2b
+B00466 |6*CW^2*Mb^2*Zu36^2+6*CW^2*Mt^2*Zu66^2-3*MW^2*Zu36^2*c2b+2*MW^2*SW^2*Zu36^2*c2b+4*MW^2*SW^2*Zu66^2*c2b
+B00467 |Ml^2-MW^2*c2b
+B00468 |Mb^2-Mt^2-MW^2*c2b
+B00469 |Ml^2*sa-MW^2*cb*sapb
+B00470 |Mb*Mt*Zd63*Zu63*camb-Mb^2*Zd33*Zu33*sa*sb-Mt^2*Zd33*Zu33*ca*cb+MW^2*Zd33*Zu33*cb*sapb*sb
+B00471 |Mb*Mt*Zd66*Zu63*camb-Mb^2*Zd36*Zu33*sa*sb-Mt^2*Zd36*Zu33*ca*cb+MW^2*Zd36*Zu33*cb*sapb*sb
+B00472 |Mb*Mt*Zd63*Zu66*camb-Mb^2*Zd33*Zu36*sa*sb-Mt^2*Zd33*Zu36*ca*cb+MW^2*Zd33*Zu36*cb*sapb*sb
+B00473 |Mb*Mt*Zd66*Zu66*camb-Mb^2*Zd36*Zu36*sa*sb-Mt^2*Zd36*Zu36*ca*cb+MW^2*Zd36*Zu36*cb*sapb*sb
+B00474 |4*SW^4+9*Zd33^2-12*SW^2*Zd33^2
+B00475 |4*SW^4+9*Zd36^2-12*SW^2*Zd36^2
+B00476 |9-24*SW^2+16*SW^4
+B00477 |9-12*SW^2+4*SW^4
+B00478 |4*SW^4+Zl33^2-4*SW^2*Zl33^2
+B00479 |1-4*SW^2
+B00480 |4*SW^4+Zl36^2-4*SW^2*Zl36^2
+B00481 |16*SW^4+9*Zu33^2-24*SW^2*Zu33^2
+B00482 |3-8*SW^2
+B00483 |16*SW^4+9*Zu36^2-24*SW^2*Zu36^2
+B00484 |2*(cb*ca^3-sb*sa^3)*CW^2*EE^2*Mh^2*samb-CW^2*EE^2*MHH^2*camb^2*s2a-2*MW^2*S2W^2*camb^2*cb^2*dlh6-2*MW^2*S2W^2*camb^2*dlh7*sb^2+4*MW^2*S2W^2*camb^2*cb*dlh5*sb
+B00485 |6*CW^2*Mb^2-3*MW^2*Zd33^2*c2b+2*MW^2*SW^2*Zd33^2*c2b-2*MW^2*SW^2*Zd63^2*c2b
+B00486 |6*CW^2*Mb^2-3*MW^2*Zd36^2*c2b+2*MW^2*SW^2*Zd36^2*c2b-2*MW^2*SW^2*Zd66^2*c2b
+B00487 |2*CW^2*Ml^2-C2W*MW^2*Zl33^2*c2b-2*MW^2*SW^2*Zl63^2*c2b
+B00488 |2*CW^2*Ml^2-C2W*MW^2*Zl36^2*c2b-2*MW^2*SW^2*Zl66^2*c2b
+B00489 |6*CW^2*Mt^2+3*MW^2*Zu33^2*c2b-4*MW^2*SW^2*Zu33^2*c2b+4*MW^2*SW^2*Zu63^2*c2b
+B00490 |6*CW^2*Mt^2+3*MW^2*Zu36^2*c2b-4*MW^2*SW^2*Zu36^2*c2b+4*MW^2*SW^2*Zu66^2*c2b
+B00491 |4*(cb*ca^3-sb*sa^3)^2*CW^2*EE^2*Mh^2-4*CW^2*EE^2*MH3^2*camb^2*capb^2+CW^2*EE^2*MHH^2*camb^2*s2a^2-4*MW^2*S2W^2*camb^2*capb^2*dlh5+8*MW^2*S2W^2*ca^2*camb^2*cb*dlh7*sb
+B00492 |B00491+8*MW^2*S2W^2*camb^2*cb*dlh6*sa^2*sb
+B00493 |6*CW^2*Mb^2*sa^2+3*MW^2*Zd33^2*c2a*cb^2-2*MW^2*SW^2*Zd33^2*c2a*cb^2+2*MW^2*SW^2*Zd63^2*c2a*cb^2
+B00494 |6*CW^2*Mb^2*sa^2+3*MW^2*Zd36^2*c2a*cb^2-2*MW^2*SW^2*Zd36^2*c2a*cb^2+2*MW^2*SW^2*Zd66^2*c2a*cb^2
+B00495 |2*CW^2*Ml^2*sa^2+C2W*MW^2*Zl33^2*c2a*cb^2+2*MW^2*SW^2*Zl63^2*c2a*cb^2
+B00496 |2*CW^2*Ml^2*sa^2+C2W*MW^2*Zl36^2*c2a*cb^2+2*MW^2*SW^2*Zl66^2*c2a*cb^2
+B00497 |6*CW^2*Mt^2*ca^2-3*MW^2*Zu33^2*c2a*sb^2+4*MW^2*SW^2*Zu33^2*c2a*sb^2-4*MW^2*SW^2*Zu63^2*c2a*sb^2
+B00498 |6*CW^2*Mt^2*ca^2-3*MW^2*Zu36^2*c2a*sb^2+4*MW^2*SW^2*Zu36^2*c2a*sb^2-4*MW^2*SW^2*Zu66^2*c2a*sb^2

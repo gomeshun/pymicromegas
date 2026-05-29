@@ -1,0 +1,304 @@
+
+----------------------------------------------------------------
+Particles without kinetic term:
+['~00', '~01', '~02', '~03', '~04']
+
+----------------------------------------------------------------
+Particles without mass term:
+['~00', '~01', '~02', '~03', '~04']
+
+---------------------------------------------------------------
+Mass term for particle 'H+' :
+(+1*MW**2+1*MH3**2-2/EE**2*MH3**2*MW**2*SW**2/vevv-2/EE**2*MW**4*SW**2/vevv+2/EE**2*MHc**2*MW**2*SW**2/vevv) = +432.469417**2
+This particles was declared with mass MHc = 432.469417
+
+---------------------------------------------------------------
+Mass term for particle Z :
+(+1/CW**2*MW**2) = +91.188400**2
+This particles was declared with mass MZ = 91.188400
+
+---------------------------------------------------------------
+Mass term for particle 'Z.f' :
+(+1/CW**2*MW**2) = +91.188400**2
+This particles was declared with mass MZ = 91.188400
+
+---------------------------------------------------------------
+Mass term for particle '~cL' :
+(-2/3/CW**2*MW**2*SW**2*c2b+1/2/CW**2*MW**2*c2b+1*Mq2**2) = +522.525529**2
+This particles was declared with mass MScL = 564.149969
+
+---------------------------------------------------------------
+Mass term for particle '~cR' :
+(+2/3/CW**2*MW**2*SW**2*c2b+1*Mu2**2) = +505.438832**2
+This particles was declared with mass MScR = 546.625658
+
+---------------------------------------------------------------
+Mass term for particle '~dL' :
+(+1/3/CW**2*MW**2*SW**2*c2b-1/2/CW**2*MW**2*c2b+1*Mq2**2) = +528.486373**2
+This particles was declared with mass MSdL = 569.581134
+
+---------------------------------------------------------------
+Mass term for particle '~dR' :
+(-1/3/CW**2*MW**2*SW**2*c2b+1*Md2**2) = +505.120162**2
+This particles was declared with mass MSdR = 546.383610
+
+---------------------------------------------------------------
+Mass term for particle '~eL' :
+(-1/2*C2W/CW**2*MW**2*c2b+1*Ml2**2) = +186.768506**2
+This particles was declared with mass MSeL = 189.608711
+
+---------------------------------------------------------------
+Mass term for particle '~eR' :
+(-1/CW**2*MW**2*SW**2*c2b+1*Mr2**2) = +123.503609**2
+This particles was declared with mass MSeR = 125.423603
+
+---------------------------------------------------------------
+Mass term for particle '~g' :
+(+1*MG3) = +571.225266
+This particles was declared with mass MSG = 571.225266
+
+---------------------------------------------------------------
+Mass term for particle '~mL' :
+(-1/2*C2W/CW**2*MW**2*c2b+1*Ml2**2) = +186.768506**2
+This particles was declared with mass MSmL = 189.631260
+
+---------------------------------------------------------------
+Mass term for particle '~mR' :
+(-1/CW**2*MW**2*SW**2*c2b+1*Mr2**2) = +123.503609**2
+This particles was declared with mass MSmR = 125.359550
+
+---------------------------------------------------------------
+Mass term for particle '~ne' :
+(+1/2/CW**2*MW**2*c2b+1*Ml2**2) = +169.167244**2
+This particles was declared with mass MSne = 172.247714
+
+---------------------------------------------------------------
+Mass term for particle '~nl' :
+(+1/2/CW**2*MW**2*c2b+1*Ml3**2) = +167.288579**2
+This particles was declared with mass MSnl = 170.185587
+
+---------------------------------------------------------------
+Mass term for particle '~nm' :
+(+1/2/CW**2*MW**2*c2b+1*Ml2**2) = +169.167244**2
+This particles was declared with mass MSnm = 172.240430
+
+---------------------------------------------------------------
+Mass term for particle '~sL' :
+(+1/3/CW**2*MW**2*SW**2*c2b-1/2/CW**2*MW**2*c2b+1*Mq2**2) = +528.486373**2
+This particles was declared with mass MSsL = 569.581036
+
+---------------------------------------------------------------
+Mass term for particle '~sR' :
+(-1/3/CW**2*MW**2*SW**2*c2b+1*Md2**2) = +505.120162**2
+This particles was declared with mass MSsR = 546.379256
+
+---------------------------------------------------------------
+Mass term for particle '~uL' :
+(-2/3/CW**2*MW**2*SW**2*c2b+1/2/CW**2*MW**2*c2b+1*Mq2**2) = +522.525529**2
+This particles was declared with mass MSuL = 564.136279
+
+---------------------------------------------------------------
+Mass term for particle '~uR' :
+(+2/3/CW**2*MW**2*SW**2*c2b+1*Mu2**2) = +505.438832**2
+This particles was declared with mass MSuR = 546.644008
+
+---------------------------------------------------------------
+Mixing of particles ['~1+', '~2+']
+
+M11 (~1-/~1+) = (+1*cb*MW*Sqrt2*Zm21*Zp11+1*sb*MW*Sqrt2*Zm11*Zp21+1*Zm21*Zp21*mu+1*MG2*Zm11*Zp11)
+    = +180.353122
+    Declared mass MC1=183.818348
+
+
+M12 (~1-/~2+) = (+1/2*cb*MW*Sqrt2*Zm21*Zp12+1/2*sb*MW*Sqrt2*Zm11*Zp22+1/2*Zm21*Zp22*mu+1/2*MG2*Zm11*Zp12)*(1-gamma5)/2+(+1/2*cb*MW*Sqrt2*Zm22*Zp11+1/2*sb*MW*Sqrt2*Zm12*Zp21+1/2*Zm22*Zp21*mu+1/2*MG2*Zm12*Zp11)*(1+gamma5)/2
+    = +0.220556*(1-gamma5)/2+0.586294*(1+gamma5)/2
+
+
+M21 (~2-/~1+) = (+1/2*cb*MW*Sqrt2*Zm22*Zp11+1/2*sb*MW*Sqrt2*Zm12*Zp21+1/2*Zm22*Zp21*mu+1/2*MG2*Zm12*Zp11)*(1-gamma5)/2+(+1/2*cb*MW*Sqrt2*Zm21*Zp12+1/2*sb*MW*Sqrt2*Zm11*Zp22+1/2*Zm21*Zp22*mu+1/2*MG2*Zm11*Zp12)*(1+gamma5)/2
+    = +0.586294*(1-gamma5)/2+0.220556*(1+gamma5)/2
+
+
+M22 (~2-/~2+) = (+1*cb*MW*Sqrt2*Zm22*Zp12+1*sb*MW*Sqrt2*Zm12*Zp22+1*Zm22*Zp22*mu+1*MG2*Zm12*Zp12)
+    = +417.800967
+    Declared mass MC2=415.473221
+
+
+Looking for the mixing matrix...
+Chargino-like mixing is recognized with rotation matrices:
+
+  (  Zm11  Zm12  )      (  Zp11  Zp12  )
+  (  Zm21  Zm22  )      (  Zp21  Zp22  )
+
+The mass matrix before introducing this rotation:
+
+M11 = (+1*MG2)
+M12 = (+1*sb*MW*Sqrt2)
+M21 = (+1*cb*MW*Sqrt2)
+M22 = (+1*mu)
+
+---------------------------------------------------------------
+Mixing of particles ['~b1', '~b2']
+
+M11 (~B1/~b1) = (+1/3/CW**2*MW**2*SW**2*Zd33**2*c2b-1/2/CW**2*MW**2*Zd33**2*c2b-1/3/CW**2*MW**2*SW**2*Zd63**2*c2b-2*Mb*Zd33*Zd63/cb*mu*sb+1*Mb**2*Zd63**2+1*Mb**2*Zd33**2+1*Mq3**2*Zd33**2+1*Md3**2*Zd63**2+2/EE*MW*SW*Sqrt2*Zd33*Zd63*cb*ds3)
+    = +464.487253**2
+    Declared mass MSb1=505.591262
+
+
+M12 (~B1/~b2) = (+1/3/CW**2*MW**2*SW**2*Zd33*Zd36*c2b-1/2/CW**2*MW**2*Zd33*Zd36*c2b-1/3/CW**2*MW**2*SW**2*Zd63*Zd66*c2b-1*Mb*Zd33*Zd66/cb*mu*sb-1*Mb*Zd36*Zd63/cb*mu*sb+1*Mb**2*Zd63*Zd66+1*Mb**2*Zd33*Zd36+1*Mq3**2*Zd33*Zd36+1*Md3**2*Zd63*Zd66+1/EE*MW*SW*Sqrt2*Zd36*Zd63*cb*ds3+1/EE*MW*SW*Sqrt2*Zd33*Zd66*cb*ds3)
+    = -97.738599**2
+
+
+M21 (~B2/~b1) = (+1/3/CW**2*MW**2*SW**2*Zd33*Zd36*c2b-1/2/CW**2*MW**2*Zd33*Zd36*c2b-1/3/CW**2*MW**2*SW**2*Zd63*Zd66*c2b-1*Mb*Zd36*Zd63/cb*mu*sb-1*Mb*Zd33*Zd66/cb*mu*sb+1*Mb**2*Zd63*Zd66+1*Mb**2*Zd33*Zd36+1*Mq3**2*Zd33*Zd36+1*Md3**2*Zd63*Zd66+1/EE*MW*SW*Sqrt2*Zd33*Zd66*cb*ds3+1/EE*MW*SW*Sqrt2*Zd36*Zd63*cb*ds3)
+    = -97.738599**2
+
+
+M22 (~B2/~b2) = (+1/3/CW**2*MW**2*SW**2*Zd36**2*c2b-1/2/CW**2*MW**2*Zd36**2*c2b-1/3/CW**2*MW**2*SW**2*Zd66**2*c2b-2*Mb*Zd36*Zd66/cb*mu*sb+1*Mb**2*Zd66**2+1*Mb**2*Zd36**2+1*Mq3**2*Zd36**2+1*Md3**2*Zd66**2+2/EE*MW*SW*Sqrt2*Zd36*Zd66*cb*ds3)
+    = +510.382930**2
+    Declared mass MSb2=545.150567
+
+
+Looking for the mixing matrix...
+It is recognized that these fields are rotated by matrix:
+
+  (  Zd33  Zd36  )
+  (  Zd63  Zd66  )
+
+The mass matrix before introducing this rotation:
+
+M11 = (+1/3/CW**2*MW**2*SW**2*c2b-1/2/CW**2*MW**2*c2b+1*Mb**2+1*Mq3**2)
+M12 = (-1*Mb/cb*mu*sb+1/EE*MW*SW*Sqrt2*cb*ds3)
+M22 = (-1/3/CW**2*MW**2*SW**2*c2b+1*Mb**2+1*Md3**2)
+
+---------------------------------------------------------------
+Mixing of particles ['~l1', '~l2']
+
+M11 (~L1/~l1) = (-1/2*C2W/CW**2*MW**2*Zl33**2*c2b-1/CW**2*MW**2*SW**2*Zl63**2*c2b-2*Ml*Zl33*Zl63/cb*mu*sb+1*Ml**2*Zl63**2+1*Ml**2*Zl33**2+1*Ml3**2*Zl33**2+1*Mr3**2*Zl63**2+2/EE*MW*SW*Sqrt2*Zl33*Zl63*cb*ls3)
+    = +106.323043**2
+    Declared mass MSl1=107.942990
+
+
+M12 (~L1/~l2) = (-1/2*C2W/CW**2*MW**2*Zl33*Zl36*c2b-1/CW**2*MW**2*SW**2*Zl63*Zl66*c2b-1*Ml*Zl33*Zl66/cb*mu*sb-1*Ml*Zl36*Zl63/cb*mu*sb+1*Ml**2*Zl63*Zl66+1*Ml**2*Zl33*Zl36+1*Ml3**2*Zl33*Zl36+1*Mr3**2*Zl63*Zl66+1/EE*MW*SW*Sqrt2*Zl33*Zl66*cb*ls3+1/EE*MW*SW*Sqrt2*Zl36*Zl63*cb*ls3)
+    = +9.640704**2
+
+
+M21 (~L2/~l1) = (-1/2*C2W/CW**2*MW**2*Zl33*Zl36*c2b-1/CW**2*MW**2*SW**2*Zl63*Zl66*c2b-1*Ml*Zl36*Zl63/cb*mu*sb-1*Ml*Zl33*Zl66/cb*mu*sb+1*Ml**2*Zl63*Zl66+1*Ml**2*Zl33*Zl36+1*Ml3**2*Zl33*Zl36+1*Mr3**2*Zl63*Zl66+1/EE*MW*SW*Sqrt2*Zl36*Zl63*cb*ls3+1/EE*MW*SW*Sqrt2*Zl33*Zl66*cb*ls3)
+    = +9.640704**2
+
+
+M22 (~L2/~l2) = (-1/2*C2W/CW**2*MW**2*Zl36**2*c2b-1/CW**2*MW**2*SW**2*Zl66**2*c2b-2*Ml*Zl36*Zl66/cb*mu*sb+1*Ml**2*Zl66**2+1*Ml**2*Zl36**2+1*Ml3**2*Zl36**2+1*Mr3**2*Zl66**2+2/EE*MW*SW*Sqrt2*Zl36*Zl66*cb*ls3)
+    = +192.155988**2
+    Declared mass MSl2=194.727947
+
+
+Looking for the mixing matrix...
+It is recognized that these fields are rotated by matrix:
+
+  (  Zl33  Zl36  )
+  (  Zl63  Zl66  )
+
+The mass matrix before introducing this rotation:
+
+M11 = (-1/2*C2W/CW**2*MW**2*c2b+1*Ml**2+1*Ml3**2)
+M12 = (-1*Ml/cb*mu*sb+1/EE*MW*SW*Sqrt2*cb*ls3)
+M22 = (-1/CW**2*MW**2*SW**2*c2b+1*Ml**2+1*Mr3**2)
+
+---------------------------------------------------------------
+Mixing of particles ['~t1', '~t2']
+
+M11 (~T1/~t1) = (-2/3/CW**2*MW**2*SW**2*Zu33**2*c2b+1/2/CW**2*MW**2*Zu33**2*c2b+2/3/CW**2*MW**2*SW**2*Zu63**2*c2b-2*Mt*Zu33*Zu63*cb*mu/sb+1*Mt**2*Zu63**2+1*Mt**2*Zu33**2+1*Mq3**2*Zu33**2+1*Mu3**2*Zu63**2-2/EE*MW*SW*Sqrt2*Zu33*Zu63*sb*us3)
+    = +322.174981**2
+    Declared mass MSt1=365.780804
+
+
+M12 (~T1/~t2) = (-2/3/CW**2*MW**2*SW**2*Zu33*Zu36*c2b+1/2/CW**2*MW**2*Zu33*Zu36*c2b+2/3/CW**2*MW**2*SW**2*Zu63*Zu66*c2b-1*Mt*Zu33*Zu66*cb*mu/sb-1*Mt*Zu36*Zu63*cb*mu/sb+1*Mt**2*Zu63*Zu66+1*Mt**2*Zu33*Zu36+1*Mq3**2*Zu33*Zu36+1*Mu3**2*Zu63*Zu66-1/EE*MW*SW*Sqrt2*Zu36*Zu63*sb*us3-1/EE*MW*SW*Sqrt2*Zu33*Zu66*sb*us3)
+    = +77.333555**2
+
+
+M21 (~T2/~t1) = (-2/3/CW**2*MW**2*SW**2*Zu33*Zu36*c2b+1/2/CW**2*MW**2*Zu33*Zu36*c2b+2/3/CW**2*MW**2*SW**2*Zu63*Zu66*c2b-1*Mt*Zu36*Zu63*cb*mu/sb-1*Mt*Zu33*Zu66*cb*mu/sb+1*Mt**2*Zu63*Zu66+1*Mt**2*Zu33*Zu36+1*Mq3**2*Zu33*Zu36+1*Mu3**2*Zu63*Zu66-1/EE*MW*SW*Sqrt2*Zu33*Zu66*sb*us3-1/EE*MW*SW*Sqrt2*Zu36*Zu63*sb*us3)
+    = +77.333555**2
+
+
+M22 (~T2/~t2) = (-2/3/CW**2*MW**2*SW**2*Zu36**2*c2b+1/2/CW**2*MW**2*Zu36**2*c2b+2/3/CW**2*MW**2*SW**2*Zu66**2*c2b-2*Mt*Zu36*Zu66*cb*mu/sb+1*Mt**2*Zu66**2+1*Mt**2*Zu36**2+1*Mq3**2*Zu36**2+1*Mu3**2*Zu66**2-2/EE*MW*SW*Sqrt2*Zu36*Zu66*sb*us3)
+    = +568.701666**2
+    Declared mass MSt2=584.872186
+
+
+Looking for the mixing matrix...
+It is recognized that these fields are rotated by matrix:
+
+  (  Zu33  Zu36  )
+  (  Zu63  Zu66  )
+
+The mass matrix before introducing this rotation:
+
+M11 = (-2/3/CW**2*MW**2*SW**2*c2b+1/2/CW**2*MW**2*c2b+1*Mt**2+1*Mq3**2)
+M12 = (-1*Mt*cb*mu/sb-1/EE*MW*SW*Sqrt2*sb*us3)
+M22 = (+2/3/CW**2*MW**2*SW**2*c2b+1*Mt**2+1*Mu3**2)
+
+---------------------------------------------------------------
+Mixing of particles ['~o1', '~o2', '~o3', '~o4']
+
+M11 (~o1/~o1) = (+2*MW*Zn21*Zn31*cb-2/CW*MW*SW*Zn11*Zn31*cb-2*MW*Zn21*Zn41*sb+2/CW*MW*SW*Zn11*Zn41*sb-2*Zn31*Zn41*mu+1*MG1*Zn11**2+1*MG2*Zn21**2)
+    = +100.982822
+    Declared mass MNE1=97.986089
+
+
+M12 (~o1/~o2) = (+1*MW*Zn22*Zn31*cb+1*MW*Zn21*Zn32*cb-1/CW*MW*SW*Zn11*Zn32*cb-1/CW*MW*SW*Zn12*Zn31*cb-1*MW*Zn22*Zn41*sb-1*MW*Zn21*Zn42*sb+1/CW*MW*SW*Zn11*Zn42*sb+1/CW*MW*SW*Zn12*Zn41*sb-1*Zn31*Zn42*mu-1*Zn32*Zn41*mu+1*MG1*Zn11*Zn12+1*MG2*Zn21*Zn22)
+    = +0.182190
+
+
+M13 (~o1/~o3) = (+1*MW*Zn23*Zn31*cb+1*MW*Zn21*Zn33*cb-1/CW*MW*SW*Zn11*Zn33*cb-1/CW*MW*SW*Zn13*Zn31*cb-1*MW*Zn23*Zn41*sb-1*MW*Zn21*Zn43*sb+1/CW*MW*SW*Zn11*Zn43*sb+1/CW*MW*SW*Zn13*Zn41*sb-1*Zn31*Zn43*mu-1*Zn33*Zn41*mu+1*MG1*Zn11*Zn13+1*MG2*Zn21*Zn23)
+    = +0.576288
+
+
+M14 (~o1/~o4) = (+1*MW*Zn24*Zn31*cb+1*MW*Zn21*Zn34*cb-1/CW*MW*SW*Zn11*Zn34*cb-1/CW*MW*SW*Zn14*Zn31*cb-1*MW*Zn24*Zn41*sb-1*MW*Zn21*Zn44*sb+1/CW*MW*SW*Zn11*Zn44*sb+1/CW*MW*SW*Zn14*Zn41*sb-1*Zn31*Zn44*mu-1*Zn34*Zn41*mu+1*MG1*Zn11*Zn14+1*MG2*Zn21*Zn24)
+    = -0.493614
+
+
+M22 (~o2/~o2) = (+2*MW*Zn22*Zn32*cb-2/CW*MW*SW*Zn12*Zn32*cb-2*MW*Zn22*Zn42*sb+2/CW*MW*SW*Zn12*Zn42*sb-2*Zn32*Zn42*mu+1*MG1*Zn12**2+1*MG2*Zn22**2)
+    = +180.757708
+    Declared mass MNE2=184.037459
+
+
+M23 (~o2/~o3) = (+1*MW*Zn23*Zn32*cb+1*MW*Zn22*Zn33*cb-1/CW*MW*SW*Zn12*Zn33*cb-1/CW*MW*SW*Zn13*Zn32*cb-1*MW*Zn23*Zn42*sb-1*MW*Zn22*Zn43*sb+1/CW*MW*SW*Zn12*Zn43*sb+1/CW*MW*SW*Zn13*Zn42*sb-1*Zn32*Zn43*mu-1*Zn33*Zn42*mu+1*MG1*Zn12*Zn13+1*MG2*Zn22*Zn23)
+    = +0.243661
+
+
+M24 (~o2/~o4) = (+1*MW*Zn24*Zn32*cb+1*MW*Zn22*Zn34*cb-1/CW*MW*SW*Zn12*Zn34*cb-1/CW*MW*SW*Zn14*Zn32*cb-1*MW*Zn24*Zn42*sb-1*MW*Zn22*Zn44*sb+1/CW*MW*SW*Zn12*Zn44*sb+1/CW*MW*SW*Zn14*Zn42*sb-1*Zn32*Zn44*mu-1*Zn34*Zn42*mu+1*MG1*Zn12*Zn14+1*MG2*Zn22*Zn24)
+    = +0.802116
+
+
+M33 (~o3/~o3) = (+2*MW*Zn23*Zn33*cb-2/CW*MW*SW*Zn13*Zn33*cb-2*MW*Zn23*Zn43*sb+2/CW*MW*SW*Zn13*Zn43*sb-2*Zn33*Zn43*mu+1*MG1*Zn13**2+1*MG2*Zn23**2)
+    = -401.983213
+    Declared mass MNE3=-400.428528
+
+
+M34 (~o3/~o4) = (+1*MW*Zn24*Zn33*cb+1*MW*Zn23*Zn34*cb-1/CW*MW*SW*Zn13*Zn34*cb-1/CW*MW*SW*Zn14*Zn33*cb-1*MW*Zn24*Zn43*sb-1*MW*Zn23*Zn44*sb+1/CW*MW*SW*Zn13*Zn44*sb+1/CW*MW*SW*Zn14*Zn43*sb-1*Zn33*Zn44*mu-1*Zn34*Zn43*mu+1*MG1*Zn13*Zn14+1*MG2*Zn23*Zn24)
+    = -0.721982
+
+
+M44 (~o4/~o4) = (+2*MW*Zn24*Zn34*cb-2/CW*MW*SW*Zn14*Zn34*cb-2*MW*Zn24*Zn44*sb+2/CW*MW*SW*Zn14*Zn44*sb-2*Zn34*Zn44*mu+1*MG1*Zn14**2+1*MG2*Zn24**2)
+    = +417.228303
+    Declared mass MNE4=413.944062
+
+
+Looking for the mixing matrix...
+It is recognized that these fields are rotated by matrix:
+
+  (  Zn11  Zn12  Zn13  Zn14  )
+  (  Zn21  Zn22  Zn23  Zn24  )
+  (  Zn31  Zn32  Zn33  Zn34  )
+  (  Zn41  Zn42  Zn43  Zn44  )
+
+The mass matrix before introducing this rotation:
+
+M11 = (+1*MG1)
+M12 = 0
+M13 = (-1/CW*MW*SW*cb)
+M14 = (+1/CW*MW*SW*sb)
+M22 = (+1*MG2)
+M23 = (+1*MW*cb)
+M24 = (-1*MW*sb)
+M33 = 0
+M34 = (-1*mu)
+M44 = 0
