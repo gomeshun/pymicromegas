@@ -1,5 +1,5 @@
 # pymicromegas
-Python interface of micromegas.
+Python interface of micromegas (unofficial)
 
 ## Features
 pymicromegas:
