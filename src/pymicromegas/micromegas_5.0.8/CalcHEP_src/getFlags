@@ -47,7 +47,7 @@ Linux) if(test "$CC" = "icc") then
      ;;
 
 Darwin)CC=clang
-       CFLAGS="-g -fsigned-char -std=gnu99"
+  CFLAGS="-g -fsigned-char -std=gnu99 -Wno-error=implicit-function-declaration -Wno-implicit-function-declaration"
        lDL=-ldl
        SHARED=-dynamiclib
        SONAME="-install_name "
@@ -167,7 +167,7 @@ RANLIB = $RANLIB
 lFort = $lFort
 CXX=$CXX    
 CXXFLAGS = $CXXFLAGS 
-CALCHEP = `pwd`
+CALCHEP = \$(patsubst %/,%,\$(dir \$(abspath \$(lastword \$(MAKEFILE_LIST)))))
 UNAME = `uname`
 export CC CFLAGS  lDL LX11 SHARED SONAME SO FC FFLAGS RANLIB CXX CXXFLAGS lFort
 
@@ -541,6 +541,14 @@ echo MAKE= $MAKE
   defaultFlags
   writeFlags  
 fi
+
+case `uname` in
+Darwin) case "$CFLAGS" in
+          *Wno-error=implicit-function-declaration*) ;;
+          *) CFLAGS="$CFLAGS -Wno-error=implicit-function-declaration -Wno-implicit-function-declaration" ;;
+        esac
+     ;;
+esac
 
 testCC;  if(test $? -ne 0  ) then  exit 1; fi
 

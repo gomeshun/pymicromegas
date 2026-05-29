@@ -19,6 +19,7 @@
 #include "usrfun.h"
 #include "nType.h"
 #include "rw_sess.h"
+#include "qcdScale.h"
 
 static REAL pvect4[16];
 

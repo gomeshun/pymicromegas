@@ -22,6 +22,8 @@
 #include "dynamic_cs.h"
 
 #include"SLHAplus.h"
+
+extern char * trim(char *);
   
 char  * libDir=NULL;
 char  * modelDir=NULL;

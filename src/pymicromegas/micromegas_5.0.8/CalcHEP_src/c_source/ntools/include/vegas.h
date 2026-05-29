@@ -31,6 +31,8 @@ extern vegasGrid *  vegas_init
 
 extern void vegas_finish( vegasGrid * vegPtr);
 
+extern void setEventCubes(vegasGrid * vegPtr, long nCubes);
+
 extern int (*vegas_control)(double x); 
 
 extern long vegas_int(vegasGrid * vegPtr, 
