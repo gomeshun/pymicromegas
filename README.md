@@ -111,7 +111,17 @@ method exists.
 - Builds a generated shared library in the micrOMEGAs project directory.
 - Provides convenience methods such as `assign`, `find_value`, `dark_omega`,
   `dark_omega2`, `dark_omega_freeze_in`, `dark_omega_freeze_in_22`,
-  `dark_omega_freeze_in_decay`, and `dark_omega_tr`.
+  `dark_omega_freeze_in_decay`, `dark_omega_tr`, `dark_omega_fo`,
+  `dark_omega2_tr`, `dark_omega_n`, and `dark_omega_infl`.
+- Adds Pythonic wrappers for simple public `micromegas.h` APIs, including
+  particle lookups, LEP/Z constraints, thermodynamic functions, equilibrium
+  abundances, cross-section helpers, FreezeIn helper yields, halo/profile
+  helpers, spectrum-table utilities, neutrino tables, and scalar/nucleon form
+  factor helpers. Check `model.available_header_methods` for the functions
+  exported by the current project library.
+- Converts common C output patterns into Python values: text printers return
+  strings, scalar output pointers return dictionaries, and `NZ=250` spectra are
+  returned as `numpy.ndarray` objects.
 - Exposes v7 N-component metadata through bridge helpers such as
   `pymicromegas_cdm_name`, `pymicromegas_cdm_mass`, and
   `pymicromegas_cdm_fraction` on `model.lib`.

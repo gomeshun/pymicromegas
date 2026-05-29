@@ -97,6 +97,31 @@ class MicrOmegasIntegrationTest(unittest.TestCase):
         self.assertTrue(model.is_feeble("~x1"))
         self.assertTrue(result["channels"])
 
+    def test_default_model_ctypes_header_wrappers(self):
+        model = MicrOmegas("SingletDM")
+        model.assign(SINGLETDM_VALID_PARAMETERS)
+        model.sort_odd_particles()
+
+        self.assertEqual(str(model.pdg_name(25)), "h")
+        self.assertGreater(int(model.particle_number("~x1")), 0)
+        self.assertAlmostEqual(float(model.particle_mass("~x1")), SINGLETDM_VALID_PARAMETERS["Mdm1"])
+        self.assertGreater(float(model.h_eff(1.0)), 0.0)
+        self.assertGreater(float(model.g_eff(1.0)), 0.0)
+        self.assertGreater(float(model.hubble(1.0)), 0.0)
+
+        next_odd = model.next_odd(0)
+        self.assertEqual(next_odd["name"], "~x1")
+        self.assertAlmostEqual(next_odd["mass"], SINGLETDM_VALID_PARAMETERS["Mdm1"])
+
+        lep = model.lsp_nlsp_lep()
+        self.assertIn("excluded", lep)
+        self.assertIn("cross_section_limit", lep)
+        self.assertIn("~x1", model.print_masses())
+
+        freeze_out = model.dark_omega_fo(SINGLETDM_VALID_PARAMETERS)
+        assert_valid_omega(self, freeze_out)
+        self.assertEqual(freeze_out["err"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()
