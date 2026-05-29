@@ -26,8 +26,6 @@ pymicromegas = [
     "main.c",
     "main.cpp",
     "_main.c",
-    "data/*.dat",
-    "micromegas_7.1/**/*",
 ]
 
 [dependency-groups]

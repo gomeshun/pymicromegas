@@ -20,7 +20,9 @@ from .processes import (
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 MICROMEGAS_VERSION = "7.1"
-MICROMEGAS_DIR = PACKAGE_DIR / f"micromegas_{MICROMEGAS_VERSION}"
+MICROMEGAS_PATH_ENV = "PYMICROMEGAS_MICROPATH"
+DEFAULT_MICROMEGAS_DIR = PACKAGE_DIR / f"micromegas_{MICROMEGAS_VERSION}"
+MICROMEGAS_DIR = Path(os.environ.get(MICROMEGAS_PATH_ENV, DEFAULT_MICROMEGAS_DIR)).expanduser().resolve()
 PYTHON_MAIN_C = PACKAGE_DIR / "main.c"
 PYTHON_MAIN_CPP = PACKAGE_DIR / "main.cpp"
 PYTHON_MAIN_SOURCE = "pymicromegas_main.c"
@@ -72,9 +74,13 @@ def to_abspath(path):
     return str(Path(path).resolve())
 
 
+def get_micromegas_dir():
+    return Path(os.environ.get(MICROMEGAS_PATH_ENV, DEFAULT_MICROMEGAS_DIR)).expanduser().resolve()
+
+
 def micromegas_env():
     env = os.environ.copy()
-    env["PYMICROMEGAS_MICROPATH"] = str(MICROMEGAS_DIR)
+    env[MICROMEGAS_PATH_ENV] = str(get_micromegas_dir())
     return env
     
     
@@ -120,12 +126,18 @@ def ensure_project_workdirs(project_path):
 class PyMicrOmegas:    
     
     def __init__(self,verbose=False):
-        self.path = dir_micromegas
+        self.micromegas_dir = get_micromegas_dir()
+        self.path = str(self.micromegas_dir) + os.sep
         self.verbose = verbose
-        os.environ["PYMICROMEGAS_MICROPATH"] = str(MICROMEGAS_DIR)
+        os.environ[MICROMEGAS_PATH_ENV] = str(self.micromegas_dir)
         
         if not os.path.isdir(self.path):
-            raise RuntimeError(f"micromegas directory is missing: {self.path}")
+            raise RuntimeError(
+                "micrOMEGAs is not bundled with pymicromegas. "
+                f"Download micrOMEGAs {MICROMEGAS_VERSION} from the official site or Zenodo, "
+                f"unpack it, and set {MICROMEGAS_PATH_ENV} to that directory. "
+                f"Missing: {self.path}"
+            )
     
     
     def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):
@@ -227,7 +239,7 @@ class Project:
         self.interface = PyMicrOmegas()
         if not self.interface.project_exists(project_name): raise RuntimeError("Project {} does not exist yet. Create it by PyMicrOmegas.create_newproject.".format(project_name))
         self.project_name = project_name
-        self.path = str(Path(dir_micromegas) / project_name) + os.sep
+        self.path = str(Path(self.interface.path) / project_name) + os.sep
         self.models_path = str(Path(self.path) / "work" / "models") + os.sep
         self.main_source = PYTHON_MAIN_SOURCE
         self.main_executable = PYTHON_MAIN_EXECUTABLE

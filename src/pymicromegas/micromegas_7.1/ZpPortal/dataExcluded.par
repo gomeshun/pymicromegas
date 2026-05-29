@@ -1,8 +1,0 @@
-# file to improve default parameters
-#! FreezeIn
-Mdm     10         # mass of Dark Matter
-MZp     1E3       # mass of Z'
-gZp     2.93E-3  #  Coupling of Zp to SM quarks and leptons
-gZpDm   8E-11
-YpD     0
-YpU     1

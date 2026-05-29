@@ -13,16 +13,21 @@ directly with micrOMEGAs project directories.
 
 ## Source Version
 
-This package currently vendors micrOMEGAs 7.1 from Zenodo record `20267206`:
+This package targets micrOMEGAs 7.1 but does not redistribute micrOMEGAs
+source code or binaries. micrOMEGAs does not include a clear open-source
+redistribution license in the official source archive/manual, so users must
+obtain micrOMEGAs separately from the official project site or Zenodo and
+follow the micrOMEGAs terms and citation requirements.
 
-- source tree: `src/pymicromegas/micromegas_7.1/`
-- archive checksum: `md5:aa066ac8d712a9c5eca4134a168f1f15`
-- local integration patch: `sources/omega.c` uses C99 `isfinite()` instead of
-  the obsolete `finite()` call for macOS/clang compatibility
+Set `PYMICROMEGAS_MICROPATH` to the unpacked micrOMEGAs directory before using
+the wrapper:
 
-The vendored source tree is included as package data and is built by the Python
-build backend when the package is installed. Importing `pymicromegas` itself does
-not run `make`.
+```bash
+export PYMICROMEGAS_MICROPATH=/path/to/micromegas_7.1
+```
+
+`pymicromegas` will build micrOMEGAs in that user-provided directory when a
+project is compiled. Importing `pymicromegas` itself does not run `make`.
 
 ## Install
 

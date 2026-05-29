@@ -5,7 +5,15 @@ import unittest
 import uuid
 from pathlib import Path
 
-from pymicromegas import MICROMEGAS_DIR, MICROMEGAS_VERSION, MicrOmegas, Project, PyMicrOmegas
+from pymicromegas import (
+    DEFAULT_MICROMEGAS_DIR,
+    MICROMEGAS_DIR,
+    MICROMEGAS_PATH_ENV,
+    MICROMEGAS_VERSION,
+    MicrOmegas,
+    Project,
+    PyMicrOmegas,
+)
 
 
 SINGLETDM_VALID_PARAMETERS = {
@@ -43,12 +51,19 @@ class ImportBehaviorTest(unittest.TestCase):
 
 
 class VendoredSourceTest(unittest.TestCase):
-    def test_micromegas_source_version_is_7_1(self):
+    def test_micromegas_source_is_not_vendored(self):
         self.assertEqual(MICROMEGAS_VERSION, "7.1")
-        self.assertEqual(Path(MICROMEGAS_DIR).name, "micromegas_7.1")
-        self.assertTrue((Path(MICROMEGAS_DIR) / "man" / "manual_7.1.tex").is_file())
+        self.assertEqual(Path(DEFAULT_MICROMEGAS_DIR).name, "micromegas_7.1")
+        self.assertFalse(Path(DEFAULT_MICROMEGAS_DIR).exists())
+
+    def test_missing_micromegas_path_has_setup_guidance(self):
+        if Path(MICROMEGAS_DIR).is_dir():
+            self.skipTest(f"{MICROMEGAS_PATH_ENV} points to an existing micrOMEGAs tree")
+        with self.assertRaisesRegex(RuntimeError, MICROMEGAS_PATH_ENV):
+            PyMicrOmegas()
 
 
+@unittest.skipUnless(Path(MICROMEGAS_DIR).is_dir(), f"set {MICROMEGAS_PATH_ENV} to run micrOMEGAs integration tests")
 class MicrOmegasIntegrationTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

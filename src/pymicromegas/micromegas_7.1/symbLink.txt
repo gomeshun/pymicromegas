@@ -1,2 +1,0 @@
-ln -s CalcHEP_4.1 CalcHEP_src  
-rm CalcHEP_src 
