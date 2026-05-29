@@ -60,6 +60,26 @@ print(omega["Omega"])
 print(omega["Xf"])
 ```
 
+Freeze-in calculations are also available through `MicrOmegas`:
+
+```python
+from pymicromegas import MicrOmegas
+
+parameters = {
+  "Q": 100.0,
+  "Mh": 120.0,
+  "laS": 0.0,
+  "laSH": 1e-11,
+  "Mdm1": 70.0,
+}
+
+model = MicrOmegas("SingletDM")
+omega_fi = model.dark_omega_freeze_in(parameters, channels=True)
+
+print(omega_fi["Omega"])
+print(omega_fi["channels"][:3])
+```
+
 For a custom model, pass the CalcHEP `.mdl` files when constructing the class:
 
 ```python
@@ -89,8 +109,9 @@ method exists.
 
 - Main Python-facing class for calculations.
 - Builds a generated shared library in the micrOMEGAs project directory.
-- Provides convenience methods such as `assign`, `find_value`, `dark_omega`, and
-  `dark_omega2`.
+- Provides convenience methods such as `assign`, `find_value`, `dark_omega`,
+  `dark_omega2`, `dark_omega_freeze_in`, `dark_omega_freeze_in_22`,
+  `dark_omega_freeze_in_decay`, and `dark_omega_tr`.
 - Exposes v7 N-component metadata through bridge helpers such as
   `pymicromegas_cdm_name`, `pymicromegas_cdm_mass`, and
   `pymicromegas_cdm_fraction` on `model.lib`.
