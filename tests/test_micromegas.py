@@ -16,6 +16,14 @@ SINGLETDM_VALID_PARAMETERS = {
     "Mdm1": 50.0,
 }
 
+SINGLETDM_FREEZEIN_PARAMETERS = {
+    "Q": 100.0,
+    "Mh": 120.0,
+    "laS": 0.0,
+    "laSH": 1e-11,
+    "Mdm1": 70.0,
+}
+
 
 def assert_valid_omega(testcase, result):
     testcase.assertIn("Omega", result)
@@ -61,7 +69,8 @@ class MicrOmegasIntegrationTest(unittest.TestCase):
         self.assertTrue(mdl_paths)
 
         try:
-            project = self.interface.create_newproject(project_name, return_project=True)
+            self.interface.create_newproject(project_name)
+            project = Project(project_name)
             project.load_mdl_files(mdl_paths)
             project.compile()
             result = project.calc_omega(SINGLETDM_VALID_PARAMETERS)
@@ -78,6 +87,15 @@ class MicrOmegasIntegrationTest(unittest.TestCase):
         self.assertIsNotNone(model.lib.pymicromegas_cdm1())
         self.assertGreater(model.lib.pymicromegas_mcdm1(), 0.0)
         self.assertAlmostEqual(model.lib.pymicromegas_cdm_fraction(1), 1.0)
+
+    def test_default_model_ctypes_dark_omega_freeze_in(self):
+        model = MicrOmegas("SingletDM")
+        result = model.dark_omega_freeze_in(SINGLETDM_FREEZEIN_PARAMETERS, channels=True)
+        assert_valid_omega(self, result)
+        self.assertEqual(result["err"], 0)
+        self.assertEqual(result["particle"], "~x1")
+        self.assertTrue(model.is_feeble("~x1"))
+        self.assertTrue(result["channels"])
 
 
 if __name__ == "__main__":
