@@ -16,7 +16,8 @@ These modified `main` files receive arguments like:
 
 # How to use it
 
-`git clone` to download pymicromegas. Then 
+`git clone` to download pymicromegas. The micrOMEGAs source tree is included
+as `micromegas_5.0.8/`, so it can be inspected and built directly. Then
 
 ```python
 from pymicromegas import PyMicrOmegas
@@ -52,9 +53,39 @@ print(output_dict)
 
 # Class
 
+## `MicrOmegas`
+- Integrated project and calculation wrapper that builds a generated shared
+  library in the micrOMEGAs project directory and loads it with `ctypes`.
+- It does not patch the upstream micrOMEGAs C sources.  The generated bridge is
+  small and is linked with the same project `Makefile` command, so future
+  micrOMEGAs makefile changes are reused as much as possible.
+- `MicrOmegas.lib` exposes the raw `ctypes.CDLL` object.  Use
+  `MicrOmegas.function(name, restype, argtypes)` or
+  `MicrOmegas.call(name, *args, restype=..., argtypes=...)` to call linked
+  micrOMEGAs functions directly when no convenience method exists.
+
+```python
+from pymicromegas import MicrOmegas
+
+mo = MicrOmegas("test", mdl_paths=["your_model_1.mdl", "your_model_2.mdl"])
+
+parameters = {
+  "parname1": 1.0,
+  "parname2": 10.0,
+}
+
+omega = mo.dark_omega(parameters)
+print(omega["Omega"])
+
+# Direct ctypes access to linked micrOMEGAs/project symbols is also available.
+mass = mo.find_value("Mcdm")
+raw_lib = mo.lib
+```
+
 ## `PyMicrOmegas`
 - wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.
-- When pymicromegas imported for the first time, it unzip `miccromegas_5.0.8.tgz` and install (make) it
+- When pymicromegas is imported for the first time, it installs (make) the
+  checked-in `micromegas_5.0.8/` source tree if it has not been built yet.
 
 If you want to modify micromegas, 
 1. clean
