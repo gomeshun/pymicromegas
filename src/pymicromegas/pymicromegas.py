@@ -1,8 +1,10 @@
 import os
 import ctypes
+import hashlib
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 import numpy as np
 from pandas import Series
@@ -363,6 +365,7 @@ class MicrOmegas:
     """
 
     BRIDGE_SOURCE = r"""
+#include <stdio.h>
 #include <string.h>
 
 #include "../include/micromegas.h"
@@ -414,6 +417,21 @@ int pymicromegas_load_heff_geff(const char *path)
     return loadHeffGeff((char *)path);
 }
 
+int pymicromegas_to_feeble_list(const char *name)
+{
+    return toFeebleList((char *)name);
+}
+
+int pymicromegas_is_feeble(const char *name)
+{
+    return isFeeble((char *)name);
+}
+
+int pymicromegas_n_feeble(void)
+{
+    return nFeeble;
+}
+
 double pymicromegas_dark_omega(double *xf, int fast, double beps, int *err)
 {
     return darkOmega(xf, fast, beps, err);
@@ -422,6 +440,35 @@ double pymicromegas_dark_omega(double *xf, int fast, double beps, int *err)
 double pymicromegas_dark_omega2(int fast, double beps, int *err)
 {
     return darkOmega2((double)fast, beps, err);
+}
+
+double pymicromegas_dark_omega_tr(double tr, double yr, int fast, double beps, int *err)
+{
+    return darkOmegaTR(tr, yr, fast, beps, err);
+}
+
+double pymicromegas_dark_omega_fi(double tr, const char *name, int *err)
+{
+    return darkOmegaFi(tr, (char *)name, err);
+}
+
+double pymicromegas_dark_omega_fi22(double tr, const char *process, const char *name, int *err)
+{
+    return darkOmegaFi22(tr, (char *)process, (char *)name, err);
+}
+
+double pymicromegas_dark_omega_fi_decay(double tr, const char *bath_particle, const char *name)
+{
+    return darkOmegaFiDecay(tr, (char *)bath_particle, (char *)name);
+}
+
+int pymicromegas_print_channels_fi(const char *path, double cut, int percent)
+{
+    FILE *file = fopen(path, "w");
+    if(!file) return 1;
+    printChannelsFi(cut, percent, file);
+    fclose(file);
+    return 0;
 }
 
 const char *pymicromegas_cdm_name(int sector)
@@ -483,7 +530,9 @@ double pymicromegas_mcdm2(void)
         self.path = self.micromegas_path / project_name
         self.models_path = self.path / "work" / "models"
         self.bridge_source = self.path / "pymicromegas_bridge.c"
-        self.library_path = self.path / ("libpymicromegas.dylib" if sys.platform == "darwin" else "libpymicromegas.so")
+        bridge_tag = hashlib.sha256(self.BRIDGE_SOURCE.encode("UTF-8")).hexdigest()[:12]
+        library_name = f"libpymicromegas_{bridge_tag}.dylib" if sys.platform == "darwin" else f"libpymicromegas_{bridge_tag}.so"
+        self.library_path = self.path / library_name
         self._lib = None
 
         self._ensure_project()
@@ -547,8 +596,18 @@ double pymicromegas_mcdm2(void)
             comments="=",
         )
 
+    def bridge_source_is_stale(self):
+        return not self.bridge_source.exists() or self.bridge_source.read_text() != self.BRIDGE_SOURCE
+
+    def bridge_library_is_stale(self):
+        if not self.library_path.exists():
+            return True
+        if self.bridge_source_is_stale():
+            return True
+        return self.bridge_source.exists() and self.bridge_source.stat().st_mtime > self.library_path.stat().st_mtime
+
     def write_bridge_source(self, force=False):
-        if force or not self.bridge_source.exists() or self.bridge_source.read_text() != self.BRIDGE_SOURCE:
+        if force or self.bridge_source_is_stale():
             self.bridge_source.write_text(self.BRIDGE_SOURCE)
         return self.bridge_source
 
@@ -571,8 +630,9 @@ double pymicromegas_mcdm2(void)
 
     def build_library(self, force=False):
         ensure_project_workdirs(self.path)
+        bridge_library_was_stale = self.bridge_library_is_stale()
         self.write_bridge_source(force=force)
-        if force or not self.library_path.exists():
+        if force or bridge_library_was_stale:
             self._run("make libs work/bin", check=True)
             self._run(self._shared_link_command(), check=True)
         return self.library_path
@@ -609,6 +669,12 @@ double pymicromegas_mcdm2(void)
         lib.pymicromegas_sort_odd_particles.restype = ctypes.c_int
         lib.pymicromegas_load_heff_geff.argtypes = [ctypes.c_char_p]
         lib.pymicromegas_load_heff_geff.restype = ctypes.c_int
+        lib.pymicromegas_to_feeble_list.argtypes = [ctypes.c_char_p]
+        lib.pymicromegas_to_feeble_list.restype = ctypes.c_int
+        lib.pymicromegas_is_feeble.argtypes = [ctypes.c_char_p]
+        lib.pymicromegas_is_feeble.restype = ctypes.c_int
+        lib.pymicromegas_n_feeble.argtypes = []
+        lib.pymicromegas_n_feeble.restype = ctypes.c_int
         lib.pymicromegas_dark_omega.argtypes = [
             ctypes.POINTER(ctypes.c_double),
             ctypes.c_int,
@@ -618,6 +684,35 @@ double pymicromegas_mcdm2(void)
         lib.pymicromegas_dark_omega.restype = ctypes.c_double
         lib.pymicromegas_dark_omega2.argtypes = [ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_int)]
         lib.pymicromegas_dark_omega2.restype = ctypes.c_double
+        lib.pymicromegas_dark_omega_tr.argtypes = [
+            ctypes.c_double,
+            ctypes.c_double,
+            ctypes.c_int,
+            ctypes.c_double,
+            ctypes.POINTER(ctypes.c_int),
+        ]
+        lib.pymicromegas_dark_omega_tr.restype = ctypes.c_double
+        lib.pymicromegas_dark_omega_fi.argtypes = [
+            ctypes.c_double,
+            ctypes.c_char_p,
+            ctypes.POINTER(ctypes.c_int),
+        ]
+        lib.pymicromegas_dark_omega_fi.restype = ctypes.c_double
+        lib.pymicromegas_dark_omega_fi22.argtypes = [
+            ctypes.c_double,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+            ctypes.POINTER(ctypes.c_int),
+        ]
+        lib.pymicromegas_dark_omega_fi22.restype = ctypes.c_double
+        lib.pymicromegas_dark_omega_fi_decay.argtypes = [
+            ctypes.c_double,
+            ctypes.c_char_p,
+            ctypes.c_char_p,
+        ]
+        lib.pymicromegas_dark_omega_fi_decay.restype = ctypes.c_double
+        lib.pymicromegas_print_channels_fi.argtypes = [ctypes.c_char_p, ctypes.c_double, ctypes.c_int]
+        lib.pymicromegas_print_channels_fi.restype = ctypes.c_int
         lib.pymicromegas_cdm_name.argtypes = [ctypes.c_int]
         lib.pymicromegas_cdm_name.restype = ctypes.c_char_p
         lib.pymicromegas_cdm_mass.argtypes = [ctypes.c_int]
@@ -653,6 +748,14 @@ double pymicromegas_mcdm2(void)
     def set_gauge(self, force_ug=0, vzdecay=0, vwdecay=0):
         self.lib.pymicromegas_set_gauge(int(force_ug), int(vzdecay), int(vwdecay))
 
+    def _resolve_particle_name(self, particle_name=None, sector=1):
+        if particle_name is not None:
+            return str(particle_name)
+        encoded_name = self.lib.pymicromegas_cdm_name(int(sector))
+        if encoded_name is None:
+            raise RuntimeError(f"Could not resolve CDM particle name for sector {sector}.")
+        return encoded_name.decode("UTF-8")
+
     def sort_odd_particles(self):
         cdm_name = ctypes.create_string_buffer(64)
         err = self.lib.pymicromegas_sort_odd_particles(cdm_name, len(cdm_name))
@@ -670,6 +773,23 @@ double pymicromegas_mcdm2(void)
         if err == 0:
             raise RuntimeError(f"Failed to load Heff/Geff data: cannot open file {dof_fname}")
         return err
+
+    def to_feeble_list(self, particle_name):
+        encoded_name = None if particle_name is None else str(particle_name).encode("UTF-8")
+        err = self.lib.pymicromegas_to_feeble_list(encoded_name)
+        if err:
+            raise RuntimeError(f"Could not add '{particle_name}' to the feeble-particle list.")
+        return None
+
+    def clear_feeble_list(self):
+        self.to_feeble_list(None)
+
+    def is_feeble(self, particle_name):
+        return bool(self.lib.pymicromegas_is_feeble(str(particle_name).encode("UTF-8")))
+
+    @property
+    def n_feeble(self):
+        return self.lib.pymicromegas_n_feeble()
 
     def dark_omega(self, parameters=None, dof_fname=None, fast=1, beps=1e-4):
         if parameters is not None:
@@ -695,6 +815,139 @@ double pymicromegas_mcdm2(void)
         if err.value:
             raise RuntimeError(f"darkOmega2 failed with error code {err.value}.")
         return omega
+
+    def dark_omega_tr(self, parameters=None, tr=1e10, yr=0.0, fast=1, beps=1e-4):
+        if parameters is not None:
+            self.assign(parameters)
+        self.set_gauge()
+        self.sort_odd_particles()
+        err = ctypes.c_int()
+        omega = self.lib.pymicromegas_dark_omega_tr(
+            float(tr), float(yr), int(fast), float(beps), ctypes.byref(err)
+        )
+        return {"Omega": omega, "TR": float(tr), "YR": float(yr), "err": err.value}
+
+    def prepare_freeze_in(self, parameters=None, particle_name=None, sector=1, reset_feeble=True):
+        if parameters is not None:
+            self.assign(parameters)
+        self.set_gauge()
+        sorted_particle_name = self.sort_odd_particles()
+        if particle_name is None and sorted_particle_name:
+            particle_name = sorted_particle_name
+        particle_name = self._resolve_particle_name(particle_name, sector=sector)
+        if reset_feeble:
+            self.clear_feeble_list()
+        self.to_feeble_list(particle_name)
+        return particle_name
+
+    def freeze_in_channels(self, cut=0.0, percent=False):
+        tmp_path = None
+        try:
+            with tempfile.NamedTemporaryFile("w+", delete=False) as tmp_file:
+                tmp_path = Path(tmp_file.name)
+            err = self.lib.pymicromegas_print_channels_fi(
+                str(tmp_path).encode("UTF-8"), float(cut), int(bool(percent))
+            )
+            if err:
+                raise RuntimeError("Failed to write freeze-in channels.")
+            return self.parse_freeze_in_channels(tmp_path.read_text())
+        finally:
+            if tmp_path is not None:
+                tmp_path.unlink(missing_ok=True)
+
+    @staticmethod
+    def parse_freeze_in_channels(text):
+        channels = []
+        for line in text.splitlines():
+            terms = line.split()
+            if len(terms) < 5 or terms[3] != "->":
+                continue
+            channels.append(
+                {
+                    "weight": float(terms[0]),
+                    "in": (terms[1].rstrip(","), terms[2]),
+                    "out": tuple(term.strip() for term in " ".join(terms[4:]).split(",")),
+                }
+            )
+        return channels
+
+    def dark_omega_freeze_in(
+        self,
+        parameters=None,
+        particle_name=None,
+        sector=1,
+        tr=1e10,
+        reset_feeble=True,
+        channels=False,
+        channel_cut=0.0,
+        channel_percent=False,
+    ):
+        particle_name = self.prepare_freeze_in(
+            parameters=parameters,
+            particle_name=particle_name,
+            sector=sector,
+            reset_feeble=reset_feeble,
+        )
+        err = ctypes.c_int()
+        omega = self.lib.pymicromegas_dark_omega_fi(
+            float(tr), particle_name.encode("UTF-8"), ctypes.byref(err)
+        )
+        result = {"Omega": omega, "TR": float(tr), "particle": particle_name, "err": err.value}
+        if channels:
+            result["channels"] = self.freeze_in_channels(cut=channel_cut, percent=channel_percent)
+        return result
+
+    def dark_omega_freeze_in_22(
+        self,
+        process,
+        parameters=None,
+        particle_name=None,
+        sector=1,
+        tr=1e10,
+        reset_feeble=True,
+    ):
+        particle_name = self.prepare_freeze_in(
+            parameters=parameters,
+            particle_name=particle_name,
+            sector=sector,
+            reset_feeble=reset_feeble,
+        )
+        err = ctypes.c_int()
+        omega = self.lib.pymicromegas_dark_omega_fi22(
+            float(tr), str(process).encode("UTF-8"), particle_name.encode("UTF-8"), ctypes.byref(err)
+        )
+        return {
+            "Omega": omega,
+            "TR": float(tr),
+            "particle": particle_name,
+            "process": str(process),
+            "err": err.value,
+        }
+
+    def dark_omega_freeze_in_decay(
+        self,
+        bath_particle,
+        parameters=None,
+        particle_name=None,
+        sector=1,
+        tr=1e10,
+        reset_feeble=True,
+    ):
+        particle_name = self.prepare_freeze_in(
+            parameters=parameters,
+            particle_name=particle_name,
+            sector=sector,
+            reset_feeble=reset_feeble,
+        )
+        omega = self.lib.pymicromegas_dark_omega_fi_decay(
+            float(tr), str(bath_particle).encode("UTF-8"), particle_name.encode("UTF-8")
+        )
+        return {
+            "Omega": omega,
+            "TR": float(tr),
+            "particle": particle_name,
+            "bath_particle": str(bath_particle),
+        }
 
     def function(self, name, restype=ctypes.c_double, argtypes=None):
         func = getattr(self.lib, name)
