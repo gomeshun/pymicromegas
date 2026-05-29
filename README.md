@@ -24,6 +24,15 @@ The vendored source tree is included as package data and is built by the Python
 build backend when the package is installed. Importing `pymicromegas` itself does
 not run `make`.
 
+## License
+
+This repository is distributed under the GNU General Public License v3.0; see
+the `LICENSE` file for the full text.
+
+The package vendors micrOMEGAs and associated third-party components under
+`src/pymicromegas/micromegas_7.1/`. Those components remain subject to their
+respective upstream license notices.
+
 ## Install
 
 From a source checkout:

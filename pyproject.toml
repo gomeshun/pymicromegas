@@ -7,10 +7,14 @@ name = "pymicromegas"
 version = "0.1.0"
 description = "Python interface for micrOMEGAs"
 readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.4.6",
     "pandas>=3.0.3",
+]
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
 
 [tool.setuptools]
