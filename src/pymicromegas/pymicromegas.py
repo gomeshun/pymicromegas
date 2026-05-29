@@ -3,12 +3,21 @@ import ctypes
 import shutil
 import subprocess
 import sys
-from pathlib import Path 
+from pathlib import Path
 import numpy as np
 from pandas import Series
 
 
-dir_micromegas = os.path.dirname(__file__) + "/micromegas_5.0.8/"
+PACKAGE_DIR = Path(__file__).resolve().parent
+MICROMEGAS_DIR = PACKAGE_DIR / "micromegas_5.0.8"
+PYTHON_MAIN_C = PACKAGE_DIR / "main.c"
+PYTHON_MAIN_CPP = PACKAGE_DIR / "main.cpp"
+PYTHON_MAIN_SOURCE = "pymicromegas_main.c"
+PYTHON_MAIN_CPP_SOURCE = "pymicromegas_main.cpp"
+PYTHON_MAIN_EXECUTABLE = "pymicromegas_main"
+USER_PROJECT_MARKER = ".pymicromegas-project"
+
+dir_micromegas = str(MICROMEGAS_DIR) + os.sep
 
 
 
@@ -50,11 +59,27 @@ FLAGS = {
 ######## utils ########
 def to_abspath(path):
     return str(Path(path).resolve())
+
+
+def micromegas_env():
+    env = os.environ.copy()
+    env["PYMICROMEGAS_MICROPATH"] = str(MICROMEGAS_DIR)
+    return env
     
     
-def run_bash(command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=True,input=None,cwd=None,verbose=True):
+def run_bash(command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=True,input=None,cwd=None,verbose=True,env=None,stderr=subprocess.PIPE):
     if verbose: print(command)
-    process = subprocess.run(command,shell=shell,stdout=stdout,encoding=encoding,check=check,input=input,cwd=cwd)
+    process = subprocess.run(
+        command,
+        shell=shell,
+        stdout=stdout,
+        stderr=stderr,
+        encoding=encoding,
+        check=check,
+        input=input,
+        cwd=cwd,
+        env=micromegas_env() if env is None else env,
+    )
     return process
 
 def is_valid_project_name(project_name):
@@ -74,33 +99,44 @@ def get_values(dict_like_object):
     else:
         return dict_like_object.values()
 
+
+def ensure_project_workdirs(project_path):
+    work_path = Path(project_path) / "work"
+    for dirname in ("tmp", "results", "so_generated", "lanhep"):
+        (work_path / dirname).mkdir(parents=True, exist_ok=True)
+
 ######## class definitions ########
 class PyMicrOmegas:    
     
     def __init__(self,verbose=False):
         self.path = dir_micromegas
+        self.verbose = verbose
+        os.environ["PYMICROMEGAS_MICROPATH"] = str(MICROMEGAS_DIR)
         
         if not os.path.isdir(self.path):
             raise RuntimeError(f"micromegas directory is missing: {self.path}")
-
-        if os.path.isfile(self.path + "include/microPath.h"): 
-            pass
-        
-        else:
-            print("PyMicrOmegas: micromegas are not installed yet. Start install automatically...")
-            output = self.compile_micromegas()
-            print("PyMicrOmegas: micromegas are installed.")
-            if verbose: print(output)
-            #raise RuntimeError("micromegas is not properly installed. Run 'make all' in micromegas_5.0.8 directory")
     
     
     def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):
         return run_bash(command,shell=shell,stdout=stdout,encoding=encoding,check=check,input=input,cwd=self.path,verbose=verbose)
     
+    def is_micromegas_built(self):
+        path = Path(self.path)
+        return (
+            (path / "include" / "microPath.h").is_file()
+            and (path / "CalcHEP_src" / "FlagsForMake").is_file()
+            and (path / "lib" / "micromegas.a").is_file()
+        )
+    
+    def ensure_micromegas_built(self):
+        if not self.is_micromegas_built():
+            return self.compile_micromegas()
+        return None
+    
     
     def compile_micromegas(self):
         print("Compiling micromegas...")
-        return self.run_bash("make")
+        return self.run_bash("make",check=True)
 
     
     def clean_micromegas(self):
@@ -110,20 +146,25 @@ class PyMicrOmegas:
     
     def project_exists(self,project_name):
         return os.path.isdir(self.path + project_name)
+    
+    def install_python_main(self,project_name):
+        if not self.project_exists(project_name): 
+            raise RuntimeError("project '{}' does not exist yet.".format(project_name))
+        project_path = Path(self.path) / project_name
+        ensure_project_workdirs(project_path)
+        shutil.copy2(PYTHON_MAIN_C, project_path / PYTHON_MAIN_SOURCE)
+        shutil.copy2(PYTHON_MAIN_CPP, project_path / PYTHON_MAIN_CPP_SOURCE)
+        return project_path / PYTHON_MAIN_SOURCE
        
         
     def load_modified_main(self,project_name,return_project=False):
         print("Loading modified main files...")
-        if not self.project_exists(project_name): 
-            raise RuntimeError("project '{}' does not exist yet.".format(project_name))
-            
-        commands = [ "mv {0}/main.c {0}/main_original.c", "mv {0}/main.cpp {0}/main_original.cpp", "cp ../main.c {0}/", "cp ../main.cpp {0}/"]
-        process = self.run_bash("\n".join(commands).format(project_name))
+        self.install_python_main(project_name)
         
         if return_project:
             return Project(project_name)
         else: 
-            return process
+            return None
     
     def create_newproject(self,project_name,return_project=False):
         print("Creating new project...")
@@ -131,8 +172,10 @@ class PyMicrOmegas:
         if self.project_exists(project_name): raise RuntimeError("project '{}' exists already.".format(project_name))
             
         commands = [ "./newProject {0}" ]
-        process = self.run_bash("\n".join(commands).format(project_name))
-        process = self.load_modified_main(project_name)
+        process = self.run_bash("\n".join(commands).format(project_name),check=True)
+        project_path = Path(self.path) / project_name
+        (project_path / USER_PROJECT_MARKER).write_text("created by pymicromegas\n")
+        self.install_python_main(project_name)
          
         if return_project:
             return Project(project_name)
@@ -150,14 +193,13 @@ class PyMicrOmegas:
     
     def remove_project(self,project_name):
         print("Removing project...")
-        if ("/" in project_name) or () : raise RuntimeError(f"{project_name} is not valid project name.")  # "rm" is dangerous!!! We shold check project name is properly passed. 
+        if not is_valid_project_name(project_name): raise RuntimeError(f"{project_name} is not valid project name.")
         if not self.project_exists(project_name): raise RuntimeError(f"project '{project_name}' does not exists.")
         
         project = Project(project_name)
         if not project.is_user_defined_project: raise RuntimeError(f"{project_name} is not created by users. remove_project cannot remove default projects.")
-        command = f"rm -r {project_name}"
-        process = self.run_bash(command)
-        return process
+        shutil.rmtree(Path(self.path) / project_name)
+        return None
     
 #    def load_mdl(self,project_name,mdl_paths):
 #        if self.project_exists(project_name): raise RuntimeError("project '{}' exists already.".format(project_name))
@@ -171,10 +213,13 @@ class Project:
     
     
     def __init__(self,project_name):
-        if not PyMicrOmegas().project_exists(project_name): raise RuntimeError("Project {} does not exist yet. Create it by PyMicrOmegas.create_newproject.".format(project_name))
+        self.interface = PyMicrOmegas()
+        if not self.interface.project_exists(project_name): raise RuntimeError("Project {} does not exist yet. Create it by PyMicrOmegas.create_newproject.".format(project_name))
         self.project_name = project_name
-        self.path = dir_micromegas + project_name + "/"
-        self.models_path = self.path + "work/models/"
+        self.path = str(Path(dir_micromegas) / project_name) + os.sep
+        self.models_path = str(Path(self.path) / "work" / "models") + os.sep
+        self.main_source = PYTHON_MAIN_SOURCE
+        self.main_executable = PYTHON_MAIN_EXECUTABLE
     
     
     def run_bash(self,command,shell=True,stdout=subprocess.PIPE,encoding="UTF-8",check=False,input=None,verbose=True):
@@ -188,19 +233,28 @@ class Project:
         print("Loading .mdl files...")
         if type(mdl_paths) not in [list, tuple]: raise RuntimeError("input arguments must be list or tuple.")
         if len(mdl_paths)==0: raise RuntimeError("input argument is empty list or tuple.")
-        processes = []
         for mdl_path in mdl_paths:
             if not os.path.isfile(mdl_path): raise RuntimeError("{} does not existing file".format(mdl_path))
             abs_mdl_path = to_abspath(mdl_path)
             print(f"Loading {abs_mdl_path}...")
-            process = self.run_bash("cp {} {}".format(abs_mdl_path,self.models_path))
-            processes.append(process)
-        return processes
+            shutil.copy2(abs_mdl_path, self.models_path)
+        return None
+    
+    def install_python_main(self):
+        return self.interface.install_python_main(self.project_name)
     
         
-    def compile(self,main="main.c"):
+    def compile(self,main=None):
         #process = subprocess.run("bash install_project.sh " + project_name,shell=True,stdout=subprocess.PIPE)
-        return self.run_bash("make main={}".format(main))
+        self.interface.ensure_micromegas_built()
+        ensure_project_workdirs(self.path)
+        if main is None:
+            self.install_python_main()
+            main = self.main_source
+            self.main_executable = PYTHON_MAIN_EXECUTABLE
+        else:
+            self.main_executable = Path(main).stem
+        return self.run_bash("make main={}".format(main),check=True)
            
       
     def clean(self):
@@ -214,7 +268,13 @@ class Project:
     
     @property
     def is_user_defined_project(self):
-        return os.path.exists(self.path+"main_original.c")
+        return os.path.exists(self.path+USER_PROJECT_MARKER) or os.path.exists(self.path+"main_original.c")
+    
+    def ensure_executable(self):
+        executable = Path(self.path) / self.main_executable
+        if not executable.exists():
+            self.compile()
+        return executable
     
     
     def run(self,dict_parameters,flags=None,dof_fname=None):
@@ -237,7 +297,8 @@ class Project:
         par_vals  = " ".join(map(str,get_values(dict_parameters)))
         args = f"{int_flags} {n_inputvals} {dof_fname} {par_names} {par_vals}"
         
-        return self.run_bash("./main {}".format(args),verbose=False)
+        executable = self.ensure_executable()
+        return self.run_bash("./{} {}".format(executable.name, args),check=True,verbose=False)
     
     
     def parse_omega(self,micromegas_output,flags=None,with_channels=False):
@@ -264,7 +325,7 @@ class Project:
                 ind = lines.index("==== Calculation of relic density =====")
             except ValueError as e:
                 raise ValueError(f"Cannot find the line \"==== Calculation of relic density =====\"\noutput:{micromegas_output}")
-            key_vals = dict([floatnize(key_val.split("=")) for key_val in lines[ind+1].split(" ")])
+            key_vals = dict([floatnize(key_val.split("=")) for key_val in lines[ind+1].split()])
             return_dict.update(key_vals)
             
             #### parse channels ####
@@ -395,11 +456,12 @@ double pymicromegas_mcdm2(void)
         self.project_name = project_name
         self.verbose = verbose
         self.interface = PyMicrOmegas(verbose=verbose)
+        self.interface.ensure_micromegas_built()
         self.micromegas_path = Path(self.interface.path)
         self.path = self.micromegas_path / project_name
         self.models_path = self.path / "work" / "models"
         self.bridge_source = self.path / "pymicromegas_bridge.c"
-        self.library_path = self.path / "libpymicromegas.so"
+        self.library_path = self.path / ("libpymicromegas.dylib" if sys.platform == "darwin" else "libpymicromegas.so")
         self._lib = None
 
         self._ensure_project()
@@ -421,6 +483,7 @@ double pymicromegas_mcdm2(void)
             check=check,
             input=input,
             cwd=self.path,
+            env=micromegas_env(),
         )
 
     def _ensure_project(self):
@@ -434,7 +497,9 @@ double pymicromegas_mcdm2(void)
             encoding="UTF-8",
             check=True,
             cwd=self.micromegas_path,
+            env=micromegas_env(),
         )
+        (self.path / USER_PROJECT_MARKER).write_text("created by pymicromegas\n")
         if self.verbose:
             print(process.stdout)
 
@@ -469,11 +534,12 @@ double pymicromegas_mcdm2(void)
         make_result = self._run(f"make -n main={self.bridge_source.name}", check=True)
         executable_name = self.bridge_source.with_suffix("").name
         source_name = self.bridge_source.name
+        shared_flags = "-dynamiclib -fPIC -Wl,-undefined,dynamic_lookup" if sys.platform == "darwin" else "-shared -fPIC -Wl,-export-dynamic"
         for line in make_result.stdout.splitlines():
             if source_name in line and f"-o {executable_name}" in line:
                 return line.replace(
                     f"-o {executable_name}",
-                    f"-shared -fPIC -Wl,-export-dynamic -o {self.library_path.name}",
+                    f"{shared_flags} -o {self.library_path.name}",
                     1,
                 )
         raise RuntimeError(
@@ -482,6 +548,7 @@ double pymicromegas_mcdm2(void)
         )
 
     def build_library(self, force=False):
+        ensure_project_workdirs(self.path)
         self.write_bridge_source(force=force)
         if force or not self.library_path.exists():
             self._run("make libs work/bin", check=True)
@@ -502,6 +569,8 @@ double pymicromegas_mcdm2(void)
 
     def _configure_bridge_functions(self):
         lib = self._lib
+        if lib is None:
+            raise RuntimeError("micrOMEGAs bridge library is not loaded.")
         lib.pymicromegas_assign_value.argtypes = [ctypes.c_char_p, ctypes.c_double]
         lib.pymicromegas_assign_value.restype = ctypes.c_int
         lib.pymicromegas_assign_values.argtypes = [

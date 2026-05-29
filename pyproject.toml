@@ -1,7 +1,11 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "pymicromegas"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python interface for micrOMEGAs"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -9,7 +13,25 @@ dependencies = [
     "pandas>=3.0.3",
 ]
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pymicromegas = [
+    "main.c",
+    "main.cpp",
+    "_main.c",
+    "data/*.dat",
+    "micromegas_5.0.8/**/*",
+]
+
 [dependency-groups]
 dev = [
+    "build>=1.3.0",
     "ipykernel>=7.2.0",
 ]

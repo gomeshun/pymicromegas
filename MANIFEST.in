@@ -1,0 +1,7 @@
+include README.md
+include src/pymicromegas/main.c
+include src/pymicromegas/main.cpp
+include src/pymicromegas/_main.c
+recursive-include src/pymicromegas/data *.dat
+recursive-include src/pymicromegas/micromegas_5.0.8 *
+global-exclude __pycache__ *.py[cod] .DS_Store

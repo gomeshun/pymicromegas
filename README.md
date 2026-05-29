@@ -1,23 +1,30 @@
 # pymicromegas
 Python interface of micromegas (unofficial)
 
+The Python package uses a `src/` layout.  The vendored micrOMEGAs source tree is
+packaged under `src/pymicromegas/micromegas_5.0.8/` and is built by the Python
+build backend when the package is installed with tools such as `pip` or `uv`.
+Importing `pymicromegas` itself does not run `make`.
+
 ## Features
 pymicromegas:
 
-- directly reseives your model parameters as Python `dict` (does not generate internal `.par` files)
+- directly receives your model parameters as Python `dict` (does not generate internal `.par` files)
 - can switch on/off by `flags` parameter
 
-If you don't like Python, instead, you can use `main.c/cpp` in `/pymicromegas/` just as normal `main.c/cpp` of micromegas.
+If you don't like Python, instead, you can use `main.c/cpp` in
+`src/pymicromegas/` just as normal `main.c/cpp` of micromegas.
 These modified `main` files receive arguments like:
 ```
-./main <integer to define flags> <n: number of parameters> <parmeter name 1> ... <parmeter name n> <parmeter value 1> ... <parmeter value n>
+./pymicromegas_main <integer to define flags> <n: number of parameters> <DOF file or None> <parameter name 1> ... <parameter name n> <parameter value 1> ... <parameter value n>
 ```
 
 
 # How to use it
 
-`git clone` to download pymicromegas. The micrOMEGAs source tree is included
-as `micromegas_5.0.8/`, so it can be inspected and built directly. Then
+Install pymicromegas with `pip install .` or `uv add <path-or-url>`. The
+micrOMEGAs source tree is included as package data, so it can also be inspected
+in `src/pymicromegas/micromegas_5.0.8/` from a source checkout. Then
 
 ```python
 from pymicromegas import PyMicrOmegas
@@ -25,7 +32,7 @@ from pymicromegas import PyMicrOmegas
 interf = PyMicrOmegas()
 project = interf.create_newproject("test")
 project.load_mdl_files(["the", "list of", "your", ".mdl file", "paths"])
-project.compile()  # once a project is compiled, you can directly call the compiled project as Project(project_name).
+project.compile()  # after compiling, you can reload it as Project(project_name).
 
 
 args = {
@@ -45,7 +52,7 @@ flags = ["MASSES_INFO","OMEGA"]
 #process = project.run(args,flags)  # return subprocess.CompletedProcess
 #print(process.stdout)  # print the output text of micromegas
 
-outout_dict = project(args,flags)  # directly return parsed output (at present, relic density only)
+output_dict = project(args,flags)  # directly return parsed output (at present, relic density only)
 output_dict = project.calc_omega(args)  # directly return parsed output about relic density with channels
 
 print(output_dict)  
@@ -56,8 +63,8 @@ print(output_dict)
 ## `MicrOmegas`
 - Integrated project and calculation wrapper that builds a generated shared
   library in the micrOMEGAs project directory and loads it with `ctypes`.
-- It does not patch the upstream micrOMEGAs C sources.  The generated bridge is
-  small and is linked with the same project `Makefile` command, so future
+- The generated bridge is small and is linked with the same project `Makefile`
+  command, so future
   micrOMEGAs makefile changes are reused as much as possible.
 - `MicrOmegas.lib` exposes the raw `ctypes.CDLL` object.  Use
   `MicrOmegas.function(name, restype, argtypes)` or
@@ -84,8 +91,9 @@ raw_lib = mo.lib
 
 ## `PyMicrOmegas`
 - wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.
-- When pymicromegas is imported for the first time, it installs (make) the
-  checked-in `micromegas_5.0.8/` source tree if it has not been built yet.
+- micrOMEGAs is built during package installation.  In editable/source-tree
+  development, project compilation also verifies the build artifacts and runs
+  `make` if they are missing.
 
 If you want to modify micromegas, 
 1. clean
@@ -93,8 +101,20 @@ If you want to modify micromegas,
 1. make again
     
 ## `Project`
-  - wrapper class of `make`, `./main ...`, in project directories.
+  - wrapper class of `make`, `./pymicromegas_main ...`, in project directories.
+  - default micrOMEGAs model directories and user-created projects are both
+    callable through the same API.
   - `Project.__call__` to directly return parsed micromegas outputs (callable object, used as if it is like a function. See the previous example.)
+
+# Tests
+
+The integration tests are written with the standard-library `unittest` module.
+They compile and run both a bundled default model and a newly-created project
+loaded from `.mdl` files:
+
+```bash
+uv run python -m unittest discover -s tests
+```
 
 
 # TODO
