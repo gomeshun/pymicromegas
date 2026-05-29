@@ -1,121 +1,163 @@
 # pymicromegas
-Python interface of micromegas (unofficial)
 
-The Python package uses a `src/` layout.  The vendored micrOMEGAs source tree is
-packaged under `src/pymicromegas/micromegas_5.0.8/` and is built by the Python
-build backend when the package is installed with tools such as `pip` or `uv`.
-Importing `pymicromegas` itself does not run `make`.
+Python interface for micrOMEGAs (unofficial).
 
-## Features
-pymicromegas:
+The primary API is the `MicrOmegas` class. It creates or loads a micrOMEGAs
+project, builds a small shared-library bridge, and calls micrOMEGAs through
+`ctypes` without going through a generated command-line executable for each
+calculation.
 
-- directly receives your model parameters as Python `dict` (does not generate internal `.par` files)
-- can switch on/off by `flags` parameter
+The lower-level `Project` and `PyMicrOmegas` classes are still available for
+compatibility with earlier pymicromegas workflows and for users who want to work
+directly with micrOMEGAs project directories.
 
-If you don't like Python, instead, you can use `main.c/cpp` in
-`src/pymicromegas/` just as normal `main.c/cpp` of micromegas.
-These modified `main` files receive arguments like:
-```
-./pymicromegas_main <integer to define flags> <n: number of parameters> <DOF file or None> <parameter name 1> ... <parameter name n> <parameter value 1> ... <parameter value n>
-```
+## Source Version
 
+This package currently vendors micrOMEGAs 7.1 from Zenodo record `20267206`:
 
-# How to use it
+- source tree: `src/pymicromegas/micromegas_7.1/`
+- archive checksum: `md5:aa066ac8d712a9c5eca4134a168f1f15`
+- local integration patch: `sources/omega.c` uses C99 `isfinite()` instead of
+  the obsolete `finite()` call for macOS/clang compatibility
 
-Install pymicromegas with `pip install .` or `uv add <path-or-url>`. The
-micrOMEGAs source tree is included as package data, so it can also be inspected
-in `src/pymicromegas/micromegas_5.0.8/` from a source checkout. Then
+The vendored source tree is included as package data and is built by the Python
+build backend when the package is installed. Importing `pymicromegas` itself does
+not run `make`.
 
-```python
-from pymicromegas import PyMicrOmegas
+## Install
 
-interf = PyMicrOmegas()
-project = interf.create_newproject("test")
-project.load_mdl_files(["the", "list of", "your", ".mdl file", "paths"])
-project.compile()  # after compiling, you can reload it as Project(project_name).
+From a source checkout:
 
-
-args = {
-  "parname1" : 1.0  # parameter values
-  "parname2" : 10   
-  "parname3" : 1e-8
-}
-
-##########
-# flags: defined in pymicromegas.FLAGS. 
-# 
-# List of available flags:
-# ['MASSES_INFO','CONSTRAINTS','MONOJET','HIGGSBOUNDS', 'HIGGSSIGNALS', 'LILITH', 'SMODELS', 'OMEGA', 'FREEZEIN', 'INDIRECT_DETECTION', 'RESET_FORMFACTORS', 'CDM_NUCLEON', 'CDM_NUCLEUS', 'NEUTRINO', 'DECAYS', 'CROSS_SECTIONS', 'SHOWPLOTS', 'CLEAN']
-##########
-flags = ["MASSES_INFO","OMEGA"]
-
-#process = project.run(args,flags)  # return subprocess.CompletedProcess
-#print(process.stdout)  # print the output text of micromegas
-
-output_dict = project(args,flags)  # directly return parsed output (at present, relic density only)
-output_dict = project.calc_omega(args)  # directly return parsed output about relic density with channels
-
-print(output_dict)  
+```bash
+uv add <path-or-url>
 ```
 
-# Class
+or:
 
-## `MicrOmegas`
-- Integrated project and calculation wrapper that builds a generated shared
-  library in the micrOMEGAs project directory and loads it with `ctypes`.
-- The generated bridge is small and is linked with the same project `Makefile`
-  command, so future
-  micrOMEGAs makefile changes are reused as much as possible.
-- `MicrOmegas.lib` exposes the raw `ctypes.CDLL` object.  Use
-  `MicrOmegas.function(name, restype, argtypes)` or
-  `MicrOmegas.call(name, *args, restype=..., argtypes=...)` to call linked
-  micrOMEGAs functions directly when no convenience method exists.
+```bash
+pip install .
+```
+
+## Quick Start
+
+Use `MicrOmegas` for normal Python calculations:
 
 ```python
 from pymicromegas import MicrOmegas
 
-mo = MicrOmegas("test", mdl_paths=["your_model_1.mdl", "your_model_2.mdl"])
-
 parameters = {
-  "parname1": 1.0,
-  "parname2": 10.0,
+    "Q": 100.0,
+    "Mh": 125.0,
+    "laS": 0.2,
+    "laSH": 0.1,
+    "Mdm1": 50.0,
 }
 
-omega = mo.dark_omega(parameters)
-print(omega["Omega"])
+model = MicrOmegas("SingletDM")
+omega = model.dark_omega(parameters)
 
-# Direct ctypes access to linked micrOMEGAs/project symbols is also available.
-mass = mo.find_value("Mcdm")
-raw_lib = mo.lib
+print(omega["Omega"])
+print(omega["Xf"])
 ```
 
-## `PyMicrOmegas`
-- wrapper class of doing `newProject`, `make`, `make clean` in the micromegas directory.
-- micrOMEGAs is built during package installation.  In editable/source-tree
-  development, project compilation also verifies the build artifacts and runs
-  `make` if they are missing.
+For a custom model, pass the CalcHEP `.mdl` files when constructing the class:
 
-If you want to modify micromegas, 
-1. clean
-1. modify 
-1. make again
-    
-## `Project`
-  - wrapper class of `make`, `./pymicromegas_main ...`, in project directories.
-  - default micrOMEGAs model directories and user-created projects are both
-    callable through the same API.
-  - `Project.__call__` to directly return parsed micromegas outputs (callable object, used as if it is like a function. See the previous example.)
+```python
+from pymicromegas import MicrOmegas
 
-# Tests
+model = MicrOmegas(
+    "my_model",
+    mdl_paths=[
+        "path/to/vars1.mdl",
+        "path/to/func1.mdl",
+        "path/to/prtcls1.mdl",
+        "path/to/lgrng1.mdl",
+    ],
+)
 
-The integration tests are written with the standard-library `unittest` module.
-They compile and run both a bundled default model and a newly-created project
-loaded from `.mdl` files:
+result = model.dark_omega({"parname1": 1.0, "parname2": 10.0})
+```
+
+`MicrOmegas.lib` exposes the raw `ctypes.CDLL` object. Use
+`MicrOmegas.function(name, restype, argtypes)` or
+`MicrOmegas.call(name, *args, restype=..., argtypes=...)` when no convenience
+method exists.
+
+## Main Classes
+
+### `MicrOmegas`
+
+- Main Python-facing class for calculations.
+- Builds a generated shared library in the micrOMEGAs project directory.
+- Provides convenience methods such as `assign`, `find_value`, `dark_omega`, and
+  `dark_omega2`.
+- Exposes v7 N-component metadata through bridge helpers such as
+  `pymicromegas_cdm_name`, `pymicromegas_cdm_mass`, and
+  `pymicromegas_cdm_fraction` on `model.lib`.
+
+### `Project`
+
+- Compatibility wrapper around `make` and `./pymicromegas_main ...` in a
+  micrOMEGAs project directory.
+- Useful when you want the raw stdout produced by a micrOMEGAs-style executable.
+- Default bundled model directories and user-created projects share the same API.
+
+```python
+from pymicromegas import Project
+
+project = Project("SingletDM")
+project.compile()
+result = project.calc_omega(parameters)
+```
+
+The generated executable receives arguments as:
+
+```text
+./pymicromegas_main <flags> <n parameters> <DOF file or None> <parameter name 1> ... <parameter name n> <parameter value 1> ... <parameter value n>
+```
+
+### `PyMicrOmegas`
+
+- Lower-level helper for `newProject`, `make`, and `make clean` in the vendored
+  micrOMEGAs directory.
+- Ensures the micrOMEGAs source tree is built when project compilation needs it.
+
+## Runtime Flags
+
+`Project.run` accepts flag names from `pymicromegas.FLAGS`, including:
+
+```python
+[
+    "MASSES_INFO",
+    "CONSTRAINTS",
+    "MONOJET",
+    "HIGGSBOUNDS",
+    "HIGGSSIGNALS",
+    "LILITH",
+    "SMODELS",
+    "OMEGA",
+    "FREEZEIN",
+    "INDIRECT_DETECTION",
+    "RESET_FORMFACTORS",
+    "CDM_NUCLEON",
+    "CDM_NUCLEUS",
+    "NEUTRINO",
+    "DECAYS",
+    "CROSS_SECTIONS",
+    "SHOWPLOTS",
+    "CLEAN",
+]
+```
+
+The `MicrOmegas` class is preferred for new code. Use `Project` flags when you
+specifically need the command-line runner behavior.
+
+## Tests
+
+The integration tests use the standard-library `unittest` module. They compile
+and run both the bundled `SingletDM` model and a newly-created project loaded
+from `.mdl` files:
 
 ```bash
 uv run python -m unittest discover -s tests
 ```
-
-
-# TODO
-- etc...

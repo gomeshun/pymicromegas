@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -10,7 +11,11 @@ from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 class build_py(_build_py):
     def run(self):
         super().run()
-        micromegas_dir = Path(self.build_lib) / "pymicromegas" / "micromegas_5.0.8"
+        package_dir = Path(self.build_lib) / "pymicromegas"
+        micromegas_dir = package_dir / "micromegas_7.1"
+        for stale_dir in package_dir.glob("micromegas_*"):
+            if stale_dir != micromegas_dir:
+                shutil.rmtree(stale_dir)
         if not micromegas_dir.is_dir():
             raise RuntimeError(f"micrOMEGAs source tree was not copied: {micromegas_dir}")
 

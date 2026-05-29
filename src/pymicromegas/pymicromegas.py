@@ -9,7 +9,8 @@ from pandas import Series
 
 
 PACKAGE_DIR = Path(__file__).resolve().parent
-MICROMEGAS_DIR = PACKAGE_DIR / "micromegas_5.0.8"
+MICROMEGAS_VERSION = "7.1"
+MICROMEGAS_DIR = PACKAGE_DIR / f"micromegas_{MICROMEGAS_VERSION}"
 PYTHON_MAIN_C = PACKAGE_DIR / "main.c"
 PYTHON_MAIN_CPP = PACKAGE_DIR / "main.cpp"
 PYTHON_MAIN_SOURCE = "pymicromegas_main.c"
@@ -418,19 +419,40 @@ double pymicromegas_dark_omega(double *xf, int fast, double beps, int *err)
     return darkOmega(xf, fast, beps, err);
 }
 
-double pymicromegas_dark_omega2(int fast, double beps)
+double pymicromegas_dark_omega2(int fast, double beps, int *err)
 {
-    return darkOmega2(fast, beps);
+    return darkOmega2((double)fast, beps, err);
+}
+
+const char *pymicromegas_cdm_name(int sector)
+{
+    if(CDM && sector >= 1 && sector <= Ncdm && CDM[sector]) return CDM[sector];
+    if(sector == 1) return CDM1;
+    if(sector == 2) return CDM2;
+    return NULL;
+}
+
+double pymicromegas_cdm_mass(int sector)
+{
+    if(McdmN && sector >= 1 && sector <= Ncdm) return McdmN[sector];
+    if(sector == 1) return Mcdm;
+    return 0.0;
+}
+
+double pymicromegas_cdm_fraction(int sector)
+{
+    if(fracCDM && sector >= 1 && sector <= Ncdm) return fracCDM[sector];
+    return sector == 1 ? 1.0 : 0.0;
 }
 
 const char *pymicromegas_cdm1(void)
 {
-    return CDM1;
+    return pymicromegas_cdm_name(1);
 }
 
 const char *pymicromegas_cdm2(void)
 {
-    return CDM2;
+    return pymicromegas_cdm_name(2);
 }
 
 double pymicromegas_mcdm(void)
@@ -440,12 +462,12 @@ double pymicromegas_mcdm(void)
 
 double pymicromegas_mcdm1(void)
 {
-    return Mcdm1;
+    return pymicromegas_cdm_mass(1);
 }
 
 double pymicromegas_mcdm2(void)
 {
-    return Mcdm2;
+    return pymicromegas_cdm_mass(2);
 }
 """
 
@@ -594,8 +616,14 @@ double pymicromegas_mcdm2(void)
             ctypes.POINTER(ctypes.c_int),
         ]
         lib.pymicromegas_dark_omega.restype = ctypes.c_double
-        lib.pymicromegas_dark_omega2.argtypes = [ctypes.c_int, ctypes.c_double]
+        lib.pymicromegas_dark_omega2.argtypes = [ctypes.c_int, ctypes.c_double, ctypes.POINTER(ctypes.c_int)]
         lib.pymicromegas_dark_omega2.restype = ctypes.c_double
+        lib.pymicromegas_cdm_name.argtypes = [ctypes.c_int]
+        lib.pymicromegas_cdm_name.restype = ctypes.c_char_p
+        lib.pymicromegas_cdm_mass.argtypes = [ctypes.c_int]
+        lib.pymicromegas_cdm_mass.restype = ctypes.c_double
+        lib.pymicromegas_cdm_fraction.argtypes = [ctypes.c_int]
+        lib.pymicromegas_cdm_fraction.restype = ctypes.c_double
         lib.pymicromegas_cdm1.argtypes = []
         lib.pymicromegas_cdm1.restype = ctypes.c_char_p
         lib.pymicromegas_cdm2.argtypes = []
@@ -662,7 +690,11 @@ double pymicromegas_mcdm2(void)
             self.assign(parameters)
         self.set_gauge()
         self.sort_odd_particles()
-        return self.lib.pymicromegas_dark_omega2(int(fast), float(beps))
+        err = ctypes.c_int()
+        omega = self.lib.pymicromegas_dark_omega2(int(fast), float(beps), ctypes.byref(err))
+        if err.value:
+            raise RuntimeError(f"darkOmega2 failed with error code {err.value}.")
+        return omega
 
     def function(self, name, restype=ctypes.c_double, argtypes=None):
         func = getattr(self.lib, name)

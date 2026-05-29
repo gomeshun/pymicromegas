@@ -5,7 +5,7 @@ import unittest
 import uuid
 from pathlib import Path
 
-from pymicromegas import MicrOmegas, Project, PyMicrOmegas
+from pymicromegas import MICROMEGAS_DIR, MICROMEGAS_VERSION, MicrOmegas, Project, PyMicrOmegas
 
 
 SINGLETDM_VALID_PARAMETERS = {
@@ -32,6 +32,13 @@ class ImportBehaviorTest(unittest.TestCase):
             text=True,
         )
         self.assertEqual(process.stdout.strip(), "imported")
+
+
+class VendoredSourceTest(unittest.TestCase):
+    def test_micromegas_source_version_is_7_1(self):
+        self.assertEqual(MICROMEGAS_VERSION, "7.1")
+        self.assertEqual(Path(MICROMEGAS_DIR).name, "micromegas_7.1")
+        self.assertTrue((Path(MICROMEGAS_DIR) / "man" / "manual_7.1.tex").is_file())
 
 
 class MicrOmegasIntegrationTest(unittest.TestCase):
@@ -68,6 +75,9 @@ class MicrOmegasIntegrationTest(unittest.TestCase):
         result = model.dark_omega(SINGLETDM_VALID_PARAMETERS)
         assert_valid_omega(self, result)
         self.assertEqual(result["err"], 0)
+        self.assertIsNotNone(model.lib.pymicromegas_cdm1())
+        self.assertGreater(model.lib.pymicromegas_mcdm1(), 0.0)
+        self.assertAlmostEqual(model.lib.pymicromegas_cdm_fraction(1), 1.0)
 
 
 if __name__ == "__main__":

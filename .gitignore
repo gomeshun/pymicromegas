@@ -16,18 +16,18 @@ __pycache__/
 
 .python-version
 
-/src/pymicromegas/micromegas_5.0.8/include/microPath.h
-/src/pymicromegas/micromegas_5.0.8/CalcHEP_src/FlagsForMake
-/src/pymicromegas/micromegas_5.0.8/**/pymicromegas_bridge.c
-/src/pymicromegas/micromegas_5.0.8/**/pymicromegas_main
-/src/pymicromegas/micromegas_5.0.8/**/pymicromegas_main.c
-/src/pymicromegas/micromegas_5.0.8/**/pymicromegas_main.cpp
-/src/pymicromegas/micromegas_5.0.8/**/.pymicromegas-project
-/src/pymicromegas/micromegas_5.0.8/**/work/VandP.c
-/src/pymicromegas/micromegas_5.0.8/**/work/path.c
-/src/pymicromegas/micromegas_5.0.8/**/work/autoprot.h
-/src/pymicromegas/micromegas_5.0.8/**/work/bin
-/src/pymicromegas/micromegas_5.0.8/**/work/tmp/
-/src/pymicromegas/micromegas_5.0.8/**/work/results/
-/src/pymicromegas/micromegas_5.0.8/**/work/so_generated/
-/src/pymicromegas/micromegas_5.0.8/pymg_unittest_*/
+/src/pymicromegas/micromegas_*/include/microPath.h
+/src/pymicromegas/micromegas_*/CalcHEP_src/FlagsForMake
+/src/pymicromegas/micromegas_*/**/pymicromegas_bridge.c
+/src/pymicromegas/micromegas_*/**/pymicromegas_main
+/src/pymicromegas/micromegas_*/**/pymicromegas_main.c
+/src/pymicromegas/micromegas_*/**/pymicromegas_main.cpp
+/src/pymicromegas/micromegas_*/**/.pymicromegas-project
+/src/pymicromegas/micromegas_*/**/work/VandP.c
+/src/pymicromegas/micromegas_*/**/work/path.c
+/src/pymicromegas/micromegas_*/**/work/autoprot.h
+/src/pymicromegas/micromegas_*/**/work/bin
+/src/pymicromegas/micromegas_*/**/work/tmp/
+/src/pymicromegas/micromegas_*/**/work/results/
+/src/pymicromegas/micromegas_*/**/work/so_generated/
+/src/pymicromegas/micromegas_*/pymg_unittest_*/
