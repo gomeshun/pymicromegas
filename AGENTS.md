@@ -1,0 +1,1 @@
+python環境はuvで用意されています。コードを実行する際は、`uv run <command>` を使用してください。対話的に環境へ入る必要がある場合のみ、`source .venv/bin/activate` で仮想環境を有効化してください。例: `uv run python script.py`、`uv run pytest` のように `uv run` を前置してください。依存関係を追加する場合は `uv add <package>` を使用し、`pip install` を直接実行しないでください。`.venv` または `pyproject.toml` が見つからない場合は、勝手に環境を作成せず、ユーザーに確認してください。
