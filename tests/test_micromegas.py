@@ -81,6 +81,10 @@ class MicrOmegasIntegrationTest(unittest.TestCase):
 
     def test_default_model_ctypes_dark_omega(self):
         model = MicrOmegas("SingletDM")
+        self.assertIs(model.relic_density.model, model)
+        self.assertIs(model.freeze_in.model, model)
+        self.assertIs(model.indirect_detection.model, model)
+        self.assertIs(model.direct_detection.model, model)
         result = model.dark_omega(SINGLETDM_VALID_PARAMETERS)
         assert_valid_omega(self, result)
         self.assertEqual(result["err"], 0)

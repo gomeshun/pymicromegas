@@ -6,8 +6,16 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Any
 import numpy as np
 from pandas import Series
+
+from .processes import (
+    DirectDetectionProcesses,
+    FreezeInProcesses,
+    IndirectDetectionProcesses,
+    RelicDensityProcesses,
+)
 
 
 PACKAGE_DIR = Path(__file__).resolve().parent
@@ -373,6 +381,52 @@ class MicrOmegas:
         "pico_2019": 4,
         "cresst_2019": 8,
         "lz5t_2024": 16,
+    }
+
+    PROCESS_DELEGATES = {
+        "get_infl_decay": "relic_density",
+        "get_infl_decay_plus": "relic_density",
+        "print_thermal_sets": "relic_density",
+        "freeze_out_channels": "relic_density",
+        "dark_omega": "relic_density",
+        "dark_omega2": "relic_density",
+        "dark_omega_tr": "relic_density",
+        "dark_omega_fo": "relic_density",
+        "dark_omega2_tr": "relic_density",
+        "dark_omega_n": "relic_density",
+        "dark_omega_n_tr": "relic_density",
+        "dark_omega_infl": "relic_density",
+        "v_sigma_plus23": "freeze_in",
+        "v_sigma_plus24": "freeze_in",
+        "y_freeze_in_22": "freeze_in",
+        "prepare_freeze_in": "freeze_in",
+        "freeze_in_channels": "freeze_in",
+        "parse_freeze_in_channels": "freeze_in",
+        "dark_omega_freeze_in": "freeze_in",
+        "dark_omega_freeze_in_22": "freeze_in",
+        "dark_omega_freeze_in_decay": "freeze_in",
+        "calc_spectrum": "indirect_detection",
+        "calc_spectrum_plus": "indirect_detection",
+        "decay_spectrum": "indirect_detection",
+        "basic_spectra": "indirect_detection",
+        "planck_cmb": "indirect_detection",
+        "dwarf_signal": "indirect_detection",
+        "x_interp": "indirect_detection",
+        "z_interp": "indirect_detection",
+        "spectr_info": "indirect_detection",
+        "spectr_int": "indirect_detection",
+        "gamma_flux_tab": "indirect_detection",
+        "gamma_flux_tab_gc": "indirect_detection",
+        "solar_modulation": "indirect_detection",
+        "pbar_background_tab": "indirect_detection",
+        "positron_flux": "indirect_detection",
+        "positron_flux_tab": "indirect_detection",
+        "pbar_flux_tab": "indirect_detection",
+        "basic_nu_spectra": "indirect_detection",
+        "muon_contained": "indirect_detection",
+        "muon_upward": "indirect_detection",
+        "nucleon_amplitudes": "direct_detection",
+        "dnde_recoil": "direct_detection",
     }
 
     HEADER_FUNCTION_SIGNATURES = {
@@ -936,6 +990,10 @@ double pymicromegas_mcdm2(void)
         library_name = f"libpymicromegas_{bridge_tag}.dylib" if sys.platform == "darwin" else f"libpymicromegas_{bridge_tag}.so"
         self.library_path = self.path / library_name
         self._lib = None
+        self.relic_density = RelicDensityProcesses(self)
+        self.freeze_in = FreezeInProcesses(self)
+        self.indirect_detection = IndirectDetectionProcesses(self)
+        self.direct_detection = DirectDetectionProcesses(self)
 
         self._ensure_project()
         if mdl_paths is not None:
@@ -1397,70 +1455,6 @@ double pymicromegas_mcdm2(void)
         excluded = self.lib.pymicromegas_lsp_nlsp_lep(ctypes.byref(cross_section_limit))
         return {"excluded": bool(excluded), "cross_section_limit": cross_section_limit.value}
 
-    def get_infl_decay(self, h0, gamma):
-        trh = ctypes.c_double()
-        tmax = ctypes.c_double()
-        aend = ctypes.c_double()
-        err = self.lib.pymicromegas_get_infl_decay(
-            float(h0), float(gamma), ctypes.byref(trh), ctypes.byref(tmax), ctypes.byref(aend)
-        )
-        return {"TRH": trh.value, "Tmax": tmax.value, "aEnd": aend.value, "err": err}
-
-    def get_infl_decay_plus(self, hsm, hi, gamma, alpha, omega):
-        trh = ctypes.c_double()
-        tmax = ctypes.c_double()
-        aend = ctypes.c_double()
-        err = self.lib.pymicromegas_get_infl_decay_plus(
-            float(hsm),
-            float(hi),
-            float(gamma),
-            float(alpha),
-            float(omega),
-            ctypes.byref(trh),
-            ctypes.byref(tmax),
-            ctypes.byref(aend),
-        )
-        return {"TRH": trh.value, "Tmax": tmax.value, "aEnd": aend.value, "err": err}
-
-    def v_sigma_plus23(self, process, temperature):
-        err = ctypes.c_int()
-        value = self.lib.pymicromegas_v_sigma_plus23(
-            self._encode_string(process), float(temperature), ctypes.byref(err)
-        )
-        return {"value": value, "err": err.value}
-
-    def v_sigma_plus24(self, process, temperature):
-        err = ctypes.c_int()
-        value = self.lib.pymicromegas_v_sigma_plus24(
-            self._encode_string(process), float(temperature), ctypes.byref(err)
-        )
-        return {"value": value, "err": err.value}
-
-    def y_freeze_in_22(self, process, t0, tr=1e10, plot_dydt=False):
-        err = ctypes.c_int()
-        value = self.lib.pymicromegas_y_freeze_in22(
-            self._encode_string(process), float(t0), float(tr), int(bool(plot_dydt)), ctypes.byref(err)
-        )
-        return {"Y": value, "T0": float(t0), "TR": float(tr), "process": str(process), "err": err.value}
-
-    def print_thermal_sets(self):
-        return self._read_bridge_text(self.lib.pymicromegas_print_thermal_sets)
-
-    def freeze_out_channels(self, xf, cut=0.01, beps=1e-4, percent=False):
-        tmp_path = None
-        try:
-            with tempfile.NamedTemporaryFile("w+", delete=False) as tmp_file:
-                tmp_path = Path(tmp_file.name)
-            total = self.lib.pymicromegas_print_channels(
-                str(tmp_path).encode("UTF-8"), float(xf), float(cut), float(beps), int(bool(percent))
-            )
-            if total < 0:
-                raise RuntimeError("Failed to write freeze-out channels.")
-            return {"total": total, "text": tmp_path.read_text()}
-        finally:
-            if tmp_path is not None:
-                tmp_path.unlink(missing_ok=True)
-
     def to_feeble_list(self, particle_name):
         encoded_name = None if particle_name is None else str(particle_name).encode("UTF-8")
         err = self.lib.pymicromegas_to_feeble_list(encoded_name)
@@ -1481,238 +1475,6 @@ double pymicromegas_mcdm2(void)
     @property
     def n_cdm(self):
         return ctypes.c_int.in_dll(self.lib, "Ncdm").value
-
-    def dark_omega(self, parameters=None, dof_fname=None, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        if dof_fname is not None:
-            self.load_heff_geff(dof_fname)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        xf = ctypes.c_double()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega(
-            ctypes.byref(xf), int(fast), float(beps), ctypes.byref(err)
-        )
-        return {"Xf": xf.value, "Omega": omega, "err": err.value}
-
-    def dark_omega2(self, parameters=None, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega2(int(fast), float(beps), ctypes.byref(err))
-        if err.value:
-            raise RuntimeError(f"darkOmega2 failed with error code {err.value}.")
-        return omega
-
-    def dark_omega_tr(self, parameters=None, tr=1e10, yr=0.0, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_tr(
-            float(tr), float(yr), int(fast), float(beps), ctypes.byref(err)
-        )
-        return {"Omega": omega, "TR": float(tr), "YR": float(yr), "err": err.value}
-
-    def dark_omega_fo(self, parameters=None, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        xf = ctypes.c_double()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_fo(
-            ctypes.byref(xf), int(fast), float(beps), ctypes.byref(err)
-        )
-        return {"Xf": xf.value, "Omega": omega, "err": err.value}
-
-    def dark_omega2_tr(self, parameters=None, tr=1e10, y1r=0.0, y2r=0.0, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega2_tr(
-            float(tr), float(y1r), float(y2r), int(fast), float(beps), ctypes.byref(err)
-        )
-        return {"Omega": omega, "TR": float(tr), "Y1R": float(y1r), "Y2R": float(y2r), "err": err.value}
-
-    def dark_omega_n(self, parameters=None, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_n(int(fast), float(beps), ctypes.byref(err))
-        return {"Omega": omega, "err": err.value}
-
-    def dark_omega_n_tr(self, y_initial, parameters=None, tr=1e10, fast=1, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        values = [float(value) for value in y_initial]
-        n_cdm = max(int(self.n_cdm), 0)
-        if n_cdm and len(values) == n_cdm:
-            values = [0.0] + values
-        array_size = max(len(values), n_cdm + 1)
-        y_array = (ctypes.c_double * array_size)()
-        for index, value in enumerate(values):
-            y_array[index] = value
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_n_tr(
-            float(tr), y_array, int(fast), float(beps), ctypes.byref(err)
-        )
-        result = {"Omega": omega, "TR": float(tr), "Y": list(y_array), "err": err.value}
-        if n_cdm:
-            result["Y_by_sector"] = list(y_array)[1 : n_cdm + 1]
-        return result
-
-    def dark_omega_infl(self, branching, parameters=None, beps=1e-4):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        self.clear_feeble_list()
-        self.sort_odd_particles()
-        tfo = ctypes.c_double()
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_infl(
-            float(branching), float(beps), ctypes.byref(tfo), ctypes.byref(err)
-        )
-        return {"Omega": omega, "Tfo": tfo.value, "branching": float(branching), "err": err.value}
-
-    def prepare_freeze_in(self, parameters=None, particle_name=None, sector=1, reset_feeble=True):
-        if parameters is not None:
-            self.assign(parameters)
-        self.set_gauge()
-        sorted_particle_name = self.sort_odd_particles()
-        if particle_name is None and sorted_particle_name:
-            particle_name = sorted_particle_name
-        particle_name = self._resolve_particle_name(particle_name, sector=sector)
-        if reset_feeble:
-            self.clear_feeble_list()
-        self.to_feeble_list(particle_name)
-        return particle_name
-
-    def freeze_in_channels(self, cut=0.0, percent=False):
-        tmp_path = None
-        try:
-            with tempfile.NamedTemporaryFile("w+", delete=False) as tmp_file:
-                tmp_path = Path(tmp_file.name)
-            err = self.lib.pymicromegas_print_channels_fi(
-                str(tmp_path).encode("UTF-8"), float(cut), int(bool(percent))
-            )
-            if err:
-                raise RuntimeError("Failed to write freeze-in channels.")
-            return self.parse_freeze_in_channels(tmp_path.read_text())
-        finally:
-            if tmp_path is not None:
-                tmp_path.unlink(missing_ok=True)
-
-    @staticmethod
-    def parse_freeze_in_channels(text):
-        channels = []
-        for line in text.splitlines():
-            terms = line.split()
-            if len(terms) < 5 or terms[3] != "->":
-                continue
-            channels.append(
-                {
-                    "weight": float(terms[0]),
-                    "in": (terms[1].rstrip(","), terms[2]),
-                    "out": tuple(term.strip() for term in " ".join(terms[4:]).split(",")),
-                }
-            )
-        return channels
-
-    def dark_omega_freeze_in(
-        self,
-        parameters=None,
-        particle_name=None,
-        sector=1,
-        tr=1e10,
-        reset_feeble=True,
-        channels=False,
-        channel_cut=0.0,
-        channel_percent=False,
-    ):
-        particle_name = self.prepare_freeze_in(
-            parameters=parameters,
-            particle_name=particle_name,
-            sector=sector,
-            reset_feeble=reset_feeble,
-        )
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_fi(
-            float(tr), particle_name.encode("UTF-8"), ctypes.byref(err)
-        )
-        result = {"Omega": omega, "TR": float(tr), "particle": particle_name, "err": err.value}
-        if channels:
-            result["channels"] = self.freeze_in_channels(cut=channel_cut, percent=channel_percent)
-        return result
-
-    def dark_omega_freeze_in_22(
-        self,
-        process,
-        parameters=None,
-        particle_name=None,
-        sector=1,
-        tr=1e10,
-        reset_feeble=True,
-    ):
-        particle_name = self.prepare_freeze_in(
-            parameters=parameters,
-            particle_name=particle_name,
-            sector=sector,
-            reset_feeble=reset_feeble,
-        )
-        err = ctypes.c_int()
-        omega = self.lib.pymicromegas_dark_omega_fi22(
-            float(tr), str(process).encode("UTF-8"), particle_name.encode("UTF-8"), ctypes.byref(err)
-        )
-        return {
-            "Omega": omega,
-            "TR": float(tr),
-            "particle": particle_name,
-            "process": str(process),
-            "err": err.value,
-        }
-
-    def dark_omega_freeze_in_decay(
-        self,
-        bath_particle,
-        parameters=None,
-        particle_name=None,
-        sector=1,
-        tr=1e10,
-        reset_feeble=True,
-    ):
-        particle_name = self.prepare_freeze_in(
-            parameters=parameters,
-            particle_name=particle_name,
-            sector=sector,
-            reset_feeble=reset_feeble,
-        )
-        omega = self.lib.pymicromegas_dark_omega_fi_decay(
-            float(tr), str(bath_particle).encode("UTF-8"), particle_name.encode("UTF-8")
-        )
-        return {
-            "Omega": omega,
-            "TR": float(tr),
-            "particle": particle_name,
-            "bath_particle": str(bath_particle),
-        }
 
     @classmethod
     def _new_double_array(cls, size=None):
@@ -1735,243 +1497,6 @@ double pymicromegas_mcdm2(void)
             array[index] = float(value)
         return array
 
-    def calc_spectrum(self, key=0):
-        arrays = [self._new_double_array() for _ in range(6)]
-        err = ctypes.c_int()
-        double_pointer = ctypes.POINTER(ctypes.c_double)
-        function = self.function(
-            "calcSpectrum",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_int, double_pointer, double_pointer, double_pointer, double_pointer, double_pointer, double_pointer, ctypes.POINTER(ctypes.c_int)],
-        )
-        sigma_v = function(int(key), *arrays, ctypes.byref(err))
-        names = ["gamma", "positron", "antiproton", "nu_e", "nu_mu", "nu_tau"]
-        result = {"sigma_v": sigma_v, "err": err.value}
-        result.update({name: self._numpy_from_array(array) for name, array in zip(names, arrays)})
-        return result
-
-    def calc_spectrum_plus(self, process, out_particle):
-        spectrum = self._new_double_array()
-        err = ctypes.c_int()
-        function = self.function(
-            "calcSpectrumPlus",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_char_p, ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_int)],
-        )
-        value = function(self._encode_string(process), int(out_particle), spectrum, ctypes.byref(err))
-        return {"value": value, "err": err.value, "spectrum": self._numpy_from_array(spectrum)}
-
-    def decay_spectrum(self, particle_name, out_particle):
-        spectrum = self._new_double_array()
-        function = self.function(
-            "decaySpectrum",
-            restype=ctypes.c_int,
-            argtypes=[ctypes.c_char_p, ctypes.c_int, ctypes.POINTER(ctypes.c_double)],
-        )
-        err = function(self._encode_string(particle_name), int(out_particle), spectrum)
-        return {"err": err, "spectrum": self._numpy_from_array(spectrum)}
-
-    def basic_spectra(self, mass, pdg, out_particle, uncertainty=False):
-        spectrum = self._new_double_array()
-        function_name = "spectraUncertainty" if uncertainty else "basicSpectra"
-        function = self.function(
-            function_name,
-            restype=ctypes.c_int,
-            argtypes=[ctypes.c_double, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double)],
-        )
-        err = function(float(mass), int(pdg), int(out_particle), spectrum)
-        return {"err": err, "spectrum": self._numpy_from_array(spectrum)}
-
-    def planck_cmb(self, v_sigma, gamma_spectrum, electron_spectrum, old=False):
-        function = self.function(
-            "PlanckCMB_old" if old else "PlanckCMB",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(v_sigma), self._as_double_array(gamma_spectrum), self._as_double_array(electron_spectrum))
-
-    def dwarf_signal(self, v_sigma, proton_spectrum):
-        function = self.function(
-            "DwarfSignal",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(v_sigma), self._as_double_array(proton_spectrum))
-
-    def x_interp(self, x, spectrum):
-        function = self.function(
-            "xInterp",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(x), self._as_double_array(spectrum))
-
-    def z_interp(self, z, spectrum):
-        function = self.function(
-            "zInterp",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(z), self._as_double_array(spectrum))
-
-    def spectr_info(self, e_min, spectrum):
-        e_total = ctypes.c_double()
-        function = self.function(
-            "spectrInfo",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        n_total = function(float(e_min), self._as_double_array(spectrum), ctypes.byref(e_total))
-        return {"Ntotal": n_total, "Etotal": e_total.value}
-
-    def spectr_int(self, e_min, e_max, spectrum):
-        function = self.function(
-            "spectrInt",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(e_min), float(e_max), self._as_double_array(spectrum))
-
-    def gamma_flux_tab(self, fi, dfi, sigma_v, spectrum):
-        observed = self._new_double_array()
-        function = self.function(
-            "gammaFluxTab",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(float(fi), float(dfi), float(sigma_v), self._as_double_array(spectrum), observed)
-        return self._numpy_from_array(observed)
-
-    def gamma_flux_tab_gc(self, longitude, latitude, d_longitude, d_latitude, sigma_v, spectrum):
-        observed = self._new_double_array()
-        function = self.function(
-            "gammaFluxTabGC",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(
-            float(longitude),
-            float(latitude),
-            float(d_longitude),
-            float(d_latitude),
-            float(sigma_v),
-            self._as_double_array(spectrum),
-            observed,
-        )
-        return self._numpy_from_array(observed)
-
-    def solar_modulation(self, phi, mass, spectrum):
-        output = self._new_double_array()
-        function = self.function(
-            "solarModulation",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(float(phi), float(mass), self._as_double_array(spectrum), output)
-        return self._numpy_from_array(output)
-
-    def pbar_background_tab(self, emax):
-        spectrum = self._new_double_array()
-        function = self.function(
-            "pBarBackgroundTab",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        function(float(emax), spectrum)
-        return self._numpy_from_array(spectrum)
-
-    def positron_flux(self, energy, sigma_v, spectrum):
-        function = self.function(
-            "posiFlux",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(energy), float(sigma_v), self._as_double_array(spectrum))
-
-    def positron_flux_tab(self, e_min, sigma_v, spectrum):
-        output = self._new_double_array()
-        function = self.function(
-            "posiFluxTab",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(float(e_min), float(sigma_v), self._as_double_array(spectrum), output)
-        return self._numpy_from_array(output)
-
-    def pbar_flux_tab(self, e_min, sigma_v, spectrum):
-        output = self._new_double_array()
-        function = self.function(
-            "pbarFluxTab",
-            restype=None,
-            argtypes=[ctypes.c_double, ctypes.c_double, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(float(e_min), float(sigma_v), self._as_double_array(spectrum), output)
-        return self._numpy_from_array(output)
-
-    def basic_nu_spectra(self, for_sun, mass, pdg, polarization=0):
-        neutrino = self._new_double_array()
-        antineutrino = self._new_double_array()
-        function = self.function(
-            "basicNuSpectra",
-            restype=ctypes.c_int,
-            argtypes=[ctypes.c_int, ctypes.c_double, ctypes.c_int, ctypes.c_int, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        err = function(int(for_sun), float(mass), int(pdg), int(polarization), neutrino, antineutrino)
-        return {"err": err, "nu": self._numpy_from_array(neutrino), "nu_bar": self._numpy_from_array(antineutrino)}
-
-    def muon_contained(self, neutrino_spectrum, antineutrino_spectrum, rho):
-        muon = self._new_double_array()
-        function = self.function(
-            "muonContained",
-            restype=None,
-            argtypes=[ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        function(self._as_double_array(neutrino_spectrum), self._as_double_array(antineutrino_spectrum), float(rho), muon)
-        return self._numpy_from_array(muon)
-
-    def muon_upward(self, neutrino_spectrum, antineutrino_spectrum):
-        muon = self._new_double_array()
-        function = self.function(
-            "muonUpward",
-            restype=None,
-            argtypes=[ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        function(self._as_double_array(neutrino_spectrum), self._as_double_array(antineutrino_spectrum), muon)
-        return self._numpy_from_array(muon)
-
-    def nucleon_amplitudes(self, wimp):
-        proton_scalar = ctypes.c_double()
-        proton_axial = ctypes.c_double()
-        neutron_scalar = ctypes.c_double()
-        neutron_axial = ctypes.c_double()
-        function = self.function(
-            "nucleonAmplitudes",
-            restype=ctypes.c_int,
-            argtypes=[ctypes.c_char_p, ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double), ctypes.POINTER(ctypes.c_double)],
-        )
-        err = function(
-            self._encode_string(wimp),
-            ctypes.byref(proton_scalar),
-            ctypes.byref(proton_axial),
-            ctypes.byref(neutron_scalar),
-            ctypes.byref(neutron_axial),
-        )
-        return {
-            "err": err,
-            "proton_scalar": proton_scalar.value,
-            "proton_axial": proton_axial.value,
-            "neutron_scalar": neutron_scalar.value,
-            "neutron_axial": neutron_axial.value,
-        }
-
-    def dnde_recoil(self, energy, recoil_spectrum):
-        function = self.function(
-            "dNdERecoil",
-            restype=ctypes.c_double,
-            argtypes=[ctypes.c_double, ctypes.POINTER(ctypes.c_double)],
-        )
-        return function(float(energy), self._as_double_array(recoil_spectrum, size=self.RECOIL_SIZE))
-
     def function(self, name, restype: object = ctypes.c_double, argtypes=None):
         func = getattr(self.lib, name)
         func.restype = restype
@@ -1982,9 +1507,12 @@ double pymicromegas_mcdm2(void)
     def call(self, name, *args, restype: object = ctypes.c_double, argtypes=None):
         return self.function(name, restype=restype, argtypes=argtypes)(*args)
 
-    def __getattr__(self, name):
+    def __getattr__(self, name) -> Any:
         if name.startswith("__"):
             raise AttributeError(name)
+        delegate_name = self.PROCESS_DELEGATES.get(name)
+        if delegate_name is not None:
+            return getattr(getattr(self, delegate_name), name)
         if name in self.HEADER_METHODS:
             function_name = self.HEADER_METHODS[name]
 

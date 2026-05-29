@@ -109,6 +109,10 @@ method exists.
 
 - Main Python-facing class for calculations.
 - Builds a generated shared library in the micrOMEGAs project directory.
+- Groups major physics calculations under process delegates:
+  `model.relic_density`, `model.freeze_in`, `model.indirect_detection`, and
+  `model.direct_detection`. The legacy direct method names on `MicrOmegas`
+  remain available and delegate to these process objects.
 - Provides convenience methods such as `assign`, `find_value`, `dark_omega`,
   `dark_omega2`, `dark_omega_freeze_in`, `dark_omega_freeze_in_22`,
   `dark_omega_freeze_in_decay`, `dark_omega_tr`, `dark_omega_fo`,
