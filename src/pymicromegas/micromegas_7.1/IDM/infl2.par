@@ -1,0 +1,14 @@
+#! Inflaton
+#! HsmInfl 0
+#! HInfl 100
+#! GammaInfl 1E-13
+#! alphaInfl 1
+#! wInfl 1
+#! BrInfl 0
+Mtp    173.5
+MHX    300
+MH3    301
+MHC    304
+laL    0.001
+la2    0.01
+Mh     125
