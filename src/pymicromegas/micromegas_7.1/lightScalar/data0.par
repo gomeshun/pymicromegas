@@ -1,0 +1,24 @@
+gSXr           0.03    #Xr-Y0 scalar coupling                                                     |
+gSXc           0.      #Xc-Y0 scalar coupling                                                     |
+gSXd           0.2     #Xd-Y0 scalar coupling                                                     |
+gSd11          1.           #d-Y0 scalar coupling                                                      |
+gSu11          1.           #u-Y0 scalar coupling                                                      |
+gSd22          1.           #s-Y0 scalar coupling                                                      |
+gSu22          1.           #c-Y0 scalar coupling                                                      |
+gSd33          1.           #b-Y0 scalar coupling                                                      |
+gSu33          1.           #t-Y0 scalar coupling                                                      |
+Lambda         10000.       #cutoff scale
+gSg            0.           #g-Y0 scalar coupling
+gPg            0.           #g-Y0 pseudoscalar coupling
+MXr            1.      #Mass of Xr.
+MXc            1000.   #Mass of Xc.
+MXd            1000.   #Mass of Xd.
+MY0            0.4     #Mass of Y0.
+fc             0       #coupling of scalar to mesons - chPT
+fc1            0       #coupling of scalar to mesons - 1809.01876
+fdgl           1       #coupling of scalar to mesons - 2407.13587
+fq             0       #coupling of scalar to quarks
+DGL            1
+Gamma         5.e-22   #
+H0             0.      #
+stheta		     1.      # Mixing of the Higgs portal

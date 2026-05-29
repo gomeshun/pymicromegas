@@ -1,0 +1,11 @@
+# file to improve default parameters
+#! Inflation
+#! HInfl 2E-8
+#! GammaInfl 1E-18
+
+Mdm     100.         # mass of Dark Matter
+MZp     500.       # mass of Z'
+gZp     1E-4  #  Coupling of Zp to SM quarks and leptons
+gZpDm  6.e-5.
+
+

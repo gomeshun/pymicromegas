@@ -1,0 +1,30 @@
+DMsimp_s_spin0_mdmo
+ Particles
+ Full  name  |A          |A+         | number |2*spin| mass          |width          |color|aux|>LaTex(A)<|>LaTeX(A+)   <|
+Photon       |a          |a          |22      |2     |0              |0              |1    |G  |a         |a             |
+Z            |Z          |Z          |23      |2     |MZ             |!WZ            |1    |G  |Z         |Z             |
+W            |W+         |W-         |24      |2     |MW             |!WW            |1    |G  |W+        |W-            |
+G            |g          |g          |21      |2     |0              |0              |8    |G  |g         |g             |
+Electron-neut|ve         |ve~        |12      |1     |0              |0              |1    |0  |ve        |ve~           |
+Mu-neutrino  |vm         |vm~        |14      |1     |0              |0              |1    |0  |vm        |vm~           |
+Tau-neutrino |vt         |vt~        |16      |1     |0              |0              |1    |0  |vt        |vt~           |
+Electron     |e-         |e+         |11      |1     |Me             |0              |1    |-3 |e-        |e+            |
+Muon         |mu-        |mu+        |13      |1     |MMU            |0              |1    |-3 |mu-       |mu+           |
+Tau          |ta-        |ta+        |15      |1     |MTA            |0              |1    |-3 |ta-       |ta+           |
+u-quark      |u          |u~         |2       |1     |MU             |0              |3    |2  |u         |u~            |
+c-quark      |c          |c~         |4       |1     |MC             |0              |3    |2  |c         |c~            |
+t-quark      |t          |t~         |6       |1     |MT             |!WT            |3    |2  |t         |t~            |
+d-quark      |d          |d~         |1       |1     |MD             |0              |3    |-1 |d         |d~            |
+s-quark      |s          |s~         |3       |1     |MS             |0              |3    |-1 |s         |s~            |
+b-quark      |b          |b~         |5       |1     |MB             |0              |3    |-1 |b         |b~            |
+H            |H          |H          |25      |0     |MH             |!WH            |1    |0  |H         |H             |
+Real scalar D|~xr        |~xr        |5000511 |0     |MXr            |0              |1    |0  |~xr       |~xr           |
+Complex scala|~xc        |~xcb       |5000512 |0     |MXc            |0              |1    |0  |~xc       |~xcb          |
+Dirac DM     |~xd        |~xdb       |5000521 |1     |MXd            |0              |1    |0  |~xd       |~xdb          |
+Scalar mediat|y0         |y0         |5000000 |0     |MY0            |!WY0           |1    |0  |y0        |y0
+pi0          |pi0        |pi0        |111     |0     |Mpi            |0              |1    |   |pi0       |pi0
+pi+          |pip        |pim        |211     |0     |Mpi            |0              |1    |3  |pip       |pim
+K+           |kp         |km         |321     |0     |MK             |0              |1    |3  |kp        |km
+kl           |kl         |kl         |130     |0     |MK             |0              |1    |0  |kl        |kl
+ks           |ks         |ks         |310     |0     |MK             |0              |1    |0  |ks        |ks
+eta          |eta        |eta        |221     |0     |Meta           |0              |1    |   |eta       |eta

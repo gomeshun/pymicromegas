@@ -1,0 +1,24 @@
+# file to improve default parameters
+MH     125
+Mp1    388          #mass of phi1
+Mp2    400          #mass of phi2
+Mp3    500          #mass of phi3
+las1   0.01          #higgs-phi1 coupling
+las2   0.2          #higgs-phi2 coupling
+las3   0.1          #higgs-phi3 coupling
+la412  0.2          #quartic coupling
+la413  0.2          #quartic coupling
+la423  0.1          #quartic coupling
+la41   0.2          #quartic coupling
+la42   0.2          #quartic coupling
+la43   0.2          #quartic coupling
+la31   0.2          #quartic
+la32   0.1          #quartic
+la33   0.1          #quartic
+la34   0.1          #quartic
+la35   0.1          #quartic
+la36   0.1          #quartic
+mus1   0          #trilinear
+mus2   0          #trilinear
+mus3   0          #trilinear
+mus4   5000          #trilinear

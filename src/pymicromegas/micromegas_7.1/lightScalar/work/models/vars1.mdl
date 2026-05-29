@@ -1,0 +1,71 @@
+DMsimp_s_spin0_mdmo
+ Parameters
+  Name         | Value       |> Comment                                                                <|
+Q              |20.          |scale for form factor
+DGL            |1            |DGL/BTPZ switch. DGL>0 set  DGL
+cabi           |0.227736     |Cabibbo angle                                                             |
+gSXr           |0.           |Xr-Y0 scalar coupling                                                     |
+gSXc           |0.           |Xc-Y0 scalar coupling                                                     |
+gSXd           |1.           |Xd-Y0 scalar coupling                                                     |
+gPXd           |0.           |Xd-Y0 pseudoscalar coupling                                               |
+gSd11          |1.           |d-Y0 scalar coupling                                                      |
+gSu11          |1.           |u-Y0 scalar coupling                                                      |
+gSd22          |1.           |s-Y0 scalar coupling                                                      |
+gSu22          |1.           |c-Y0 scalar coupling                                                      |
+gSd33          |1.           |b-Y0 scalar coupling                                                      |
+gSu33          |1.           |t-Y0 scalar coupling                                                      |
+gPd11          |0.           |d-Y0 pseudoscalar coupling                                                |
+gPu11          |0.           |u-Y0 pseudoscalar coupling                                                |
+gPd22          |0.           |s-Y0 pseudoscalar coupling                                                |
+gPu22          |0.           |c-Y0 pseudoscalar coupling                                                |
+gPd33          |0.           |b-Y0 pseudoscalar coupling                                                |
+gPu33          |0.           |t-Y0 pseudoscalar coupling                                                |
+Lambda         |10000.       |cutoff scale                                                              |
+gSg            |0.           |g-Y0 scalar coupling                                                      |
+gPg            |0.           |g-Y0 pseudoscalar coupling                                                |
+aEWM1          |127.9        |Inverse of the EW coupling constant at the Z pole                         |
+Gf             |0.0000116637 |Fermi constant                                                            |
+aS             |0.1184       |Strong coupling constant at the Z pole                                    |
+ymdo           |0.00504      |Down Yukawa mass                                                          |
+ymup           |0.00255      |Up Yukawa mass                                                            |
+yms            |0.101        |Strange Yukawa mass                                                       |
+ymc            |1.27         |Charm Yukawa mass                                                         |
+ymb            |4.7          |Bottom Yukawa mass                                                        |
+ymt            |172          |Top Yukawa mass                                                           |
+yme            |0.000511     |Electron Yukawa mass                                                      |
+ymm            |0.10566      |Muon Yukawa mass                                                          |
+ymtau          |1.777        |Tau Yukawa mass                                                           |
+GG             |1.21977796370|Strong coupling constant at the Z pole   This value will be ignored and ca|
+MZ             |91.1876      |Mass of G0.                                                               |
+Me             |0.000511     |Mass of e.                                                                |
+MMU            |0.10566      |Mass of mu.                                                               |
+MTA            |1.777        |Mass of ta.                                                               |
+MU             |0.00255      |Mass of u.                                                                |
+MC             |1.27         |Mass of c.                                                                |
+MT             |172          |Mass of t.                                                                |
+MD             |0.00504      |Mass of d.                                                                |
+MS             |0.101        |Mass of s.                                                                |
+MB             |4.7          |Mass of b.                                                                |
+MH             |125          |Mass of H.                                                                |
+MXr            |10.          |Mass of Xr.                                                               |
+MXc            |10.          |Mass of Xc.                                                               |
+MXd            |10.          |Mass of Xd.                                                               |
+MY0            |1000.        |Mass of Y0.                                                               |
+%WZ            |2.4952       |Width of G0.                                                              |
+%WW            |2.085        |Width of GP.                                                              |
+%WT            |1.50833649   |Width of t.                                                               |
+%WH            |0.00407      |Width of H.                                                               |
+%WY0           |10.          |Width of Y0.                                                              |
+E              |2.71828182845|The base of the natural logarithm.                                        |
+Pi             |3.14159265358|The circumference of a circle divided by the diameter.                    |
+fpi            |0.093        |
+mu             |2.56         |
+mq             |3.56E-3      |mass for u and d
+ms             | 93.2E-3     |mass for s
+fc             |1            |coupling of scalar to mesons LO-CHPT
+fc1            |0            |coupling of scalar to mesons - 1809.01876
+fdgl           |0            |coupling of scalar to mesons - 2407.13587
+fq             |0            |coupling of scalar to quarks
+Gamma          |0            |
+H0             |0            |
+stheta	       |0.1          |scalar-Higgs mixing angle

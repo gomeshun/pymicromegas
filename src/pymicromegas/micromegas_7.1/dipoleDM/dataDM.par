@@ -1,0 +1,4 @@
+#! FreezeIn
+milliQ  0       #milli charge
+Mdm    100      #mass of DM
+DMcm    1E-30   #dipole magnetic moment is cm
