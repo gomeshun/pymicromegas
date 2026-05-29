@@ -1,0 +1,9 @@
+1. version 3.9.2 
+  1) CalcHEP distribution comes with a  manual 
+  2) We fixed a bug in batch calculation that occurred when some subprocesses were kinematically disabled.
+     Now such subprocesses are ignored.
+  3) In some models there are processes which have zero matrix element in spite the  existence of Feynman 
+     diagrams. In the current version numerical code (n_calchep) for such processes is not generated, whereas in previous 
+     versions CalcHEP generated numerical code with zero matrix element. 
+  4) The commands which increase/decrease size of X11 window  (Ctrl+/Ctrl-)  are improved.
+   
