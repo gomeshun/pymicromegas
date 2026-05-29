@@ -7,7 +7,7 @@ all:include/microPath.h
 	$(MAKE) -C sources
 
 include/microPath.h:
-	echo \#define micrO \"$(CURDIR)\"  > include/microPath.h
+	printf '%s\n' '#include <stdlib.h>' '#define micrO (getenv("PYMICROMEGAS_MICROPATH") ? getenv("PYMICROMEGAS_MICROPATH") : "$(CURDIR)")' > include/microPath.h
         
    
 clean:  
